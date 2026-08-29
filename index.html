@@ -1494,6 +1494,8 @@ const FRAG_COMPOSITE = /* glsl */`
   varying vec2 vUv;
   uniform sampler2D tScene, tBloom;
   uniform float uTime, uBloom, uGrain, uVignette, uAberration, uExposure;
+  uniform float uContrast, uShadowMix;
+  uniform vec3 uShadowTint;
 
   float hash(vec2 p) {
     p = fract(p * vec2(443.897, 441.423));
@@ -1518,6 +1520,15 @@ const FRAG_COMPOSITE = /* glsl */`
 
     /* filmic-ish tone curve, kept restrained so blacks stay black */
     col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);
+
+    /* print grade — contrast pivoted on mid grey, then a cool cast pushed
+       into the low end only. Neutral for the screen pass; the editorial
+       plates lean on it so they read as photographs sitting on the page
+       rather than as views of whatever is behind them. */
+    col = (col - 0.5) * uContrast + 0.5;
+    float lum = dot(col, vec3(0.2126, 0.7152, 0.0722));
+    col = mix(col, col * uShadowTint, (1.0 - smoothstep(0.0, 0.5, lum)) * uShadowMix);
+    col = max(col, vec3(0.0));
 
     /* vignette */
     col *= 1.0 - smoothstep(0.16, 0.82, r2) * uVignette;
@@ -1566,7 +1577,10 @@ class PostChain {
       uGrain: { value: opts.grain ?? 0.05 },
       uVignette: { value: opts.vignette ?? 0.62 },
       uAberration: { value: opts.aberration ?? 0.02 },
-      uExposure: { value: opts.exposure ?? 1.06 }
+      uExposure: { value: opts.exposure ?? 1.06 },
+      uContrast: { value: opts.contrast ?? 1.0 },
+      uShadowMix: { value: opts.shadowMix ?? 0.0 },
+      uShadowTint: { value: new THREE.Color(opts.shadowTint ?? 0xffffff) }
     });
     this.setSize(width, height);
   }
@@ -2963,110 +2977,181 @@ function buildForegrounds() {
     paintChainlink(ctx, FG_H - 210, 210, 0.42);
   });
 
-  /* 06 — the cabinet: vitrine edges, plinths, framed faces */
+  /* 06 — the cabinet: vitrines in perspective, plinths, framed faces */
   make((ctx) => {
     const r = makeRandom(63);
-    ctx.fillStyle = 'rgba(7,8,11,0.97)';
-    ctx.fillRect(0, FG_H - 120, FG_W, 120);
+    ctx.fillStyle = 'rgba(7,8,11,0.98)';
+    ctx.fillRect(0, FG_H - 132, FG_W, 132);
     for (let i = 0; i < 5; i++) {
-      const w = 150 + r() * 90;
-      const x = 60 + i * (FG_W / 5) + r() * 60;
-      const h = 150 + r() * 90;
-      ctx.fillStyle = 'rgba(10,11,15,0.96)';
-      ctx.fillRect(x, FG_H - h, w, h);
-      /* the glass catches one edge of the spot above it */
-      const g = ctx.createLinearGradient(x, FG_H - h, x + w, FG_H);
-      g.addColorStop(0, 'rgba(255,225,170,0.16)');
-      g.addColorStop(0.35, 'rgba(255,225,170,0.02)');
-      g.addColorStop(1, 'rgba(255,225,170,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(x, FG_H - h, w, h);
-      ctx.strokeStyle = 'rgba(210,190,150,0.22)';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(x + 0.5, FG_H - h + 0.5, w, h);
+      const cx = 170 + i * ((FG_W - 340) / 4);
+      const pool = ctx.createRadialGradient(cx, FG_H - 96, 8, cx, FG_H - 96, 190);
+      pool.addColorStop(0, 'rgba(255,226,170,0.16)');
+      pool.addColorStop(1, 'rgba(255,226,170,0)');
+      ctx.fillStyle = pool;
+      ctx.fillRect(cx - 200, FG_H - 200, 400, 200);
     }
-
-    ctx.fillStyle = 'rgba(7,8,11,0.97)';
-    ctx.fillRect(0, FG_H - 120, FG_W, 120);
-    for (let i = 0; i < 6; i++) {
-      const w = 150, h = 210;
-      const x = 110 + i * ((FG_W - 300) / 5);
-      const y = FG_H - 120 - h;
-      ctx.fillStyle = 'rgba(12,14,19,0.97)';
-      ctx.fillRect(x, y, w, h);
-      ctx.strokeStyle = 'rgba(120,140,190,0.35)';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(x + 1.5, y + 1.5, w - 3, h - 3);
-      const g = ctx.createLinearGradient(x, y, x, y + h);
-      g.addColorStop(0, 'rgba(120,150,220,0.16)');
-      g.addColorStop(1, 'rgba(120,150,220,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(x, y, w, h);
-    }
-  });
-
-  /* 07 — the far end: folded shirts and light boxes on the floor */
-  make((ctx) => {
-    const r = makeRandom(131);
-    ctx.fillStyle = 'rgba(8,9,12,0.97)';
-    ctx.fillRect(0, FG_H - 130, FG_W, 130);
-    ctx.fillStyle = 'rgba(14,16,20,0.98)';
-    ctx.fillRect(0, FG_H - 150, FG_W, 26);
-    for (let i = 0; i < 6; i++) {
-      const w = 120 + r() * 70, h = 34 + r() * 22;
-      const x = 90 + i * (FG_W / 6) + r() * 70;
-      const y = FG_H - 150 - h;
-      ctx.fillStyle = ['#11265c', '#0d1b3e', '#16306e'][(r() * 3) | 0];
-      ctx.fillRect(x, y, w, h);
-      ctx.fillStyle = 'rgba(240,179,35,0.8)';
-      ctx.fillRect(x, y + h * 0.42, w, h * 0.22);
-      ctx.fillStyle = 'rgba(0,0,0,0.35)';
-      ctx.fillRect(x, y, w, 5);
-    }
-
-    ctx.fillStyle = 'rgba(7,8,11,0.97)';
-    ctx.fillRect(0, FG_H - 110, FG_W, 110);
     for (let i = 0; i < 5; i++) {
-      const cx = 150 + i * (FG_W - 300) / 4;
-      const g = ctx.createLinearGradient(cx, FG_H - 300, cx, FG_H - 60);
-      g.addColorStop(0, 'rgba(60,100,200,0.22)');
-      g.addColorStop(1, 'rgba(60,100,200,0)');
-      ctx.fillStyle = g;
+      const cx = 170 + i * ((FG_W - 340) / 4);
+      const depth = 1 - Math.abs(i - 2) * 0.13;
+      const w = 128 * depth, h = 232 * depth, base = FG_H - 108, taper = 16 * depth;
+      ctx.fillStyle = 'rgba(26,28,33,0.98)';
       ctx.beginPath();
-      ctx.moveTo(cx - 60, FG_H - 300);
-      ctx.lineTo(cx + 60, FG_H - 300);
-      ctx.lineTo(cx + 150, FG_H - 60);
-      ctx.lineTo(cx - 150, FG_H - 60);
+      ctx.moveTo(cx - w / 2, base);
+      ctx.lineTo(cx + w / 2, base);
+      ctx.lineTo(cx + w / 2 - taper * 0.35, base + 96 * depth);
+      ctx.lineTo(cx - w / 2 + taper * 0.35, base + 96 * depth);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fillRect(cx - w / 2, base, w, 4);
+      const g = ctx.createLinearGradient(cx - w / 2, base - h, cx + w / 2, base);
+      g.addColorStop(0, 'rgba(180,205,255,0.13)');
+      g.addColorStop(0.42, 'rgba(180,205,255,0.03)');
+      g.addColorStop(1, 'rgba(180,205,255,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(cx - w / 2, base - h, w, h);
+      ctx.strokeStyle = 'rgba(196,178,140,0.34)';
+      ctx.lineWidth = 2 * depth;
+      ctx.strokeRect(cx - w / 2, base - h, w, h);
+      ctx.fillStyle = 'rgba(255,240,205,0.10)';
+      ctx.fillRect(cx - w / 2 + 9 * depth, base - h + 6, 5 * depth, h - 18);
+      ctx.fillStyle = 'rgba(212,168,74,0.30)';
+      const tw = 26 * depth, th = 78 * depth;
+      ctx.beginPath();
+      ctx.moveTo(cx - tw / 2, base - 12);
+      ctx.lineTo(cx + tw / 2, base - 12);
+      ctx.lineTo(cx + tw * 0.22, base - th * 0.55);
+      ctx.lineTo(cx + tw * 0.62, base - th);
+      ctx.lineTo(cx - tw * 0.62, base - th);
+      ctx.lineTo(cx - tw * 0.22, base - th * 0.55);
       ctx.closePath();
       ctx.fill();
     }
-    ctx.strokeStyle = 'rgba(90,92,88,0.7)';
-    ctx.lineWidth = 5;
-    ctx.beginPath();
-    ctx.moveTo(0, FG_H - 128);
-    ctx.quadraticCurveTo(FG_W / 2, FG_H - 96, FG_W, FG_H - 128);
-    ctx.stroke();
+    for (let i = 0; i < 7; i++) {
+      const cx = 120 + i * ((FG_W - 240) / 6);
+      const d = 1 - Math.abs(i - 3) * 0.09;
+      const w = 96 * d, h = 124 * d, y = FG_H - 430;
+      ctx.fillStyle = 'rgba(11,13,17,0.97)';
+      ctx.fillRect(cx - w / 2, y, w, h);
+      ctx.strokeStyle = 'rgba(120,140,190,0.30)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(cx - w / 2, y, w, h);
+      const fg = ctx.createLinearGradient(cx, y, cx, y + h);
+      fg.addColorStop(0, 'rgba(120,150,220,0.16)');
+      fg.addColorStop(1, 'rgba(120,150,220,0)');
+      ctx.fillStyle = fg;
+      ctx.fillRect(cx - w / 2, y, w, h);
+      if (r() > 0.55) {
+        ctx.fillStyle = 'rgba(240,179,35,0.16)';
+        ctx.fillRect(cx - w / 2, y + h - 14 * d, w, 5 * d);
+      }
+    }
   });
 
-  /* 08 — the stand as one flat silhouette, seen from outside */
+  /* 07 — the far end: folded cloth on a bench, light boxes behind */
   make((ctx) => {
-    ctx.fillStyle = 'rgba(7,8,11,0.97)';
+    const r = makeRandom(131);
+    ctx.fillStyle = 'rgba(7,8,11,0.98)';
+    ctx.fillRect(0, FG_H - 118, FG_W, 118);
+    for (let i = 0; i < 5; i++) {
+      const cx = 160 + i * ((FG_W - 320) / 4);
+      const g = ctx.createLinearGradient(cx, FG_H - 330, cx, FG_H - 90);
+      g.addColorStop(0, 'rgba(70,112,215,0.24)');
+      g.addColorStop(1, 'rgba(70,112,215,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(cx - 54, FG_H - 330);
+      ctx.lineTo(cx + 54, FG_H - 330);
+      ctx.lineTo(cx + 138, FG_H - 90);
+      ctx.lineTo(cx - 138, FG_H - 90);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = 'rgba(150,185,255,0.20)';
+      ctx.fillRect(cx - 52, FG_H - 332, 104, 6);
+    }
+    ctx.fillStyle = 'rgba(17,19,24,0.99)';
+    ctx.fillRect(0, FG_H - 152, FG_W, 30);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.fillRect(0, FG_H - 124, FG_W, 8);
+    const BODY = ['#11265c', '#0d1b3e', '#16306e', '#0a1730'];
+    for (let i = 0; i < 7; i++) {
+      const w = 132 + r() * 58, h = 40 + r() * 20;
+      const x = 60 + i * ((FG_W - 160) / 7) + r() * 40;
+      const stack = 1 + ((r() * 2.4) | 0);
+      for (let k = 0; k < stack; k++) {
+        const y = FG_H - 152 - h * (k + 1) + k * 5;
+        ctx.fillStyle = BODY[(r() * BODY.length) | 0];
+        ctx.beginPath();
+        ctx.moveTo(x + 6, y);
+        ctx.lineTo(x + w - 6, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + 7);
+        ctx.lineTo(x + w, y + h - 7);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - 6, y + h);
+        ctx.lineTo(x + 6, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - 7);
+        ctx.lineTo(x, y + 7);
+        ctx.quadraticCurveTo(x, y, x + 6, y);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(240,179,35,0.88)';
+        ctx.fillRect(x, y + h * 0.44, w, h * 0.2);
+        ctx.fillStyle = 'rgba(255,255,255,0.07)';
+        ctx.fillRect(x, y, w, 3);
+        ctx.fillStyle = 'rgba(0,0,0,0.28)';
+        ctx.fillRect(x, y + h - 3, w, 3);
+      }
+    }
+  });
+
+  /* 08 — the ground from outside, built up in layers */
+  make((ctx) => {
+    const r = makeRandom(211);
+    const haze = ctx.createRadialGradient(FG_W * 0.52, FG_H - 40, 30, FG_W * 0.52, FG_H - 40, FG_W * 0.5);
+    haze.addColorStop(0, 'rgba(46,74,150,0.34)');
+    haze.addColorStop(0.55, 'rgba(30,50,105,0.12)');
+    haze.addColorStop(1, 'rgba(30,50,105,0)');
+    ctx.fillStyle = haze;
+    ctx.fillRect(0, 0, FG_W, FG_H);
+    ctx.fillStyle = 'rgba(15,19,29,0.85)';
+    let x = -40;
+    while (x < FG_W + 40) {
+      const w = 70 + r() * 150, h = 60 + r() * 90;
+      ctx.fillRect(x, FG_H - 250 - h * 0.35, w, h + 250);
+      x += w + 6;
+    }
+    for (const px of [FG_W * 0.13, FG_W * 0.87]) {
+      ctx.fillStyle = 'rgba(9,10,14,0.96)';
+      ctx.fillRect(px - 7, FG_H - 470, 5, 470);
+      ctx.fillRect(px + 12, FG_H - 470, 5, 470);
+      for (let b = 0; b < 9; b++) ctx.fillRect(px - 7, FG_H - 452 + b * 48, 26, 3);
+      ctx.fillStyle = 'rgba(226,238,255,0.5)';
+      for (let c = 0; c < 8; c++) {
+        ctx.fillRect(px - 22 + (c % 4) * 14, FG_H - 496 + ((c / 4) | 0) * 13, 10, 9);
+      }
+      const glow = ctx.createRadialGradient(px + 5, FG_H - 488, 4, px + 5, FG_H - 488, 130);
+      glow.addColorStop(0, 'rgba(210,228,255,0.30)');
+      glow.addColorStop(1, 'rgba(210,228,255,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(px - 135, FG_H - 620, 270, 270);
+    }
+    ctx.fillStyle = 'rgba(6,7,10,0.99)';
     ctx.beginPath();
     ctx.moveTo(0, FG_H);
-    ctx.lineTo(0, 300);
-    ctx.lineTo(420, 210);
-    ctx.lineTo(430, 120);
-    ctx.lineTo(470, 120);
-    ctx.lineTo(480, 205);
-    ctx.lineTo(1180, 190);
-    ctx.lineTo(1190, 96);
-    ctx.lineTo(1230, 96);
-    ctx.lineTo(1240, 188);
-    ctx.lineTo(FG_W, 250);
+    ctx.lineTo(0, FG_H - 210);
+    ctx.lineTo(FG_W * 0.18, FG_H - 246);
+    ctx.lineTo(FG_W * 0.30, FG_H - 300);
+    ctx.lineTo(FG_W * 0.70, FG_H - 300);
+    ctx.lineTo(FG_W * 0.82, FG_H - 246);
+    ctx.lineTo(FG_W, FG_H - 210);
     ctx.lineTo(FG_W, FG_H);
     ctx.closePath();
     ctx.fill();
-    paintSmokeCloud(ctx, 980, 330, 460, 'rgba(30,52,110,ALPHA)');
+    for (let i = 0; i < 26; i++) {
+      if (r() < 0.32) continue;
+      ctx.fillStyle = r() > 0.7 ? 'rgba(255,212,137,0.5)' : 'rgba(60,84,146,0.5)';
+      ctx.fillRect(FG_W * 0.31 + i * (FG_W * 0.38 / 26), FG_H - 288, 16, 20);
+    }
+    ctx.fillStyle = 'rgba(240,179,35,0.14)';
+    ctx.fillRect(0, FG_H - 212, FG_W, 2);
   });
 
   return layers;
@@ -3179,7 +3264,8 @@ function renderPlate(figure) {
 
   if (!plateChain) {
     plateChain = new PostChain(renderer, PLATE_W, PLATE_H, {
-      bloom: 0.74, grain: 0.08, vignette: 0.84, aberration: 0.03, exposure: 1.12, quality: 1
+      bloom: 0.82, grain: 0.135, vignette: 0.98, aberration: 0.032, exposure: 1.06, quality: 1,
+      contrast: 1.22, shadowMix: 0.55, shadowTint: 0x8fa8d8
     });
     plateOut = new THREE.WebGLRenderTarget(PLATE_W, PLATE_H, { depthBuffer: false });
     platePixels = new Uint8Array(PLATE_W * PLATE_H * 4);
