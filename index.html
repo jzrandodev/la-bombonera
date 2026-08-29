@@ -222,6 +222,31 @@ body {
 .nav-list a:hover .idx, .nav-list a[aria-current="true"] .idx { color: var(--gold); }
 .nav-list a[aria-current="true"]::after { transform: scaleX(1); }
 
+.masthead__tools {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.55rem, 0.4rem + 0.6vw, 1rem);
+}
+.wordmark { order: 1; }
+.primary-nav { order: 2; }
+.masthead__tools { order: 3; }
+
+.lang-toggle {
+  display: inline-flex;
+  border: var(--rule) solid var(--concrete-d);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+.lang-toggle__opt {
+  padding: 0.45rem 0.62rem;
+  color: var(--concrete-d);
+  transition: color 300ms var(--ease), background 300ms var(--ease);
+}
+.lang-toggle__opt.is-on { background: var(--gold); color: var(--ink); }
+.lang-toggle:hover .lang-toggle__opt:not(.is-on) { color: var(--bone); }
+
 .nav-toggle { display: none; }
 
 /* ─── chrome: chapter rail ────────────────────────────────────────────── */
@@ -690,7 +715,7 @@ h1 .em, h2 .em { color: var(--gold); }
 <script>document.documentElement.className = 'js';</script>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
 <!-- live 3D environment -->
 <div id="stage" aria-hidden="true"></div>
@@ -703,16 +728,23 @@ h1 .em, h2 .em { color: var(--gold); }
   <a class="wordmark" href="#hero">
     <span class="mark" aria-hidden="true"></span>
     <span>La Bombonera</span>
-    <span class="sub">Est. 1940</span>
+    <span class="sub" data-i18n="est">Est. 1940</span>
   </a>
 
-  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
-    <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
-    <span>Chapters</span>
-  </button>
+  <div class="masthead__tools">
+    <button class="lang-toggle" id="lang-toggle" type="button">
+      <span class="lang-toggle__opt" data-lang="en">EN</span>
+      <span class="lang-toggle__opt" data-lang="es">ES</span>
+    </button>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+      <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span data-i18n="nav.chapters">Chapters</span>
+    </button>
+  </div>
 
   <nav class="primary-nav" id="primary-nav" aria-label="Chapters">
-    <button class="nav-close" type="button">Close ✕</button>
+    <button class="nav-close" type="button" data-i18n="nav.close">Close ✕</button>
     <ul class="nav-list">
       <li><a href="#barrio"><span class="idx">01</span> Barrio</a></li>
       <li><a href="#tunel"><span class="idx">02</span> Túnel</a></li>
@@ -725,12 +757,12 @@ h1 .em, h2 .em { color: var(--gold); }
 
 <nav class="rail" aria-label="Chapter progress">
   <ul>
-    <li><a href="#hero"><span class="name">Arrival</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 00, Arrival</span>00</a></li>
-    <li><a href="#barrio"><span class="name">Barrio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 01, </span>01</a></li>
-    <li><a href="#tunel"><span class="name">Túnel</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 02, </span>02</a></li>
-    <li><a href="#tribuna"><span class="name">Tribuna</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 03, </span>03</a></li>
-    <li><a href="#cancha"><span class="name">Cancha</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 04, </span>04</a></li>
-    <li><a href="#manifiesto"><span class="name">Manifiesto</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 05, </span>05</a></li>
+    <li><a href="#hero"><span class="name" data-i18n="rail.0">Arrival</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch">Chapter</span> 00</span>00</a></li>
+    <li><a href="#barrio"><span class="name">Barrio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch1">Chapter</span> 01, </span>01</a></li>
+    <li><a href="#tunel"><span class="name">Túnel</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch2">Chapter</span> 02, </span>02</a></li>
+    <li><a href="#tribuna"><span class="name">Tribuna</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch3">Chapter</span> 03, </span>03</a></li>
+    <li><a href="#cancha"><span class="name">Cancha</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch4">Chapter</span> 04, </span>04</a></li>
+    <li><a href="#manifiesto"><span class="name">Manifiesto</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch5">Chapter</span> 05, </span>05</a></li>
   </ul>
 </nav>
 
@@ -740,52 +772,52 @@ h1 .em, h2 .em { color: var(--gold); }
   <section class="chapter hero" id="hero" data-chapter="0" aria-labelledby="hero-title">
     <p class="stencil" aria-hidden="true">La<br>Bombonera</p>
 
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">00</span> La Boca · Buenos Aires · 20:47</p>
-    <h1 id="hero-title" data-reveal data-split>The street gets loud <span class="em">before</span> the stadium does</h1>
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">00</span> <span data-i18n="hero.eyebrow">La Boca · Buenos Aires · 20:47</span></p>
+    <h1 id="hero-title" data-reveal data-split data-i18n="hero.h">The street gets loud <span class="em">before</span> the stadium does</h1>
 
     <hr class="rule rule--gold" data-reveal>
 
     <div class="hero-foot">
-      <p class="lede" data-reveal>Five chapters, one continuous camera, every brick of it drawn at runtime. Scroll to walk from Caminito to the top of the away-side steps.</p>
-      <p class="scroll-cue" data-reveal><span class="line" aria-hidden="true"></span> Scroll</p>
+      <p class="lede" data-reveal data-i18n="hero.lede">Six chapters, one continuous camera, every brick of it drawn at runtime. Scroll to walk from Caminito to the top of the away-side steps.</p>
+      <p class="scroll-cue" data-reveal><span class="line" aria-hidden="true"></span> <span data-i18n="hero.scroll">Scroll</span></p>
     </div>
 
     <hr class="rule" data-reveal>
 
     <dl class="meta" data-reveal>
-      <div><dt>Render</dt><dd>WebGL · Three.js r185</dd></div>
-      <div><dt>Geometry</dt><dd>100% procedural</dd></div>
-      <div><dt>Assets</dt><dd>Zero images</dd></div>
-      <div><dt>Build step</dt><dd>None</dd></div>
+      <div><dt data-i18n="hero.m1t">Render</dt><dd>WebGL · Three.js r185</dd></div>
+      <div><dt data-i18n="hero.m2t">Geometry</dt><dd data-i18n="hero.m2d">100% procedural</dd></div>
+      <div><dt data-i18n="hero.m3t">Assets</dt><dd data-i18n="hero.m3d">Zero images</dd></div>
+      <div><dt data-i18n="hero.m4t">Build step</dt><dd data-i18n="hero.m4d">None</dd></div>
     </dl>
   </section>
 
   <!-- ── 01 ─────────────────────────────────────────────────────────── -->
   <section class="chapter" id="barrio" data-chapter="1" aria-labelledby="barrio-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">01</span> Caminito · corrugated iron</p>
-    <h2 id="barrio-title" data-reveal data-split>Painted in whatever the <span class="em">docks</span> had left over</h2>
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">01</span> <span data-i18n="bar.eyebrow">Caminito · corrugated iron</span></p>
+    <h2 id="barrio-title" data-reveal data-split data-i18n="bar.h">Painted in whatever the <span class="em">docks</span> had left over</h2>
     <hr class="rule" data-reveal>
 
     <div class="chapter-grid">
       <div class="col stack">
-        <p class="stencil stencil--fill" data-reveal aria-hidden="true">Barrio</p>
+        <p class="stencil stencil--fill" data-reveal aria-hidden="true" data-i18n="bar.stencil">Barrio</p>
         <div class="body-copy" data-reveal>
-          <p>The walk starts three blocks out, where the houses are sheet metal over timber and no two panels agree on a colour. The story the neighbourhood tells is that the paint came off the ships — leftovers from the port, brushed on in whatever order the tins came out of the crate.</p>
-          <p>Balconies hang low enough to touch. Laundry crosses the street overhead. Somewhere behind the roofline a floodlight is already burning, washing the top of the block in a hard white that the streetlamps can't match.</p>
+          <p data-i18n="bar.p1">The walk starts three blocks out, where the houses are sheet metal over timber and no two panels agree on a colour. The story the neighbourhood tells is that the paint came off the ships — leftovers from the port, brushed on in whatever order the tins came out of the crate.</p>
+          <p data-i18n="bar.p2">Balconies hang low enough to touch. Laundry crosses the street overhead. Somewhere behind the roofline a floodlight is already burning, washing the top of the block in a hard white that the streetlamps can't match.</p>
         </div>
         <blockquote class="quote" data-reveal>
-          You hear it two streets early. A drum, then a second drum finding it.
-          <cite>Chapter 01 · 20:51</cite>
+          <span data-i18n="bar.q">You hear it two streets early. A drum, then a second drum finding it.</span>
+          <cite data-i18n="bar.cite">Chapter 01 · 20:51</cite>
         </blockquote>
       </div>
 
       <div class="col card-col">
         <figure class="card" data-reveal data-plate="0">
           <div class="card__frame">
-            <div class="plate-fallback">Plate 01 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.1">Plate 01 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b>Plate 01</b><span>Caminito · 24mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.1b">Plate 01</b><span data-i18n="cap.1">Caminito · 24mm</span></figcaption>
         </figure>
       </div>
     </div>
@@ -793,30 +825,30 @@ h1 .em, h2 .em { color: var(--gold); }
 
   <!-- ── 02 ─────────────────────────────────────────────────────────── -->
   <section class="chapter chapter--reverse" id="tunel" data-chapter="2" aria-labelledby="tunel-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">02</span> The threshold · raw concrete</p>
-    <h2 id="tunel-title" data-reveal data-split>The last <span class="em">quiet</span> place in the building</h2>
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">02</span> <span data-i18n="tun.eyebrow">The threshold · raw concrete</span></p>
+    <h2 id="tunel-title" data-reveal data-split data-i18n="tun.h">The last <span class="em">quiet</span> place in the building</h2>
     <hr class="rule" data-reveal>
 
     <div class="chapter-grid">
       <div class="col stack">
-        <p class="stencil stencil--fill" data-reveal aria-hidden="true">El Túnel</p>
+        <p class="stencil stencil--fill" data-reveal aria-hidden="true" data-i18n="tun.stencil">El Túnel</p>
         <div class="body-copy" data-reveal>
-          <p>Under the stand the temperature drops. Pillars every four metres, poured rough and never finished, holding up fifty thousand people who are all doing the same thing at the same time directly overhead.</p>
-          <p>The noise arrives as pressure before it arrives as sound. At the mouth of the tunnel the light is a flat white rectangle, and everything between here and there is silhouette.</p>
+          <p data-i18n="tun.p1">Under the stand the temperature drops. Pillars every four metres, poured rough and never finished, holding up fifty thousand people who are all doing the same thing at the same time directly overhead.</p>
+          <p data-i18n="tun.p2">The noise arrives as pressure before it arrives as sound. At the mouth of the tunnel the light is a flat white rectangle, and everything between here and there is silhouette.</p>
         </div>
         <dl class="meta" data-reveal>
-          <div><dt>Shape</dt><dd>Three steep sides, one flat wall</dd></div>
-          <div><dt>Pitch</dt><dd>Vertical, not raked</dd></div>
+          <div><dt data-i18n="tun.m1t">Shape</dt><dd data-i18n="tun.m1d">Three steep sides, one flat wall</dd></div>
+          <div><dt data-i18n="tun.m2t">Rake</dt><dd data-i18n="tun.m2d">Vertical, not stepped back</dd></div>
         </dl>
       </div>
 
       <div class="col card-col">
         <figure class="card" data-reveal data-plate="1">
           <div class="card__frame">
-            <div class="plate-fallback">Plate 02 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.2">Plate 02 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b>Plate 02</b><span>Tunnel mouth · 35mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.2b">Plate 02</b><span data-i18n="cap.2">Tunnel mouth · 35mm</span></figcaption>
         </figure>
       </div>
     </div>
@@ -824,37 +856,37 @@ h1 .em, h2 .em { color: var(--gold); }
 
   <!-- ── 03 ─────────────────────────────────────────────────────────── -->
   <section class="chapter" id="tribuna" data-chapter="3" aria-labelledby="tribuna-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">03</span> The stands · full throat</p>
-    <h2 id="tribuna-title" data-reveal data-split>It doesn't tremble. It <span class="em">beats</span>.</h2>
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">03</span> <span data-i18n="tri.eyebrow">The stands · full throat</span></p>
+    <h2 id="tribuna-title" data-reveal data-split data-i18n="tri.h">It doesn't tremble. It <span class="em">beats</span>.</h2>
     <hr class="rule rule--heavy" data-reveal>
 
     <div class="chapter-grid">
       <div class="col stack">
-        <p class="stencil stencil--fill" data-reveal aria-hidden="true">La Tribuna</p>
+        <p class="stencil stencil--fill" data-reveal aria-hidden="true" data-i18n="tri.stencil">La Tribuna</p>
         <div class="body-copy" data-reveal>
-          <p>The stands here go up, not back. You step out of the concrete into a wall of people stacked almost vertically above you, close enough that the whole structure moves on the same beat — a slow, deliberate bounce that starts in the top tier and arrives in your knees.</p>
-          <p>Smoke crosses the floodlights in blue and gold. Paper falls for a full minute after kickoff and keeps falling. Nothing about it is decorative; it is the building doing what it was built to do.</p>
+          <p data-i18n="tri.p1">The stands here go up, not back. You step out of the concrete into a wall of people stacked almost vertically above you, close enough that the whole structure moves on the same beat — a slow, deliberate bounce that starts in the top tier and arrives in your knees.</p>
+          <p data-i18n="tri.p2">Smoke crosses the floodlights in blue and gold. Paper falls for a full minute after kickoff and keeps falling. Nothing about it is decorative; it is the building doing what it was built to do.</p>
         </div>
         <blockquote class="quote" data-reveal>
-          Every camera cut is the same shot: people, at an angle no other stadium allows.
-          <cite>Chapter 03 · 21:04</cite>
+          <span data-i18n="tri.q">Every camera cut is the same shot: people, at an angle no other stadium allows.</span>
+          <cite data-i18n="tri.cite">Chapter 03 · 21:04</cite>
         </blockquote>
       </div>
 
       <div class="col card-col stack">
         <figure class="card" data-reveal data-plate="2">
           <div class="card__frame">
-            <div class="plate-fallback">Plate 03 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.3">Plate 03 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b>Plate 03</b><span>Upper tier · 85mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.3b">Plate 03</b><span data-i18n="cap.3">Upper tier · 85mm</span></figcaption>
         </figure>
         <figure class="card" data-reveal data-plate="3">
           <div class="card__frame">
-            <div class="plate-fallback">Plate 04 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.4">Plate 04 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b>Plate 04</b><span>Floodlight · 200mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.4b">Plate 04</b><span data-i18n="cap.4">Floodlight · 200mm</span></figcaption>
         </figure>
       </div>
     </div>
@@ -862,30 +894,30 @@ h1 .em, h2 .em { color: var(--gold); }
 
   <!-- ── 04 ─────────────────────────────────────────────────────────── -->
   <section class="chapter chapter--reverse" id="cancha" data-chapter="4" aria-labelledby="cancha-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> The pitch · eye level</p>
-    <h2 id="cancha-title" data-reveal data-split>Down here the stands are a <span class="em">ceiling</span></h2>
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> <span data-i18n="can.eyebrow">The pitch · eye level</span></p>
+    <h2 id="cancha-title" data-reveal data-split data-i18n="can.h">Down here the stands are a <span class="em">ceiling</span></h2>
     <hr class="rule" data-reveal>
 
     <div class="chapter-grid">
       <div class="col stack">
-        <p class="stencil stencil--fill" data-reveal aria-hidden="true">La Cancha</p>
+        <p class="stencil stencil--fill" data-reveal aria-hidden="true" data-i18n="can.stencil">La Cancha</p>
         <div class="body-copy" data-reveal>
-          <p>From the grass the geometry stops making sense. The stands don't recede, they climb — and they keep climbing, until the top row sits somewhere up near the floodlights and the people in it read as texture rather than as a crowd.</p>
-          <p>The noise arrives downward. It comes off the concrete and lands on you, and there is nowhere out here you can stand to get out from under it.</p>
+          <p data-i18n="can.p1">From the grass the geometry stops making sense. The stands don't recede, they climb — and they keep climbing, until the top row sits somewhere up near the floodlights and the people in it read as texture rather than as a crowd.</p>
+          <p data-i18n="can.p2">The noise arrives downward. It comes off the concrete and lands on you, and there is nowhere out here you can stand to get out from under it.</p>
         </div>
         <blockquote class="quote" data-reveal>
-          Nobody in this building is behind you. They are all above you.
-          <cite>Chapter 04 · 21:12</cite>
+          <span data-i18n="can.q">Nobody in this building is behind you. They are all above you.</span>
+          <cite data-i18n="can.cite">Chapter 04 · 21:12</cite>
         </blockquote>
       </div>
 
       <div class="col card-col">
         <figure class="card" data-reveal data-plate="4">
           <div class="card__frame">
-            <div class="plate-fallback">Plate 05 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.5">Plate 05 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b>Plate 05</b><span>Touchline · 50mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.5b">Plate 05</b><span data-i18n="cap.5">Touchline · 50mm</span></figcaption>
         </figure>
       </div>
     </div>
@@ -893,40 +925,40 @@ h1 .em, h2 .em { color: var(--gold); }
 
   <!-- ── 05 ─────────────────────────────────────────────────────────── -->
   <section class="manifesto" id="manifiesto" data-chapter="5" aria-labelledby="manifiesto-title">
-    <p class="stencil manifesto__stencil" aria-hidden="true">El<br>Latido</p>
+    <p class="stencil manifesto__stencil" aria-hidden="true" data-i18n="man.stencil">El<br>Latido</p>
 
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> Manifesto · colophon</p>
-    <h2 id="manifiesto-title" data-reveal data-split>Build the <span class="em">noise</span>, not the logo</h2>
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">05</span> <span data-i18n="man.eyebrow">Manifesto · colophon</span></p>
+    <h2 id="manifiesto-title" data-reveal data-split data-i18n="man.h">Build the <span class="em">noise</span>, not the logo</h2>
     <hr class="rule rule--heavy" data-reveal>
 
     <ol>
-      <li data-reveal>Every surface in this page is generated at runtime. There is not one photograph, one texture file, or one placeholder image in the repository.</li>
-      <li data-reveal>The camera never cuts. Five chapters, one path, driven entirely by how far you have scrolled.</li>
-      <li data-reveal>No framework, no bundler, no package manager. One HTML file, a vendored renderer, and a font.</li>
-      <li data-reveal>Reduced motion is not a degraded version. It is the same story, held still.</li>
-      <li data-reveal>A stadium is a machine for amplifying people. So is a good page.</li>
+      <li data-reveal data-i18n="man.1">Every surface in this page is generated at runtime. There is not one photograph, one texture file, or one placeholder image in the repository.</li>
+      <li data-reveal data-i18n="man.2">The camera never cuts. Six chapters, one path, driven entirely by how far you have scrolled.</li>
+      <li data-reveal data-i18n="man.3">No framework, no bundler, no package manager. One HTML file, a vendored renderer, and a font.</li>
+      <li data-reveal data-i18n="man.4">Reduced motion is not a degraded version. It is the same story, held still.</li>
+      <li data-reveal data-i18n="man.5">A stadium is a machine for amplifying people. So is a good page.</li>
     </ol>
 
     <div class="colophon">
       <div>
-        <h3>Built by</h3>
+        <h3 data-i18n="col.1">Built by</h3>
         <p><a href="https://www.jjzamora.com" rel="noopener">jjzamora.com</a></p>
         <p><a href="https://github.com/jzrandodev" rel="noopener">github.com/jzrandodev</a></p>
       </div>
       <div>
-        <h3>Source</h3>
-        <p><a href="https://github.com/jzrandodev/la-bombonera" rel="noopener">View the repository</a></p>
-        <p>MIT licensed</p>
+        <h3 data-i18n="col.2">Source</h3>
+        <p><a href="https://github.com/jzrandodev/la-bombonera" rel="noopener" data-i18n="col.repo">View the repository</a></p>
+        <p data-i18n="col.mit">MIT licensed</p>
       </div>
       <div>
         <h3>Stack</h3>
         <p>Three.js r185 · MIT</p>
         <p>Big Shoulders · OFL 1.1</p>
-        <p>Static · no build step</p>
+        <p data-i18n="col.static">Static · no build step</p>
       </div>
       <div>
-        <h3>Note</h3>
-        <p class="disclaimer">An independent design study inspired by the architecture and atmosphere of La Boca. Not affiliated with, endorsed by, or licensed by any football club. No club marks are used.</p>
+        <h3 data-i18n="col.4">Note</h3>
+        <p class="disclaimer" data-i18n="col.disc">An independent design study inspired by the architecture and atmosphere of La Boca. Not affiliated with, endorsed by, or licensed by any football club. No club marks are used.</p>
       </div>
     </div>
   </section>
@@ -2394,7 +2426,142 @@ function splitWords(el) {
   walk(el, { n: 0 });
 }
 
+/* ═══ language ═════════════════════════════════════════════════════════
+   One page, two languages. English stays in the markup, so a visitor
+   with JavaScript disabled still gets the complete page and only the
+   Spanish is carried here.
+
+   The stencil layer inverts with the language: the English view sets
+   Spanish words behind the headings, the Spanish view sets English
+   ones. Translating both would make the stencil merely repeat the
+   heading, and the page would go flat.
+   ═══════════════════════════════════════════════════════════════════ */
+const ES = {
+  'meta.title': 'La Bombonera — Una caminata de día de partido',
+  'meta.desc': 'Una caminata cinematográfica de seis capítulos desde las calles de La Boca hasta la tribuna, renderizada en vivo en WebGL. Un estudio de diseño independiente.',
+
+  'skip': 'Saltar al contenido',
+  'est': 'Inaug. 1940',
+  'nav.chapters': 'Capítulos',
+  'nav.close': 'Cerrar ✕',
+  'rail.0': 'Llegada',
+  'rail.ch': 'Capítulo', 'rail.ch1': 'Capítulo', 'rail.ch2': 'Capítulo',
+  'rail.ch3': 'Capítulo', 'rail.ch4': 'Capítulo', 'rail.ch5': 'Capítulo',
+
+  'hero.eyebrow': 'La Boca · Buenos Aires · 20:47',
+  'hero.h': 'La calle grita <span class="em">antes</span> que el estadio',
+  'hero.lede': 'Seis capítulos, una sola cámara, cada ladrillo dibujado en tiempo real. Deslizá para caminar desde Caminito hasta lo más alto de los tablones.',
+  'hero.scroll': 'Deslizá',
+  'hero.m1t': 'Render',
+  'hero.m2t': 'Geometría', 'hero.m2d': '100% procedural',
+  'hero.m3t': 'Recursos', 'hero.m3d': 'Cero imágenes',
+  'hero.m4t': 'Compilación', 'hero.m4d': 'Ninguna',
+
+  'bar.eyebrow': 'Caminito · chapa acanalada',
+  'bar.h': 'Pintado con lo que sobró en el <span class="em">puerto</span>',
+  'bar.stencil': 'The Block',
+  'bar.p1': 'La caminata arranca tres cuadras antes, donde las casas son chapa sobre madera y no hay dos paneles que se pongan de acuerdo en un color. La historia que cuenta el barrio es que la pintura salía de los barcos: sobras del puerto, pasadas al pincel en el orden en que iban apareciendo las latas.',
+  'bar.p2': 'Los balcones cuelgan tan bajo que los tocás. La ropa cruza la calle por arriba. Detrás de los techos ya hay un reflector prendido, lavando la parte alta de la cuadra con un blanco duro que los faroles no llegan a igualar.',
+  'bar.q': 'Lo escuchás dos calles antes. Un bombo, y después otro que lo encuentra.',
+  'bar.cite': 'Capítulo 01 · 20:51',
+  'plate.1': 'Placa 01 · render en vivo',
+  'cap.1b': 'Placa 01', 'cap.1': 'Caminito · 24mm',
+
+  'tun.eyebrow': 'El umbral · hormigón desnudo',
+  'tun.h': 'El último lugar <span class="em">callado</span> del estadio',
+  'tun.stencil': 'The Tunnel',
+  'tun.p1': 'Abajo de la tribuna baja la temperatura. Columnas cada cuatro metros, coladas en bruto y nunca terminadas, aguantando a cincuenta mil personas que hacen todas lo mismo al mismo tiempo justo encima tuyo.',
+  'tun.p2': 'El ruido llega como presión antes de llegar como sonido. En la boca del túnel la luz es un rectángulo blanco y plano, y todo lo que hay entre acá y allá es silueta.',
+  'tun.m1t': 'Forma', 'tun.m1d': 'Tres lados empinados, una pared plana',
+  'tun.m2t': 'Pendiente', 'tun.m2d': 'Vertical, no escalonada',
+  'plate.2': 'Placa 02 · render en vivo',
+  'cap.2b': 'Placa 02', 'cap.2': 'Boca del túnel · 35mm',
+
+  'tri.eyebrow': 'La tribuna · a garganta abierta',
+  'tri.h': 'No tiembla. <span class="em">Late</span>.',
+  'tri.stencil': 'The Stand',
+  'tri.p1': 'Acá la tribuna sube, no se aleja. Salís del hormigón a una pared de gente apilada casi vertical arriba tuyo, tan cerca que toda la estructura se mueve al mismo ritmo: un salto lento y decidido que arranca en la bandeja de arriba y te llega a las rodillas.',
+  'tri.p2': 'El humo cruza los reflectores en azul y oro. El papel picado cae un minuto entero después del comienzo y sigue cayendo. Nada de esto es decorativo: es el edificio haciendo aquello para lo que fue construido.',
+  'tri.q': 'Cada corte de cámara es la misma toma: gente, en un ángulo que ninguna otra cancha permite.',
+  'tri.cite': 'Capítulo 03 · 21:04',
+  'plate.3': 'Placa 03 · render en vivo',
+  'cap.3b': 'Placa 03', 'cap.3': 'Bandeja alta · 85mm',
+  'plate.4': 'Placa 04 · render en vivo',
+  'cap.4b': 'Placa 04', 'cap.4': 'Reflector · 200mm',
+
+  'can.eyebrow': 'El campo · a la altura de los ojos',
+  'can.h': 'Desde acá abajo la tribuna es un <span class="em">techo</span>',
+  'can.stencil': 'The Pitch',
+  'can.p1': 'Desde el pasto la geometría deja de tener sentido. La tribuna no se aleja, trepa — y sigue trepando, hasta que la última fila queda allá arriba cerca de los reflectores y la gente que está ahí se lee como textura y no como multitud.',
+  'can.p2': 'El ruido llega desde arriba. Rebota en el hormigón y te cae encima, y no hay lugar acá afuera donde te puedas parar para salir de abajo.',
+  'can.q': 'Nadie en este estadio está detrás tuyo. Están todos arriba.',
+  'can.cite': 'Capítulo 04 · 21:12',
+  'plate.5': 'Placa 05 · render en vivo',
+  'cap.5b': 'Placa 05', 'cap.5': 'Línea de cal · 50mm',
+
+  'man.stencil': 'The<br>Heartbeat',
+  'man.eyebrow': 'Manifiesto · colofón',
+  'man.h': 'Construí el <span class="em">ruido</span>, no el logo',
+  'man.1': 'Cada superficie de esta página se genera en tiempo real. No hay una sola fotografía, ni un archivo de textura, ni una imagen de relleno en el repositorio.',
+  'man.2': 'La cámara nunca corta. Seis capítulos, un solo recorrido, movido enteramente por cuánto scrolleaste.',
+  'man.3': 'Sin framework, sin bundler, sin gestor de paquetes. Un archivo HTML, un renderer incluido y una tipografía.',
+  'man.4': 'El modo de movimiento reducido no es una versión degradada. Es la misma historia, quieta.',
+  'man.5': 'Un estadio es una máquina para amplificar gente. Una buena página también.',
+  'col.1': 'Hecho por', 'col.2': 'Código', 'col.4': 'Nota',
+  'col.repo': 'Ver el repositorio',
+  'col.mit': 'Licencia MIT',
+  'col.static': 'Estático · sin compilación',
+  'col.disc': 'Un estudio de diseño independiente inspirado en la arquitectura y el clima de La Boca. Sin relación, aval ni licencia de ningún club de fútbol. No se usan marcas de ningún club.'
+};
+
+const langToggle = document.getElementById('lang-toggle');
+const metaDesc = document.querySelector('meta[name="description"]');
+const EN_TITLE = document.title;
+const EN_DESC = metaDesc.content;
+
+/* cache the authored English before anything rewrites it */
+const EN = new Map();
+document.querySelectorAll('[data-i18n]').forEach((node) => EN.set(node, node.innerHTML));
+
+let lang = 'en';
+
+function applyLanguage(next) {
+  lang = next === 'es' ? 'es' : 'en';
+  EN.forEach((authored, node) => {
+    const value = lang === 'es' ? (ES[node.dataset.i18n] ?? authored) : authored;
+    if (node.innerHTML !== value) node.innerHTML = value;
+  });
+
+  document.documentElement.lang = lang;
+  document.title = lang === 'es' ? ES['meta.title'] : EN_TITLE;
+  metaDesc.content = lang === 'es' ? ES['meta.desc'] : EN_DESC;
+
+  /* headings carry per-word reveal spans — rebuild them for the new copy,
+     without flashing already-revealed text back out */
+  document.querySelectorAll('[data-split]').forEach((h) => {
+    const revealed = h.classList.contains('is-in');
+    splitWords(h);
+    if (revealed) h.classList.add('is-in');
+  });
+
+  langToggle.querySelectorAll('.lang-toggle__opt').forEach((opt) => {
+    opt.classList.toggle('is-on', opt.dataset.lang === lang);
+  });
+  langToggle.setAttribute('aria-label', lang === 'es'
+    ? 'Switch to English · Cambiar a inglés'
+    : 'Cambiar a español · Switch to Spanish');
+
+  try { localStorage.setItem('lb-lang', lang); } catch (err) { /* private browsing */ }
+}
+
 document.querySelectorAll('[data-split]').forEach(splitWords);
+
+/* a stored choice wins; otherwise follow the browser and let es-* land in Spanish */
+let storedLang = null;
+try { storedLang = localStorage.getItem('lb-lang'); } catch (err) { /* private browsing */ }
+const browserLang = (navigator.language || 'en').toLowerCase().startsWith('es') ? 'es' : 'en';
+applyLanguage(storedLang === 'es' || storedLang === 'en' ? storedLang : browserLang);
+langToggle.addEventListener('click', () => applyLanguage(lang === 'es' ? 'en' : 'es'));
 
 const revealables = [...document.querySelectorAll('[data-reveal]')];
 revealables.forEach((el) => {
