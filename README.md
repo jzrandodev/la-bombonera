@@ -2,7 +2,7 @@
 
 A five-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. Editorial typography over a continuous 3D camera path — an art book that happens to be a real-time scene.
 
-**[View the source](https://github.com/jzrandodev/la-bombonera)** · Built by [Juan Zamora](https://www.jjzamora.com)
+**[View it live](https://la-bombonera-gules.vercel.app)** · [View the source](https://github.com/jzrandodev/la-bombonera) · Built by [Juan Zamora](https://www.jjzamora.com)
 
 ## What it does
 
