@@ -1,12 +1,12 @@
 # La Bombonera
 
-An eight-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. Editorial typography over a continuous 3D camera path — an art book that happens to be a real-time scene.
+A ten-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. Editorial typography over a continuous 3D camera path — an art book that happens to be a real-time scene.
 
 **[View it live](https://la-bombonera-gules.vercel.app)** · [View the source](https://github.com/jzrandodev/la-bombonera) · Built by [Juan Zamora](https://www.jjzamora.com)
 
 ## What it does
 
-- Moves a single WebGL camera along one continuous path as the page scrolls. Eight chapters, no cuts, no scene swaps — each chapter is a composed shot on the same path.
+- Moves a single WebGL camera along one continuous path as the page scrolls. Ten chapters, no cuts, no scene swaps — each chapter is a composed shot on the same path.
 - Builds the whole world procedurally: corrugated tin houses, laundry lines strung over the street, a concrete tunnel, a bowl with near-vertical tiers, a flat wall of lit boxes, and floodlight towers.
 - Renders its own post-processing at runtime — bright-pass, separable bloom, a filmic tone curve, film grain, vignette and a touch of chromatic aberration, all hand-written as fullscreen passes.
 - Layers editorial cards over the live scene whose images are **offscreen renders of the same world**, plus foreground cutouts painted to canvas with real alpha — chainlink, concrete steps, flags, drums, smoke.
@@ -58,6 +58,16 @@ la-bombonera/
     ├── THREE-LICENSE
     └── fonts/
 ```
+
+## Swapping in your own emblems
+
+The badge chapter ships with **original emblems invented for this page** — shield outlines, rings, stars and bars, drawn procedurally from the shared vocabulary of football crests. No real club crest is drawn anywhere in this project.
+
+They are placeholders by design. To hang your own artwork instead, replace an entry in the `EMBLEMS` array in `index.html` with `{ src: './assets/emblems/your-file.webp' }` and load it as a texture.
+
+> **If you do that, the sentence "No club marks, crests, or photography are used" below — and the matching line in the page footer — both stop being true, and must be removed.** Both spots are commented in the source.
+
+The same applies to the shirts: they carry a colour and a band and nothing else. No sponsor, no manufacturer mark, no crest.
 
 ## Design and attribution
 
