@@ -1,12 +1,12 @@
 # La Bombonera
 
-A ten-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. Editorial typography over a continuous 3D camera path — an art book that happens to be a real-time scene.
+An eleven-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. Editorial typography over a continuous 3D camera path — an art book that happens to be a real-time scene.
 
 **[View it live](https://la-bombonera-gules.vercel.app)** · [View the source](https://github.com/jzrandodev/la-bombonera) · Built by [Juan Zamora](https://www.jjzamora.com)
 
 ## What it does
 
-- Moves a single WebGL camera along one continuous path as the page scrolls. Ten chapters, no cuts, no scene swaps — each chapter is a composed shot on the same path.
+- Moves a single WebGL camera along one continuous path as the page scrolls. Eleven chapters, no cuts, no scene swaps — each chapter is a composed shot on the same path.
 - Builds the whole world procedurally: corrugated tin houses, laundry lines strung over the street, a concrete tunnel, a bowl with near-vertical tiers, a flat wall of lit boxes, and floodlight towers.
 - Renders its own post-processing at runtime — bright-pass, separable bloom, a filmic tone curve, film grain, vignette and a touch of chromatic aberration, all hand-written as fullscreen passes.
 - Layers editorial cards over the live scene whose images are **offscreen renders of the same world**, plus foreground cutouts painted to canvas with real alpha — chainlink, concrete steps, flags, drums, smoke.
@@ -58,6 +58,18 @@ la-bombonera/
     ├── THREE-LICENSE
     └── fonts/
 ```
+
+## Legend cards
+
+The legends chapter renders from a single `LEGENDS` array in `index.html`. **Every value in it is a placeholder** — no real player, no real appearance count, no real goal tally. Fill it in from a source you trust; career figures are exactly the kind of detail that is easy to get confidently wrong.
+
+To add card art, give an entry an `art` path and it replaces the placeholder panel on the front:
+
+```js
+{ no: '10', name: '...', art: './assets/legends/whoever.webp', position: '...', years: '...', apps: '...', goals: '...', note: '...' }
+```
+
+Cards flip on hover, on keyboard focus, and on click, so they work on touch and with a keyboard rather than hover alone.
 
 ## Swapping in your own emblems
 
