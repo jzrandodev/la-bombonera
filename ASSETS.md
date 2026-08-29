@@ -1,5 +1,59 @@
 # Asset list
 
+**2026-08-30 — direction changed.** Juan looked at the live render and called it: the procedural 3D scene has hit its ceiling. Boxes and cylinders lit with three.js lights can look clean and geometric; they can't look like kage, because kage's look comes from actual artwork composited over a simpler 3D layer, not from better light tuning. Proven the hard way last session — a full pass of shadows, PBR materials and light re-aims made the piece measurably worse, not better.
+
+**New plan: Juan generates the environment art. Everything below this line is superseded** by the full shot list further down, which specs one background plate and one foreground cutout per chapter — real pictures replacing what the procedural scene currently tries and fails to do. The scroll choreography, chapter structure, camera pacing and audio all stay exactly as they are; only the picture changes.
+
+This also ends the "zero image assets, everything generated at runtime" claim in the README and repo description. That was a real technical flex and it's a real thing to give up — but Juan's call, and the right one for a piece people are actually going to look at.
+
+---
+
+## Full shot list — one background + one foreground per chapter
+
+**Do not mass-generate all nine before checking style.** Generate the **hero and tribuna** first — they're the two "hero shots" of the piece, bookending the emotional arc — get those looking right, lock the palette and grain approach, then do the remaining seven against that reference. Regenerating nine images because chapter one didn't match chapter two's style is the expensive way to learn this.
+
+**Shared direction for every background plate:**
+- Near-black / deep navy / gold / raw concrete — the palette the site already commits to everywhere else (CSS variables, procedural textures, the audio's implied setting). A plate that drifts warm-orange or clean-daylight will look like it belongs to a different site.
+- Night, artificial light only — sodium/halogen warm highlights against cold blue-black shadow. No sky detail, no daylight.
+- Heavy atmosphere: haze, grain, a sense of humidity in the air. Nothing crisp or clean.
+- Wide/cinematic framing — subject placed per the notes below, generous negative space above and to the sides so text can sit over it without a crop fight.
+- **Size: 2400 × 1500** (roughly 8:5). Wide enough to crop to ultrawide desktop, tall enough to crop to portrait mobile without losing the subject — keep the important content within the centre 70% so `object-fit: cover` has room to breathe on both ends.
+- **Format:** WebP, quality ~78–82. Target 250–350 KB each.
+- **Path:** `assets/scenes/00-hero.webp` … `08-manifiesto.webp`
+
+**Shared direction for every foreground cutout:**
+- **Real alpha.** Transparent everywhere except the silhouette itself — these composite over the background plate and the 3D layer both.
+- Bottom-anchored: the subject sits at the bottom of the frame with nothing but transparency above roughly the bottom third, since it's pinned to the bottom of the viewport on the page.
+- Silhouette-forward and a little graphic rather than photoreal — chainlink, concrete edges, flags, smoke should read at a glance, not reward close inspection.
+- **Size: 2200 × 700**, alpha WebP. Target 200–350 KB each (alpha pushes weight up — this is the heaviest category on the list).
+- **Path:** `assets/foreground/00-hero.webp` … `08-manifiesto.webp`
+
+| # | Chapter | Background plate — what's in frame | Foreground cutout |
+| --- | --- | --- | --- |
+| 00 | **Hero** (pilot) | Street-level view down a narrow Caminito block toward a lit wall in the far distance — corrugated tin houses close on both sides, laundry lines crossing overhead, one warm streetlamp mid-frame, the suggestion of floodlight glow leaking over the rooftops far ahead. This is the title-card shot: needs to hold its own with large type over it. | Kerb-level: parked cars, a bollard or two, wet-street reflections of the lamp light |
+| 01 | Barrio | Closer in on the tin housing — a corner where two clashing paint colours meet, a balcony overhead, one window lit warm from inside. Intimate, textural, the "you are three blocks from the ground" chapter. | Corrugated wall corner in silhouette, laundry hanging across the frame |
+| 02 | Estadio | The street ends and a flat concrete wall rises the full height of frame — four storeys, ghost-painted with decades of old advertising, a gated entrance with turnstiles at street level, lit from below by warm lamps against the wall's own cold grey. This is the "the building arrives" beat. | Shuttered gate, iron bars, turnstile silhouettes |
+| 03 | Túnel | Looking down a low concrete underpass — pillars every few metres in rough poured concrete, receding into a flat white rectangle of light at the far end. Claustrophobic, symmetrical, the last quiet place before the noise. | Concrete steps rising, chainlink fence at the top of them |
+| 04 | Cancha | Eye-level at the touchline, looking up and back at a stand climbing almost vertically above — the crowd should read as mass and colour rather than individual figures, floodlight glare cutting across the top of frame. This is "the stands are a ceiling." | Painted touchline and grass blades at boot height |
+| 05 | **Tribuna** (pilot) | The full stand from a raised angle — steep tiers absolutely packed, blue and gold smoke drifting across floodlights, confetti caught mid-air, the most energetic and brightest frame in the entire piece. This is the climax; it needs to be the loudest image on the page. | Chainlink fence, flags mid-wave, a drum, smoke banks, crowd silhouettes along the bottom edge |
+| 06 | Trofeos y Leyendas | A dim underground room, cases and plinths lit by hard individual spotlights against near-total darkness, trophies and framed photographs just visible in the pools of light. Quiet, reverent, a tonal drop after the tribuna. | Vitrine edges and plinth silhouettes in the dark |
+| 07 | Camisetas y Escudos | Shirts hanging on a rail under warm spotlights, badges/emblems glowing on backlit panels further down the same room — same quiet underground palette as 06, slightly warmer. | Folded shirts on a bench, light-box glow spilling onto the floor |
+| 08 | **Manifiesto** (pilot) | Pulled far back and high, the whole ground as one lit shape sitting in the dark city — floodlight towers, the stadium's silhouette against the night sky, no visible detail, all mass and light. The closing, pulled-back shot. | The ground's silhouette from outside: floodlight pylons, roofline, the flat wall of lit boxes |
+
+### Weight and loading
+
+Nine backgrounds plus nine foregrounds is a real amount of weight — roughly 2.5–3 MB for the plates and 2–3 MB for the alpha cutouts, on top of the ~1 MB the page loads today. That's fine **if it's lazy-loaded per chapter** rather than all fetched on first paint: only the hero's pair loads immediately, everything else loads as its chapter approaches the viewport, the same pattern already used for the editorial plates. I'll build that loader once the first images land — no point building it against a spec that might shift after the pilot.
+
+### What I need from you before generating all nine
+
+Just the hero and tribuna. Send those back, I'll wire them in and we'll look at it together before committing to the rest.
+
+---
+
+## Superseded — the original code-only audit
+
+Kept for reference; the recommendations below no longer apply to chapters getting real art, since "leave it, it reads fine" was my judgment of the procedural version and the whole point now is that the procedural version isn't good enough.
+
 Working spec for artwork to be generated externally and dropped in. Every dimension below is taken from the actual slot in `index.html`, not estimated.
 
 ## What's actually there now
