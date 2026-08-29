@@ -717,7 +717,8 @@ h1 .em, h2 .em { color: var(--gold); }
       <li><a href="#barrio"><span class="idx">01</span> Barrio</a></li>
       <li><a href="#tunel"><span class="idx">02</span> Túnel</a></li>
       <li><a href="#tribuna"><span class="idx">03</span> Tribuna</a></li>
-      <li><a href="#manifiesto"><span class="idx">04</span> Manifiesto</a></li>
+      <li><a href="#cancha"><span class="idx">04</span> Cancha</a></li>
+      <li><a href="#manifiesto"><span class="idx">05</span> Manifiesto</a></li>
     </ul>
   </nav>
 </header>
@@ -728,7 +729,8 @@ h1 .em, h2 .em { color: var(--gold); }
     <li><a href="#barrio"><span class="name">Barrio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 01, </span>01</a></li>
     <li><a href="#tunel"><span class="name">Túnel</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 02, </span>02</a></li>
     <li><a href="#tribuna"><span class="name">Tribuna</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 03, </span>03</a></li>
-    <li><a href="#manifiesto"><span class="name">Manifiesto</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 04, </span>04</a></li>
+    <li><a href="#cancha"><span class="name">Cancha</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 04, </span>04</a></li>
+    <li><a href="#manifiesto"><span class="name">Manifiesto</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden">Chapter 05, </span>05</a></li>
   </ul>
 </nav>
 
@@ -859,7 +861,38 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 04 ─────────────────────────────────────────────────────────── -->
-  <section class="manifesto" id="manifiesto" data-chapter="4" aria-labelledby="manifiesto-title">
+  <section class="chapter chapter--reverse" id="cancha" data-chapter="4" aria-labelledby="cancha-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> The pitch · eye level</p>
+    <h2 id="cancha-title" data-reveal data-split>Down here the stands are a <span class="em">ceiling</span></h2>
+    <hr class="rule" data-reveal>
+
+    <div class="chapter-grid">
+      <div class="col stack">
+        <p class="stencil stencil--fill" data-reveal aria-hidden="true">La Cancha</p>
+        <div class="body-copy" data-reveal>
+          <p>From the grass the geometry stops making sense. The stands don't recede, they climb — and they keep climbing, until the top row sits somewhere up near the floodlights and the people in it read as texture rather than as a crowd.</p>
+          <p>The noise arrives downward. It comes off the concrete and lands on you, and there is nowhere out here you can stand to get out from under it.</p>
+        </div>
+        <blockquote class="quote" data-reveal>
+          Nobody in this building is behind you. They are all above you.
+          <cite>Chapter 04 · 21:12</cite>
+        </blockquote>
+      </div>
+
+      <div class="col card-col">
+        <figure class="card" data-reveal data-plate="4">
+          <div class="card__frame">
+            <div class="plate-fallback">Plate 05 · rendered live</div>
+            <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
+          </div>
+          <figcaption class="card__caption"><b>Plate 05</b><span>Touchline · 50mm</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────────────────────────────────── -->
+  <section class="manifesto" id="manifiesto" data-chapter="5" aria-labelledby="manifiesto-title">
     <p class="stencil manifesto__stencil" aria-hidden="true">El<br>Latido</p>
 
     <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> Manifesto · colophon</p>
@@ -1902,7 +1935,7 @@ function buildLights() {
 }
 
 /* ═══ camera choreography ══════════════════════════════════════════════
-   Five composed shots on one continuous Catmull-Rom path. Scroll
+   Composed shots on one continuous Catmull-Rom path. Scroll
    position maps to a chapter-anchored t, so every chapter lands on
    its exact framing no matter how tall the sections are.
    ═══════════════════════════════════════════════════════════════════ */
@@ -1911,15 +1944,20 @@ const SHOTS = [
   { pos: [1.2, 1.8, 34], look: [-1.4, 3.2, 8], fov: 62 },      /* 01 barrio    */
   { pos: [0.1, 1.8, -30], look: [0.2, 2.2, -60], fov: 52 },    /* 02 túnel     */
   { pos: [-10, 6.5, -66], look: [8, 20, -100], fov: 58 },      /* 03 tribuna   */
-  { pos: [-58, 40, -26], look: [0, 6, -94], fov: 46 }          /* 04 manifiesto*/
+  { pos: [12, 1.7, -73], look: [6, 18, -56], fov: 62 },        /* 04 cancha    */
+  { pos: [-58, 40, -26], look: [0, 6, -94], fov: 46 }          /* 05 manifiesto*/
 ];
+
+/* la tribuna is the only chapter allowed to shake */
+const TREMOR_CHAPTER = 3;
 
 /* plates are separate framings of the same world — the stills in the cards */
 const PLATES = [
   { pos: [2.6, 2.2, 46], look: [-2, 3.4, 20], fov: 62 },
   { pos: [0, 1.9, -30], look: [0, 2.2, -61], fov: 48 },
   { pos: [-10, 12, -70], look: [20, 26, -104], fov: 30 },
-  { pos: [-20, 22, -68], look: [-44, 46, -121], fov: 18 }
+  { pos: [-20, 22, -68], look: [-44, 46, -121], fov: 18 },
+  { pos: [0, 1.2, -70], look: [0, 3.4, -106], fov: 40 }
 ];
 
 const _p0 = new THREE.Vector3(), _p1 = new THREE.Vector3(), _p2 = new THREE.Vector3(), _p3 = new THREE.Vector3();
@@ -2141,7 +2179,36 @@ function buildForegrounds() {
     paintChainlink(ctx, FG_H - 210, 210, 0.42);
   });
 
-  /* 04 — the stand as one flat silhouette, seen from outside */
+  /* 04 — pitch level: the painted line and grass at the boot */
+  make((ctx) => {
+    const r = makeRandom(41);
+    /* touchline, running off in perspective */
+    ctx.fillStyle = 'rgba(226,228,220,0.42)';
+    ctx.beginPath();
+    ctx.moveTo(0, FG_H - 152);
+    ctx.lineTo(FG_W, FG_H - 198);
+    ctx.lineTo(FG_W, FG_H - 170);
+    ctx.lineTo(0, FG_H - 118);
+    ctx.closePath();
+    ctx.fill();
+    /* blades, taller and denser the closer they are */
+    for (let i = 0; i < 1500; i++) {
+      const t = r();
+      const x = r() * FG_W;
+      const y = FG_H - t * t * 310;
+      const h = 12 + (1 - t) * 56;
+      const lean = (r() - 0.5) * 16;
+      const g = 24 + r() * 36;
+      ctx.strokeStyle = `rgba(${(g * 0.5) | 0}, ${(g + 28) | 0}, ${(g * 0.72) | 0}, ${(0.45 + r() * 0.5).toFixed(2)})`;
+      ctx.lineWidth = 1 + r() * 2.2;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x + lean * 0.5, y - h * 0.6, x + lean, y - h);
+      ctx.stroke();
+    }
+  });
+
+  /* 05 — the stand as one flat silhouette, seen from outside */
   make((ctx) => {
     ctx.fillStyle = 'rgba(7,8,11,0.97)';
     ctx.beginPath();
@@ -2192,7 +2259,7 @@ if (webgl) {
   renderer.toneMapping = THREE.NoToneMapping;
   if (!LOW) {
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
   }
   stage.appendChild(renderer.domElement);
   renderer.domElement.setAttribute('aria-hidden', 'true');
@@ -2448,7 +2515,7 @@ function frame(now) {
   catmull(SHOTS, 'look', tCurrent, tgtLook);
 
   /* chapter 03 is the only place the camera is allowed to shake */
-  const beat = Math.exp(-Math.pow(tCurrent - 3, 2) / 0.42);
+  const beat = Math.exp(-Math.pow(tCurrent - TREMOR_CHAPTER, 2) / 0.42);
   crowdUniforms.uBeat.value = 0.3 + beat * 0.7;
   if (!still) {
     const t = U_TIME.value;
