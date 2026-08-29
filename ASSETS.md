@@ -2,6 +2,36 @@
 
 Working spec for artwork to be generated externally and dropped in. Every dimension below is taken from the actual slot in `index.html`, not estimated.
 
+## What's actually there now
+
+There are no image files in this project. Three different things look like imagery, and they want different treatment — worth knowing before generating replacements for something that shouldn't be replaced.
+
+| # | What | Actually is | Reads as | Best path |
+| --- | --- | --- | --- | --- |
+| — | Editorial plate cards ×8 | Live offscreen renders of the scene from other camera positions | Slightly dark thumbnails of the background | **Code.** They share almost the same grade as the screen (bloom 0.74 vs 0.66, grain 0.08 vs 0.055), so they read as screenshots rather than as separate stills. A distinct grade fixes this for free |
+| — | Legend card fronts ×12 | Hatched placeholder panel | Obviously unfinished | **Art.** Slot already built |
+| — | Emblems ×5 | `emblemTexture()` — shield, ring, stars | Simple, deliberately placeholder-ish | Either |
+| 00 | Rooftops and wires | Canvas2D | Good | Leave |
+| 01 | Corrugated wall + laundry | Canvas2D | Good — the tin is some of the strongest work here | Leave |
+| 02 | Gate, bars, turnstiles | Canvas2D | Good | Leave |
+| 03 | Concrete steps + chainlink | Canvas2D | Fine | Leave |
+| 04 | Grass + touchline | Canvas2D | Good — the blade scatter reads convincingly | Leave |
+| 05 | The stand: flags, drums, smoke, crowd | Canvas2D | Good, most energy of any layer | Leave |
+| 06 | The cabinet: vitrines, plinths, frames | Canvas2D | **Weak** — rectangles with gradients, written fast during the chapter merge | **Code** |
+| 07 | Shirts bench + light boxes | Canvas2D | **Weak** — same problem | **Code** |
+| 08 | Stand as flat silhouette | Canvas2D | **Weak** — a crude polygon, and it's the last thing you see | **Code** |
+
+Textures — corrugated tin, concrete, pitch stripes, chainlink, smoke — are all generated at runtime and all hold up. The tin in particular is doing a lot of work in the barrio and shouldn't be touched.
+
+### Recommended order of attack
+
+1. **Plate grade** — cheapest, highest visible return, zero weight. Push contrast, cool the shadows, heavier grain, deeper vignette so the cards read as photographs sitting on the page rather than views of what's behind them.
+2. **Foreground layers 06, 07, 08** — the three genuinely weak ones. All fixable in Canvas2D for no weight.
+3. **Legend card art** — the one place a generated image is unambiguously the right answer.
+4. Everything else on the list below, only if the zero-assets trade is worth making.
+
+---
+
 ## Before starting: the zero-assets trade
 
 The project currently claims, in three places, that nothing is loaded from disk:
