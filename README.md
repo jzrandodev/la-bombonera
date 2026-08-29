@@ -65,15 +65,13 @@ The badge chapter ships with **original emblems invented for this page** — shi
 
 They are placeholders by design. To hang your own artwork instead, replace an entry in the `EMBLEMS` array in `index.html` with `{ src: './assets/emblems/your-file.webp' }` and load it as a texture.
 
-> **If you do that, the sentence "No club marks, crests, or photography are used" below — and the matching line in the page footer — both stop being true, and must be removed.** Both spots are commented in the source.
-
 The same applies to the shirts: they carry a colour and a band and nothing else. No sponsor, no manufacturer mark, no crest.
 
 ## Design and attribution
 
 An independent design study, inspired by the architecture and atmosphere of La Boca and by the format of MengTo's [Kage](https://github.com/MengTo/kage) — a five-chapter Three.js night walk. The code here is original and shares none of Kage's source.
 
-Not affiliated with, endorsed by, or licensed by any football club. No club marks, crests, or photography are used; the palette is just a palette.
+Not affiliated with, endorsed by, or licensed by any football club.
 
 Vendored Three.js r185 keeps its MIT notice. Big Shoulders and Big Shoulders Stencil are used under the SIL Open Font License 1.1, self-hosted with the license text included.
 

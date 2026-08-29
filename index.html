@@ -272,11 +272,26 @@ body {
   line-height: 1;
 }
 .lang-toggle__opt {
-  padding: 0.45rem 0.62rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.42rem 0.58rem;
   color: var(--concrete-d);
   transition: color 300ms var(--ease), background 300ms var(--ease);
 }
 .lang-toggle__opt.is-on { background: var(--gold); color: var(--ink); }
+.lang-toggle .flag {
+  width: 15px;
+  height: auto;
+  display: block;
+  flex: 0 0 auto;
+  outline: 1px solid rgba(0, 0, 0, 0.35);
+  outline-offset: -1px;
+  opacity: 0.55;
+  transition: opacity 300ms var(--ease);
+}
+.lang-toggle__opt.is-on .flag,
+.lang-toggle:hover .flag { opacity: 1; }
 .lang-toggle:hover .lang-toggle__opt:not(.is-on) { color: var(--bone); }
 
 .nav-toggle { display: none; }
@@ -770,8 +785,8 @@ h1 .em, h2 .em { color: var(--gold); }
     </button>
 
     <button class="lang-toggle" id="lang-toggle" type="button">
-      <span class="lang-toggle__opt" data-lang="en">EN</span>
-      <span class="lang-toggle__opt" data-lang="es">ES</span>
+      <span class="lang-toggle__opt" data-lang="en"><svg class="flag" viewBox="0 0 21 15" aria-hidden="true"><rect width="21" height="15" fill="#f4f4f4"/><g fill="#b22234"><rect width="21" height="2.14"/><rect y="4.28" width="21" height="2.14"/><rect y="8.57" width="21" height="2.14"/><rect y="12.86" width="21" height="2.14"/></g><rect width="9" height="6.43" fill="#3c3b6e"/><g fill="#fff"><circle cx="1.9" cy="1.7" r="0.55"/><circle cx="4.5" cy="1.7" r="0.55"/><circle cx="7.1" cy="1.7" r="0.55"/><circle cx="3.2" cy="3.4" r="0.55"/><circle cx="5.8" cy="3.4" r="0.55"/><circle cx="1.9" cy="5.1" r="0.55"/><circle cx="4.5" cy="5.1" r="0.55"/><circle cx="7.1" cy="5.1" r="0.55"/></g></svg>EN</span>
+      <span class="lang-toggle__opt" data-lang="es"><svg class="flag" viewBox="0 0 21 15" aria-hidden="true"><rect width="21" height="15" fill="#74acdf"/><rect y="5" width="21" height="5" fill="#f4f4f4"/><g fill="#f6b40e"><circle cx="10.5" cy="7.5" r="1.75"/><path d="M10.5 3.9l.5 1.2h-1zM10.5 11.1l.5-1.2h-1zM6.9 7.5l1.2.5v-1zM14.1 7.5l-1.2.5v-1zM7.95 4.95l1.15.55-.6.6zM13.05 10.05l-1.15-.55.6-.6zM7.95 10.05l.55-1.15.6.6zM13.05 4.95l-.55 1.15-.6-.6z"/></g></svg>ES</span>
     </button>
 
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
@@ -1127,7 +1142,7 @@ h1 .em, h2 .em { color: var(--gold); }
       </div>
       <div>
         <h3 data-i18n="col.4">Note</h3>
-        <p class="disclaimer" data-i18n="col.disc">An independent design study inspired by the architecture and atmosphere of La Boca. Not affiliated with, endorsed by, or licensed by any football club. No club marks are used.</p>
+        <p class="disclaimer" data-i18n="col.disc">An independent design study inspired by the architecture and atmosphere of La Boca. Not affiliated with, endorsed by, or licensed by any football club.</p>
       </div>
     </div>
   </section>
@@ -2091,9 +2106,6 @@ function shirtMaterial(bandY, bandH, body, band) {
 
    To hang your own artwork instead, replace a spec below with
    { src: './assets/emblems/whatever.webp' } and load it as a texture.
-   If you do that, the line "No club marks, crests, or photography are
-   used" in README.md and in the page footer both stop being true and
-   must be removed.
    ═══════════════════════════════════════════════════════════════════ */
 const EMBLEMS = [
   { outline: 'shield', ring: true, stars: 3, bars: 0 },
@@ -3187,7 +3199,7 @@ const ES = {
   'col.repo': 'Ver el repositorio',
   'col.mit': 'Licencia MIT',
   'col.static': 'Estático · sin compilación',
-  'col.disc': 'Un estudio de diseño independiente inspirado en la arquitectura y el clima de La Boca. Sin relación, aval ni licencia de ningún club de fútbol. No se usan marcas de ningún club.'
+  'col.disc': 'Un estudio de diseño independiente inspirado en la arquitectura y el clima de La Boca. Sin relación, aval ni licencia de ningún club de fútbol.'
 };
 
 const langToggle = document.getElementById('lang-toggle');
