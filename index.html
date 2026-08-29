@@ -38,7 +38,7 @@
   --step-0:  clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
   --step-1:  clamp(1.15rem, 1.05rem + 0.5vw, 1.45rem);
   --step-2:  clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem);
-  --step-h:  clamp(2.9rem, 1.2rem + 8.4vw, 9.5rem);
+  --step-h:  clamp(2.3rem, 1.1rem + 5.4vw, 6.2rem);
   --step-st: clamp(4.2rem, 1rem + 16vw, 17rem);
 
   --gutter: clamp(1.15rem, 0.6rem + 2.6vw, 4.5rem);
@@ -120,6 +120,30 @@ body {
   background:
     linear-gradient(96deg, rgba(6,7,11,0.86) 0%, rgba(6,7,11,0.5) 34%, rgba(6,7,11,0.05) 62%, rgba(6,7,11,0.3) 100%),
     linear-gradient(0deg, rgba(6,7,11,0.72) 0%, rgba(6,7,11,0) 38%);
+}
+
+#wordmark {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 4vh;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1000ms var(--ease);
+}
+#wordmark.is-active { opacity: 1; }
+#wordmark span {
+  font-family: var(--font-stencil);
+  font-weight: 700;
+  font-size: clamp(4.4rem, 16.5vw, 22rem);
+  line-height: 0.76;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(232, 230, 224, 0.17);
 }
 
 #foreground {
@@ -916,6 +940,9 @@ h1 .em, h2 .em { color: var(--gold); }
 
 <!-- live 3D environment -->
 <div id="stage" aria-hidden="true"></div>
+<!-- the wordmark sits between the scene and the foreground plane, so the
+     foreground occludes its feet the way a real layer would -->
+<div id="wordmark" aria-hidden="true"><span>La Bombonera</span></div>
 <!-- procedural foreground cutouts, painted at runtime -->
 <div id="foreground" aria-hidden="true"></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
@@ -978,8 +1005,6 @@ h1 .em, h2 .em { color: var(--gold); }
 
   <!-- ── 00 ─────────────────────────────────────────────────────────── -->
   <section class="chapter hero" id="hero" data-chapter="0" aria-labelledby="hero-title">
-    <p class="stencil" aria-hidden="true">La<br>Bombonera</p>
-
     <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">00</span> <span data-i18n="hero.eyebrow">La Boca · Buenos Aires · 20:47</span></p>
     <h1 id="hero-title" data-reveal data-split data-i18n="hero.h">The street gets loud <span class="em">before</span> the stadium does</h1>
 
@@ -1494,7 +1519,7 @@ const FRAG_COMPOSITE = /* glsl */`
   varying vec2 vUv;
   uniform sampler2D tScene, tBloom;
   uniform float uTime, uBloom, uGrain, uVignette, uAberration, uExposure;
-  uniform float uContrast, uShadowMix;
+  uniform float uContrast, uShadowMix, uSaturation;
   uniform vec3 uShadowTint;
 
   float hash(vec2 p) {
@@ -1520,6 +1545,10 @@ const FRAG_COMPOSITE = /* glsl */`
 
     /* filmic-ish tone curve, kept restrained so blacks stay black */
     col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);
+
+    /* saturation, pulled around luma */
+    float sLum = dot(col, vec3(0.2126, 0.7152, 0.0722));
+    col = mix(vec3(sLum), col, uSaturation);
 
     /* print grade — contrast pivoted on mid grey, then a cool cast pushed
        into the low end only. Neutral for the screen pass; the editorial
@@ -1567,7 +1596,9 @@ class PostChain {
     this.rtB = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: false });
 
     this.bright = makePass(FRAG_BRIGHT, {
-      tSrc: { value: null }, uThreshold: { value: 0.62 }, uKnee: { value: 0.35 }
+      tSrc: { value: null },
+      uThreshold: { value: opts.threshold ?? 0.86 },
+      uKnee: { value: opts.knee ?? 0.2 }
     });
     this.blur = makePass(FRAG_BLUR, { tSrc: { value: null }, uDir: { value: new THREE.Vector2() } });
     this.composite = makePass(FRAG_COMPOSITE, {
@@ -1580,7 +1611,8 @@ class PostChain {
       uExposure: { value: opts.exposure ?? 1.06 },
       uContrast: { value: opts.contrast ?? 1.0 },
       uShadowMix: { value: opts.shadowMix ?? 0.0 },
-      uShadowTint: { value: new THREE.Color(opts.shadowTint ?? 0xffffff) }
+      uShadowTint: { value: new THREE.Color(opts.shadowTint ?? 0xffffff) },
+      uSaturation: { value: opts.saturation ?? 1.0 }
     });
     this.setSize(width, height);
   }
@@ -1613,9 +1645,11 @@ class PostChain {
     this.bright.material.uniforms.tSrc.value = this.sceneRT.texture;
     this._draw(this.bright, this.rtA);
 
-    const passes = LOW ? 2 : 3;
+    /* two narrow passes. Three wide ones turned every lit window into a
+       blob and took the form out of the whole scene. */
+    const passes = LOW ? 1 : 2;
     for (let i = 0; i < passes; i++) {
-      const spread = 1 + i * 1.4;
+      const spread = 1 + i * 0.7;
       this.blur.material.uniforms.tSrc.value = this.rtA.texture;
       this.blur.material.uniforms.uDir.value.set(this.bloomTexel.x * spread, 0);
       this._draw(this.blur, this.rtB);
@@ -1882,9 +1916,20 @@ function buildBarrio() {
     setInstance(posts, i, side * 4.6, 2.4, z, 0.16, 4.8, 0.16);
     setInstance(heads, i, side * 4.1, 4.7, z, 0.9, 0.16, 0.42);
   }
-  const warm = new THREE.PointLight(0xffb75e, 26, 26, 2);
-  warm.position.set(-4.1, 4.6, 33);
-  world.add(warm);
+  /* One light for a whole street was why the barrio read as scattered lit
+     rectangles in black: nothing was falling on the tin. Every lamp now
+     actually lights the wall it is bolted to. */
+  for (let i = 0; i < lampCount; i++) {
+    const z = 12 + i * 10.5;
+    const side = i % 2 === 0 ? -1 : 1;
+    const lamp = new THREE.PointLight(0xffc98f, 130, 22, 2);
+    lamp.position.set(side * 4.1, 4.5, z);
+    world.add(lamp);
+  }
+  /* a low fill so the facing walls are never pure black */
+  const streetFill = new THREE.PointLight(0x7f97d2, 340, 80, 2);
+  streetFill.position.set(0, 9, 42);
+  world.add(streetFill);
 }
 
 /* ─── 02 · the tunnel ─────────────────────────────────────────────────── */
@@ -1953,7 +1998,7 @@ function buildTunnel() {
      facade. These light the street side, which is the side anyone
      walking up to it actually sees. */
   for (const fx of [-15, 0, 15]) {
-    const lamp = new THREE.PointLight(0xffc27a, 1150, 52, 2);
+    const lamp = new THREE.PointLight(0xffb782, 430, 46, 2);
     lamp.position.set(fx, 9, 9);
     shell.add(lamp);
   }
@@ -2663,7 +2708,7 @@ function buildLights() {
    its exact framing no matter how tall the sections are.
    ═══════════════════════════════════════════════════════════════════ */
 const SHOTS = [
-  { pos: [3.4, 6.4, 68], look: [0.4, 6.6, 26], fov: 58 },      /* 00 arrival   */
+  { pos: [2.6, 2.5, 46], look: [-1.2, 7.2, 4], fov: 60 },       /* 00 arrival   */
   { pos: [1.2, 1.8, 34], look: [-1.4, 3.2, 8], fov: 62 },      /* 01 barrio    */
   { pos: [-3, 1.7, 15], look: [7, 7, 3], fov: 64 },            /* 02 estadio   */
   { pos: [0.1, 1.8, -30], look: [0.2, 2.2, -60], fov: 52 },    /* 03 túnel     */
@@ -2824,26 +2869,70 @@ function buildForegrounds() {
     layers.push(c);
   };
 
-  /* 00 — rooftops and wires, low on the frame */
+  /* 00 — street level: kerb, parked cars, a bollard or two */
   make((ctx) => {
     const r = makeRandom(5);
-    ctx.fillStyle = 'rgba(9,10,14,0.97)';
-    let x = -60;
-    while (x < FG_W + 60) {
-      const w = 90 + r() * 170;
-      const h = 70 + r() * 120;
-      ctx.fillRect(x, FG_H - h, w, h);
-      ctx.fillRect(x - 8, FG_H - h - 12, w + 16, 14);
-      x += w + 8;
+    /* wet road, catching the lamps */
+    const road = ctx.createLinearGradient(0, FG_H - 210, 0, FG_H);
+    road.addColorStop(0, 'rgba(18,22,32,0.62)');
+    road.addColorStop(1, 'rgba(7,8,12,0.99)');
+    ctx.fillStyle = road;
+    ctx.fillRect(0, FG_H - 210, FG_W, 210);
+    for (let i = 0; i < 5; i++) {
+      const cx = 180 + i * ((FG_W - 360) / 4);
+      const g = ctx.createRadialGradient(cx, FG_H - 60, 6, cx, FG_H - 60, 220);
+      g.addColorStop(0, 'rgba(255,186,96,0.30)');
+      g.addColorStop(1, 'rgba(255,186,96,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(cx - 230, FG_H - 260, 460, 260);
     }
-    ctx.strokeStyle = 'rgba(9,10,14,0.9)';
-    ctx.lineWidth = 4;
-    for (let i = 0; i < 4; i++) {
-      const y = FG_H - 150 - i * 34;
+    /* kerb */
+    ctx.fillStyle = 'rgba(17,19,23,0.98)';
+    ctx.fillRect(0, FG_H - 216, FG_W, 14);
+    ctx.fillStyle = 'rgba(150,155,150,0.30)';
+    ctx.fillRect(0, FG_H - 218, FG_W, 3);
+
+    /* two cars, low and black, one either side */
+    const car = (x, w, flip) => {
+      const h = w * 0.34, y = FG_H - 150;
+      ctx.save();
+      ctx.translate(x, y);
+      if (flip) ctx.scale(-1, 1);
+      ctx.fillStyle = 'rgba(9,10,14,0.99)';
       ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.quadraticCurveTo(FG_W / 2, y + 52 + i * 10, FG_W, y - 12);
-      ctx.stroke();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(w * 0.08, -h * 0.52);
+      ctx.lineTo(w * 0.32, -h * 0.9);
+      ctx.lineTo(w * 0.68, -h * 0.94);
+      ctx.lineTo(w * 0.9, -h * 0.5);
+      ctx.lineTo(w, -h * 0.12);
+      ctx.lineTo(w, h * 0.28);
+      ctx.lineTo(0, h * 0.28);
+      ctx.closePath();
+      ctx.fill();
+      /* one lamp caught along the roofline */
+      ctx.fillStyle = 'rgba(238,224,186,0.45)';
+      ctx.fillRect(w * 0.30, -h * 0.92, w * 0.42, 4);
+      ctx.fillStyle = 'rgba(150,175,225,0.16)';
+      ctx.fillRect(w * 0.06, -h * 0.5, w * 0.86, 2);
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.beginPath(); ctx.ellipse(w * 0.24, h * 0.3, w * 0.1, 6, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(w * 0.78, h * 0.3, w * 0.1, 6, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    };
+    car(-70, 520, false);
+    car(FG_W - 430, 500, true);
+
+    /* bollards along the kerb */
+    ctx.fillStyle = 'rgba(12,14,18,0.98)';
+    for (let x = 620; x < FG_W - 520; x += 130) {
+      ctx.fillRect(x, FG_H - 246, 11, 44);
+      ctx.beginPath(); ctx.arc(x + 5.5, FG_H - 246, 5.5, 0, Math.PI * 2); ctx.fill();
+    }
+    /* litter, because nothing here is tidy */
+    for (let i = 0; i < 30; i++) {
+      ctx.fillStyle = `rgba(${170 + r() * 60 | 0},${160 + r() * 60 | 0},${140 + r() * 50 | 0},${0.05 + r() * 0.09})`;
+      ctx.fillRect(r() * FG_W, FG_H - 190 + r() * 180, 4 + r() * 12, 2 + r() * 5);
     }
   });
 
@@ -3163,6 +3252,7 @@ const progressBar = document.getElementById('progress');
 const chapterEls = [...document.querySelectorAll('[data-chapter]')];
 const navLinks = [...document.querySelectorAll('.nav-list a, .rail a')];
 const fgLayers = buildForegrounds();
+const wordmark = document.getElementById('wordmark');
 
 let renderer = null;
 let webgl = true;
@@ -3197,7 +3287,9 @@ if (webgl) {
   atmosphere = buildAtmosphere();
 
   chain = new PostChain(renderer, 1, 1, {
-    bloom: LOW ? 0.5 : 0.66, grain: 0.055, vignette: 0.7, aberration: 0.022, exposure: 1.1, quality: LOW ? 0.75 : 1
+    bloom: LOW ? 0.22 : 0.26, grain: 0.05, vignette: 0.82, aberration: 0.02, exposure: 1.02,
+    contrast: 1.10, saturation: 1.02, shadowMix: 0.55, shadowTint: 0x8ba4d6,
+    threshold: 0.88, knee: 0.18, quality: LOW ? 0.75 : 1
   });
 }
 
@@ -3246,6 +3338,7 @@ function setChapter(i) {
     else a.removeAttribute('aria-current');
   });
   fgLayers.forEach((c, k) => c.classList.toggle('is-active', k === i));
+  wordmark.classList.toggle('is-active', i === 0);
 }
 
 /* ─── editorial plates: the same world, framed and shot ───────────────── */
@@ -3264,8 +3357,9 @@ function renderPlate(figure) {
 
   if (!plateChain) {
     plateChain = new PostChain(renderer, PLATE_W, PLATE_H, {
-      bloom: 0.82, grain: 0.135, vignette: 0.98, aberration: 0.032, exposure: 1.06, quality: 1,
-      contrast: 1.22, shadowMix: 0.55, shadowTint: 0x8fa8d8
+      bloom: 0.34, grain: 0.135, vignette: 0.98, aberration: 0.032, exposure: 1.0, quality: 1,
+      contrast: 1.26, saturation: 1.14, shadowMix: 0.55, shadowTint: 0x8fa8d8,
+      threshold: 0.9, knee: 0.16
     });
     plateOut = new THREE.WebGLRenderTarget(PLATE_W, PLATE_H, { depthBuffer: false });
     platePixels = new Uint8Array(PLATE_W * PLATE_H * 4);
