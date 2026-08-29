@@ -231,6 +231,38 @@ body {
 .primary-nav { order: 2; }
 .masthead__tools { order: 3; }
 
+.sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.42rem 0.62rem;
+  border: var(--rule) solid var(--concrete-d);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--concrete-d);
+  transition: color 300ms var(--ease), border-color 300ms var(--ease);
+}
+.sound-toggle:hover { color: var(--bone); }
+.sound-toggle[aria-pressed="true"] { color: var(--gold); border-color: var(--gold-dim); }
+.sound-toggle__bars { display: flex; align-items: flex-end; gap: 2px; height: 11px; }
+.sound-toggle__bars i {
+  display: block;
+  width: 2px;
+  height: 3px;
+  background: currentColor;
+  transition: height 300ms var(--ease);
+}
+.sound-toggle[aria-pressed="true"] .sound-toggle__bars i { animation: meter 900ms var(--ease-io) infinite; }
+.sound-toggle[aria-pressed="true"] .sound-toggle__bars i:nth-child(2) { animation-delay: 150ms; }
+.sound-toggle[aria-pressed="true"] .sound-toggle__bars i:nth-child(3) { animation-delay: 300ms; }
+@keyframes meter {
+  0%, 100% { height: 3px; }
+  50% { height: 11px; }
+}
+
 .lang-toggle {
   display: inline-flex;
   border: var(--rule) solid var(--concrete-d);
@@ -732,6 +764,11 @@ h1 .em, h2 .em { color: var(--gold); }
   </a>
 
   <div class="masthead__tools">
+    <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false">
+      <span class="sound-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span data-i18n="sound">Sound</span>
+    </button>
+
     <button class="lang-toggle" id="lang-toggle" type="button">
       <span class="lang-toggle__opt" data-lang="en">EN</span>
       <span class="lang-toggle__opt" data-lang="es">ES</span>
@@ -747,24 +784,26 @@ h1 .em, h2 .em { color: var(--gold); }
     <button class="nav-close" type="button" data-i18n="nav.close">Close ✕</button>
     <ul class="nav-list">
       <li><a href="#barrio"><span class="idx">01</span> Barrio</a></li>
-      <li><a href="#tunel"><span class="idx">02</span> Túnel</a></li>
-      <li><a href="#trofeos"><span class="idx">03</span> Trofeos</a></li>
-      <li><a href="#cancha"><span class="idx">04</span> Cancha</a></li>
-      <li><a href="#tribuna"><span class="idx">05</span> Tribuna</a></li>
-      <li><a href="#manifiesto"><span class="idx">06</span> Manifiesto</a></li>
+      <li><a href="#estadio"><span class="idx">02</span> Estadio</a></li>
+      <li><a href="#tunel"><span class="idx">03</span> Túnel</a></li>
+      <li><a href="#trofeos"><span class="idx">04</span> Trofeos</a></li>
+      <li><a href="#cancha"><span class="idx">05</span> Cancha</a></li>
+      <li><a href="#tribuna"><span class="idx">06</span> Tribuna</a></li>
+      <li><a href="#manifiesto"><span class="idx">07</span> Manifiesto</a></li>
     </ul>
   </nav>
 </header>
 
 <nav class="rail" aria-label="Chapter progress">
   <ul>
-    <li><a href="#hero"><span class="name" data-i18n="rail.0">Arrival</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch">Chapter</span> 00</span>00</a></li>
+    <li><a href="#hero"><span class="name" data-i18n="rail.0">Arrival</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch">Chapter</span> 00, </span>00</a></li>
     <li><a href="#barrio"><span class="name">Barrio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch1">Chapter</span> 01, </span>01</a></li>
-    <li><a href="#tunel"><span class="name">Túnel</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch2">Chapter</span> 02, </span>02</a></li>
-    <li><a href="#trofeos"><span class="name">Trofeos</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch3">Chapter</span> 03, </span>03</a></li>
-    <li><a href="#cancha"><span class="name">Cancha</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch4">Chapter</span> 04, </span>04</a></li>
-    <li><a href="#tribuna"><span class="name">Tribuna</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch5">Chapter</span> 05, </span>05</a></li>
-    <li><a href="#manifiesto"><span class="name">Manifiesto</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch6">Chapter</span> 06, </span>06</a></li>
+    <li><a href="#estadio"><span class="name">Estadio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch2">Chapter</span> 02, </span>02</a></li>
+    <li><a href="#tunel"><span class="name">Túnel</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch3">Chapter</span> 03, </span>03</a></li>
+    <li><a href="#trofeos"><span class="name">Trofeos</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch4">Chapter</span> 04, </span>04</a></li>
+    <li><a href="#cancha"><span class="name">Cancha</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch5">Chapter</span> 05, </span>05</a></li>
+    <li><a href="#tribuna"><span class="name">Tribuna</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch6">Chapter</span> 06, </span>06</a></li>
+    <li><a href="#manifiesto"><span class="name">Manifiesto</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch7">Chapter</span> 07, </span>07</a></li>
   </ul>
 </nav>
 
@@ -780,7 +819,7 @@ h1 .em, h2 .em { color: var(--gold); }
     <hr class="rule rule--gold" data-reveal>
 
     <div class="hero-foot">
-      <p class="lede" data-reveal data-i18n="hero.lede">Six chapters, one continuous camera, every brick of it drawn at runtime. Scroll to walk from Caminito to the top of the away-side steps.</p>
+      <p class="lede" data-reveal data-i18n="hero.lede">Eight chapters, one continuous camera, every brick of it drawn at runtime. Scroll to walk from Caminito to the top of the away-side steps.</p>
       <p class="scroll-cue" data-reveal><span class="line" aria-hidden="true"></span> <span data-i18n="hero.scroll">Scroll</span></p>
     </div>
 
@@ -826,8 +865,39 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 02 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter chapter--reverse" id="tunel" data-chapter="2" aria-labelledby="tunel-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">02</span> <span data-i18n="tun.eyebrow">The threshold · raw concrete</span></p>
+  <section class="chapter chapter--reverse" id="estadio" data-chapter="2" aria-labelledby="estadio-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">02</span> <span data-i18n="est.eyebrow">The wall · arrival</span></p>
+    <h2 id="estadio-title" data-reveal data-split data-i18n="est.h">Then the street <span class="em">ends</span>, and the wall starts</h2>
+    <hr class="rule" data-reveal>
+
+    <div class="chapter-grid">
+      <div class="col stack">
+        <p class="stencil stencil--fill" data-reveal aria-hidden="true" data-i18n="est.stencil">El Estadio</p>
+        <div class="body-copy" data-reveal>
+          <p data-i18n="est.p1">You do not see it coming. The blocks look the same the whole way down — tin, balconies, washing — and then the houses simply stop, and there is a wall where the next street should be. Flat, grey, four storeys of it, still carrying the paint of thirty years of announcements.</p>
+          <p data-i18n="est.p2">The noise you have been following for ten minutes is on the other side of it. From here it stops being a sound in the distance and becomes a thing with a location.</p>
+        </div>
+        <blockquote class="quote" data-reveal>
+          <span data-i18n="est.q">Nobody here looks up at it. Everyone who lives on this street stopped noticing it a long time ago.</span>
+          <cite data-i18n="est.cite">Chapter 02 · 20:58</cite>
+        </blockquote>
+      </div>
+
+      <div class="col card-col">
+        <figure class="card" data-reveal data-plate="6">
+          <div class="card__frame">
+            <div class="plate-fallback" data-i18n="plate.7">Plate 02 · rendered live</div>
+            <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
+          </div>
+          <figcaption class="card__caption"><b data-i18n="cap.7b">Plate 02</b><span data-i18n="cap.7">Facade · 28mm</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────────────────────────────────── -->
+  <section class="chapter" id="tunel" data-chapter="3" aria-labelledby="tunel-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">03</span> <span data-i18n="tun.eyebrow">The threshold · raw concrete</span></p>
     <h2 id="tunel-title" data-reveal data-split data-i18n="tun.h">The last <span class="em">quiet</span> place in the building</h2>
     <hr class="rule" data-reveal>
 
@@ -847,18 +917,18 @@ h1 .em, h2 .em { color: var(--gold); }
       <div class="col card-col">
         <figure class="card" data-reveal data-plate="1">
           <div class="card__frame">
-            <div class="plate-fallback" data-i18n="plate.2">Plate 02 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.2">Plate 03 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b data-i18n="cap.2b">Plate 02</b><span data-i18n="cap.2">Tunnel mouth · 35mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.2b">Plate 03</b><span data-i18n="cap.2">Tunnel mouth · 35mm</span></figcaption>
         </figure>
       </div>
     </div>
   </section>
 
-  <!-- ── 03 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter" id="trofeos" data-chapter="3" aria-labelledby="trofeos-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">03</span> <span data-i18n="tro.eyebrow">Under the stand · the room</span></p>
+  <!-- ── 04 ─────────────────────────────────────────────────────────── -->
+  <section class="chapter chapter--reverse" id="trofeos" data-chapter="4" aria-labelledby="trofeos-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> <span data-i18n="tro.eyebrow">Under the stand · the room</span></p>
     <h2 id="trofeos-title" data-reveal data-split data-i18n="tro.h">The room where the <span class="em">noise</span> is kept</h2>
     <hr class="rule" data-reveal>
 
@@ -871,25 +941,25 @@ h1 .em, h2 .em { color: var(--gold); }
         </div>
         <blockquote class="quote" data-reveal>
           <span data-i18n="tro.q">Upstairs is what the club is. Down here is what it remembers.</span>
-          <cite data-i18n="tro.cite">Chapter 03 · 21:02</cite>
+          <cite data-i18n="tro.cite">Chapter 04 · 21:02</cite>
         </blockquote>
       </div>
 
       <div class="col card-col">
         <figure class="card" data-reveal data-plate="5">
           <div class="card__frame">
-            <div class="plate-fallback" data-i18n="plate.6">Plate 03 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.6">Plate 04 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b data-i18n="cap.6b">Plate 03</b><span data-i18n="cap.6">Vitrine · 65mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.6b">Plate 04</b><span data-i18n="cap.6">Vitrine · 65mm</span></figcaption>
         </figure>
       </div>
     </div>
   </section>
 
-  <!-- ── 04 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter chapter--reverse" id="cancha" data-chapter="4" aria-labelledby="cancha-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> <span data-i18n="can.eyebrow">The pitch · eye level</span></p>
+  <!-- ── 05 ─────────────────────────────────────────────────────────── -->
+  <section class="chapter" id="cancha" data-chapter="5" aria-labelledby="cancha-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">05</span> <span data-i18n="can.eyebrow">The pitch · eye level</span></p>
     <h2 id="cancha-title" data-reveal data-split data-i18n="can.h">Down here the stands are a <span class="em">ceiling</span></h2>
     <hr class="rule" data-reveal>
 
@@ -902,25 +972,25 @@ h1 .em, h2 .em { color: var(--gold); }
         </div>
         <blockquote class="quote" data-reveal>
           <span data-i18n="can.q">Nobody in this building is behind you. They are all above you.</span>
-          <cite data-i18n="can.cite">Chapter 04 · 21:12</cite>
+          <cite data-i18n="can.cite">Chapter 05 · 21:12</cite>
         </blockquote>
       </div>
 
       <div class="col card-col">
         <figure class="card" data-reveal data-plate="4">
           <div class="card__frame">
-            <div class="plate-fallback" data-i18n="plate.5">Plate 04 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.5">Plate 05 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b data-i18n="cap.5b">Plate 04</b><span data-i18n="cap.5">Touchline · 50mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.5b">Plate 05</b><span data-i18n="cap.5">Touchline · 50mm</span></figcaption>
         </figure>
       </div>
     </div>
   </section>
 
-  <!-- ── 05 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter" id="tribuna" data-chapter="5" aria-labelledby="tribuna-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">05</span> <span data-i18n="tri.eyebrow">The stands · full throat</span></p>
+  <!-- ── 06 ─────────────────────────────────────────────────────────── -->
+  <section class="chapter chapter--reverse" id="tribuna" data-chapter="6" aria-labelledby="tribuna-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">06</span> <span data-i18n="tri.eyebrow">The stands · full throat</span></p>
     <h2 id="tribuna-title" data-reveal data-split data-i18n="tri.h">It doesn't tremble. It <span class="em">beats</span>.</h2>
     <hr class="rule rule--heavy" data-reveal>
 
@@ -933,40 +1003,40 @@ h1 .em, h2 .em { color: var(--gold); }
         </div>
         <blockquote class="quote" data-reveal>
           <span data-i18n="tri.q">Every camera cut is the same shot: people, at an angle no other stadium allows.</span>
-          <cite data-i18n="tri.cite">Chapter 05 · 21:26</cite>
+          <cite data-i18n="tri.cite">Chapter 06 · 21:26</cite>
         </blockquote>
       </div>
 
       <div class="col card-col stack">
         <figure class="card" data-reveal data-plate="2">
           <div class="card__frame">
-            <div class="plate-fallback" data-i18n="plate.3">Plate 05 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.3">Plate 06 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b data-i18n="cap.3b">Plate 05</b><span data-i18n="cap.3">Upper tier · 85mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.3b">Plate 06</b><span data-i18n="cap.3">Upper tier · 85mm</span></figcaption>
         </figure>
         <figure class="card" data-reveal data-plate="3">
           <div class="card__frame">
-            <div class="plate-fallback" data-i18n="plate.4">Plate 06 · rendered live</div>
+            <div class="plate-fallback" data-i18n="plate.4">Plate 07 · rendered live</div>
             <span class="card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
           </div>
-          <figcaption class="card__caption"><b data-i18n="cap.4b">Plate 06</b><span data-i18n="cap.4">Floodlight · 200mm</span></figcaption>
+          <figcaption class="card__caption"><b data-i18n="cap.4b">Plate 07</b><span data-i18n="cap.4">Floodlight · 200mm</span></figcaption>
         </figure>
       </div>
     </div>
   </section>
 
-  <!-- ── 06 ─────────────────────────────────────────────────────────── -->
-  <section class="manifesto" id="manifiesto" data-chapter="6" aria-labelledby="manifiesto-title">
+  <!-- ── 07 ─────────────────────────────────────────────────────────── -->
+  <section class="manifesto" id="manifiesto" data-chapter="7" aria-labelledby="manifiesto-title">
     <p class="stencil manifesto__stencil" aria-hidden="true" data-i18n="man.stencil">El<br>Latido</p>
 
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">06</span> <span data-i18n="man.eyebrow">Manifesto · colophon</span></p>
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">07</span> <span data-i18n="man.eyebrow">Manifesto · colophon</span></p>
     <h2 id="manifiesto-title" data-reveal data-split data-i18n="man.h">Build the <span class="em">noise</span>, not the logo</h2>
     <hr class="rule rule--heavy" data-reveal>
 
     <ol>
       <li data-reveal data-i18n="man.1">Every surface in this page is generated at runtime. There is not one photograph, one texture file, or one placeholder image in the repository.</li>
-      <li data-reveal data-i18n="man.2">The camera never cuts. Six chapters, one path, driven entirely by how far you have scrolled.</li>
+      <li data-reveal data-i18n="man.2">The camera never cuts. Eight chapters, one path, driven entirely by how far you have scrolled.</li>
       <li data-reveal data-i18n="man.3">No framework, no bundler, no package manager. One HTML file, a vendored renderer, and a font.</li>
       <li data-reveal data-i18n="man.4">Reduced motion is not a degraded version. It is the same story, held still.</li>
       <li data-reveal data-i18n="man.5">A stadium is a machine for amplifying people. So is a good page.</li>
@@ -1481,7 +1551,9 @@ scene.add(world);
 function buildBarrio() {
   const houses = [];
   for (const side of [-1, 1]) {
-    let z = 6;
+    /* the last houses stop short of the facade, leaving an apron of open
+       ground in front of the wall — the moment chapter 02 is about */
+    let z = 15;
     while (z < 84) {
       const depth = range(7, 10.5);
       const width = range(6, 11);
@@ -1628,7 +1700,7 @@ function buildTunnel() {
   const facadeMat = MAT.concrete.clone();
   facadeMat.color.setHex(0x4a4c4e);
   const slabs = [
-    [-14.5, 6, 15, 12], [14.5, 6, 15, 12], [0, 9.7, 8, 6.6]
+    [-19, 9, 26, 18], [19, 9, 26, 18], [0, 14.5, 12, 7]
   ];
   for (const [x, y, w, h] of slabs) {
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 3), facadeMat);
@@ -1661,6 +1733,15 @@ function buildTunnel() {
   const mouth = new THREE.Mesh(new THREE.PlaneGeometry(W, H), new THREE.MeshBasicMaterial({ color: 0xdfe6f2, fog: false }));
   mouth.position.set(0, H / 2, Z1 + 0.2);
   shell.add(mouth);
+
+  /* the key light travels +z and so only reaches the far side of the
+     facade. These light the street side, which is the side anyone
+     walking up to it actually sees. */
+  for (const fx of [-15, 0, 15]) {
+    const lamp = new THREE.PointLight(0xffc27a, 1150, 52, 2);
+    lamp.position.set(fx, 9, 9);
+    shell.add(lamp);
+  }
 
   const spill = new THREE.PointLight(0xcfe0ff, 40, 34, 2);
   spill.position.set(0, 2.6, Z1 + 3);
@@ -2161,16 +2242,17 @@ function buildLights() {
 const SHOTS = [
   { pos: [3.4, 6.4, 68], look: [0.4, 6.6, 26], fov: 58 },      /* 00 arrival   */
   { pos: [1.2, 1.8, 34], look: [-1.4, 3.2, 8], fov: 62 },      /* 01 barrio    */
-  { pos: [0.1, 1.8, -30], look: [0.2, 2.2, -60], fov: 52 },    /* 02 túnel     */
-  { pos: [-2, -5.0, -36], look: [8, -5.6, -46], fov: 54 },      /* 03 trofeos   */
-  { pos: [12, 1.7, -73], look: [6, 18, -56], fov: 62 },        /* 04 cancha    */
-  { pos: [-10, 6.5, -66], look: [8, 20, -100], fov: 58 },      /* 05 tribuna   */
-  { pos: [-58, 40, -26], look: [0, 6, -94], fov: 46 }          /* 06 manifiesto*/
+  { pos: [-3, 1.7, 15], look: [7, 7, 3], fov: 64 },             /* 02 estadio   */
+  { pos: [0.1, 1.8, -30], look: [0.2, 2.2, -60], fov: 52 },    /* 03 túnel     */
+  { pos: [-2, -5.0, -36], look: [8, -5.6, -46], fov: 54 },      /* 04 trofeos   */
+  { pos: [12, 1.7, -73], look: [6, 18, -56], fov: 62 },        /* 05 cancha    */
+  { pos: [-10, 6.5, -66], look: [8, 20, -100], fov: 58 },      /* 06 tribuna   */
+  { pos: [-58, 40, -26], look: [0, 6, -94], fov: 46 }          /* 07 manifiesto*/
 ];
 
-/* la tribuna is the only chapter allowed to shake, and it is now the climax
+/* la tribuna is the only chapter allowed to shake, and it is the climax
    rather than the midpoint — the walk builds to it */
-const TREMOR_CHAPTER = 5;
+const TREMOR_CHAPTER = 6;
 
 /* plates are separate framings of the same world — the stills in the cards */
 const PLATES = [
@@ -2179,7 +2261,8 @@ const PLATES = [
   { pos: [-10, 12, -70], look: [20, 26, -104], fov: 30 },
   { pos: [-20, 22, -68], look: [-44, 46, -121], fov: 18 },
   { pos: [0, 1.2, -70], look: [0, 3.4, -106], fov: 40 },
-  { pos: [-5.4, -5.0, -46], look: [-9, -5.4, -50], fov: 34 }
+  { pos: [-5.4, -5.0, -46], look: [-9, -5.4, -50], fov: 34 },
+  { pos: [-6, 2.0, 13], look: [10, 8, 3], fov: 48 }
 ];
 
 const _p0 = new THREE.Vector3(), _p1 = new THREE.Vector3(), _p2 = new THREE.Vector3(), _p3 = new THREE.Vector3();
@@ -2382,13 +2465,51 @@ function buildForegrounds() {
     }
   });
 
-  /* 02 — concrete steps and the fence at the top of them */
+  /* 02 — the wall: shuttered gate, bars, turnstiles */
+  make((ctx) => {
+    const r = makeRandom(97);
+    ctx.fillStyle = 'rgba(9,10,13,0.97)';
+    ctx.fillRect(0, FG_H - 190, FG_W, 190);
+    /* a gate opening, darker than the wall around it */
+    const gx = FG_W * 0.34, gw = FG_W * 0.3;
+    ctx.fillStyle = 'rgba(4,5,7,0.99)';
+    ctx.fillRect(gx, FG_H - 260, gw, 260);
+    /* vertical bars across it */
+    ctx.strokeStyle = 'rgba(74,76,72,0.85)';
+    ctx.lineWidth = 5;
+    for (let x = gx + 14; x < gx + gw; x += 26) {
+      ctx.beginPath(); ctx.moveTo(x, FG_H - 256); ctx.lineTo(x, FG_H); ctx.stroke();
+    }
+    ctx.lineWidth = 7;
+    ctx.beginPath(); ctx.moveTo(gx, FG_H - 258); ctx.lineTo(gx + gw, FG_H - 258); ctx.stroke();
+    /* turnstile drums either side */
+    for (const cx of [gx - 90, gx + gw + 90]) {
+      ctx.fillStyle = 'rgba(16,18,22,0.96)';
+      ctx.fillRect(cx - 26, FG_H - 150, 52, 150);
+      ctx.strokeStyle = 'rgba(96,98,94,0.7)';
+      ctx.lineWidth = 6;
+      for (let a = 0; a < 3; a++) {
+        const ang = (a / 3) * Math.PI + 0.4;
+        ctx.beginPath();
+        ctx.moveTo(cx, FG_H - 108);
+        ctx.lineTo(cx + Math.cos(ang) * 70, FG_H - 108 + Math.sin(ang) * 70);
+        ctx.stroke();
+      }
+    }
+    /* paint ghosts of old announcements */
+    for (let i = 0; i < 7; i++) {
+      ctx.fillStyle = `rgba(${140 + r() * 60 | 0},${120 + r() * 60 | 0},${90 + r() * 50 | 0},${0.04 + r() * 0.05})`;
+      ctx.fillRect(r() * FG_W, FG_H - 180 + r() * 60, 60 + r() * 190, 20 + r() * 40);
+    }
+  });
+
+  /* 03 — concrete steps and the fence at the top of them */
   make((ctx) => {
     paintSteps(ctx);
     paintChainlink(ctx, 40, 230, 0.5);
   });
 
-  /* 03 — the undercroft: vitrine edge and plinths in the dark */
+  /* 04 — the undercroft: vitrine edge and plinths in the dark */
   make((ctx) => {
     const r = makeRandom(63);
     ctx.fillStyle = 'rgba(7,8,11,0.97)';
@@ -2412,7 +2533,7 @@ function buildForegrounds() {
     }
   });
 
-  /* 04 — pitch level: the painted line and grass at the boot */
+  /* 05 — pitch level: the painted line and grass at the boot */
   make((ctx) => {
     const r = makeRandom(41);
     /* touchline, running off in perspective */
@@ -2441,7 +2562,7 @@ function buildForegrounds() {
     }
   });
 
-  /* 05 — the stand itself: fence, flags, drums, smoke, people */
+  /* 06 — the stand itself: fence, flags, drums, smoke, people */
   make((ctx) => {
     paintSmokeCloud(ctx, 260, 300, 300, 'rgba(43,79,158,ALPHA)');
     paintSmokeCloud(ctx, 1500, 250, 340, 'rgba(240,179,35,ALPHA)');
@@ -2454,7 +2575,7 @@ function buildForegrounds() {
     paintChainlink(ctx, FG_H - 210, 210, 0.42);
   });
 
-  /* 06 — the stand as one flat silhouette, seen from outside */
+  /* 07 — the stand as one flat silhouette, seen from outside */
   make((ctx) => {
     ctx.fillStyle = 'rgba(7,8,11,0.97)';
     ctx.beginPath();
@@ -2659,15 +2780,16 @@ const ES = {
 
   'skip': 'Saltar al contenido',
   'est': 'Inaug. 1940',
+  'sound': 'Sonido',
   'nav.chapters': 'Capítulos',
   'nav.close': 'Cerrar ✕',
   'rail.0': 'Llegada',
   'rail.ch': 'Capítulo', 'rail.ch1': 'Capítulo', 'rail.ch2': 'Capítulo',
-  'rail.ch3': 'Capítulo', 'rail.ch4': 'Capítulo', 'rail.ch5': 'Capítulo', 'rail.ch6': 'Capítulo',
+  'rail.ch3': 'Capítulo', 'rail.ch4': 'Capítulo', 'rail.ch5': 'Capítulo', 'rail.ch6': 'Capítulo', 'rail.ch7': 'Capítulo',
 
   'hero.eyebrow': 'La Boca · Buenos Aires · 20:47',
   'hero.h': 'La calle grita <span class="em">antes</span> que el estadio',
-  'hero.lede': 'Seis capítulos, una sola cámara, cada ladrillo dibujado en tiempo real. Deslizá para caminar desde Caminito hasta lo más alto de los tablones.',
+  'hero.lede': 'Ocho capítulos, una sola cámara, cada ladrillo dibujado en tiempo real. Deslizá para caminar desde Caminito hasta lo más alto de los tablones.',
   'hero.scroll': 'Deslizá',
   'hero.m1t': 'Render',
   'hero.m2t': 'Geometría', 'hero.m2d': '100% procedural',
@@ -2684,6 +2806,16 @@ const ES = {
   'plate.1': 'Placa 01 · render en vivo',
   'cap.1b': 'Placa 01', 'cap.1': 'Caminito · 24mm',
 
+  'est.eyebrow': 'El paredón · la llegada',
+  'est.h': 'Y entonces la calle <span class="em">termina</span> y empieza el paredón',
+  'est.stencil': 'The Ground',
+  'est.p1': 'No lo ves venir. Las cuadras son iguales hasta el final — chapa, balcones, ropa colgada — y de golpe las casas se terminan y hay un paredón donde debería seguir la calle. Plano, gris, cuatro pisos, todavía con la pintura de treinta años de anuncios encima.',
+  'est.p2': 'El ruido que venís siguiendo hace diez minutos está del otro lado. Desde acá deja de ser un sonido a lo lejos y pasa a ser una cosa con lugar.',
+  'est.q': 'Nadie acá lo mira. Todos los que viven en esta cuadra dejaron de notarlo hace mucho.',
+  'est.cite': 'Capítulo 02 · 20:58',
+  'plate.7': 'Placa 02 · render en vivo',
+  'cap.7b': 'Placa 02', 'cap.7': 'Fachada · 28mm',
+
   'tun.eyebrow': 'El umbral · hormigón desnudo',
   'tun.h': 'El último lugar <span class="em">callado</span> del estadio',
   'tun.stencil': 'The Tunnel',
@@ -2691,8 +2823,8 @@ const ES = {
   'tun.p2': 'El ruido llega como presión antes de llegar como sonido. En la boca del túnel la luz es un rectángulo blanco y plano, y todo lo que hay entre acá y allá es silueta.',
   'tun.m1t': 'Forma', 'tun.m1d': 'Tres lados empinados, una pared plana',
   'tun.m2t': 'Pendiente', 'tun.m2d': 'Vertical, no escalonada',
-  'plate.2': 'Placa 02 · render en vivo',
-  'cap.2b': 'Placa 02', 'cap.2': 'Boca del túnel · 35mm',
+  'plate.2': 'Placa 03 · render en vivo',
+  'cap.2b': 'Placa 03', 'cap.2': 'Boca del túnel · 35mm',
 
   'tri.eyebrow': 'La tribuna · a garganta abierta',
   'tri.h': 'No tiembla. <span class="em">Late</span>.',
@@ -2700,11 +2832,11 @@ const ES = {
   'tri.p1': 'Acá la tribuna sube, no se aleja. Salís del hormigón a una pared de gente apilada casi vertical arriba tuyo, tan cerca que toda la estructura se mueve al mismo ritmo: un salto lento y decidido que arranca en la bandeja de arriba y te llega a las rodillas.',
   'tri.p2': 'El humo cruza los reflectores en azul y oro. El papel picado cae un minuto entero después del comienzo y sigue cayendo. Nada de esto es decorativo: es el edificio haciendo aquello para lo que fue construido.',
   'tri.q': 'Cada corte de cámara es la misma toma: gente, en un ángulo que ninguna otra cancha permite.',
-  'tri.cite': 'Capítulo 05 · 21:26',
-  'plate.3': 'Placa 05 · render en vivo',
-  'cap.3b': 'Placa 05', 'cap.3': 'Bandeja alta · 85mm',
-  'plate.4': 'Placa 06 · render en vivo',
-  'cap.4b': 'Placa 06', 'cap.4': 'Reflector · 200mm',
+  'tri.cite': 'Capítulo 06 · 21:26',
+  'plate.3': 'Placa 06 · render en vivo',
+  'cap.3b': 'Placa 06', 'cap.3': 'Bandeja alta · 85mm',
+  'plate.4': 'Placa 07 · render en vivo',
+  'cap.4b': 'Placa 07', 'cap.4': 'Reflector · 200mm',
 
   'tro.eyebrow': 'Abajo de la tribuna · la sala',
   'tro.h': 'La sala donde se guarda el <span class="em">ruido</span>',
@@ -2712,9 +2844,9 @@ const ES = {
   'tro.p1': 'Abajo de la tribuna, pasando el punto donde los pasillos dejan de ser para el público, vuelve a bajar la temperatura y el sonido se va con ella. Esta es la otra mitad del edificio: la mitad que no se mueve.',
   'tro.p2': 'Las vitrinas están iluminadas y los pedestales no tienen placa. Lo que hay adentro importa menos que el hecho de que alguien las lustró esta mañana, y las va a lustrar mañana otra vez, para una sala por la que casi nadie pasa.',
   'tro.q': 'Arriba está lo que el club es. Acá abajo, lo que recuerda.',
-  'tro.cite': 'Capítulo 03 · 21:02',
-  'plate.6': 'Placa 03 · render en vivo',
-  'cap.6b': 'Placa 03', 'cap.6': 'Vitrina · 65mm',
+  'tro.cite': 'Capítulo 04 · 21:02',
+  'plate.6': 'Placa 04 · render en vivo',
+  'cap.6b': 'Placa 04', 'cap.6': 'Vitrina · 65mm',
 
   'can.eyebrow': 'El campo · a la altura de los ojos',
   'can.h': 'Desde acá abajo la tribuna es un <span class="em">techo</span>',
@@ -2722,15 +2854,15 @@ const ES = {
   'can.p1': 'Desde el pasto la geometría deja de tener sentido. La tribuna no se aleja, trepa — y sigue trepando, hasta que la última fila queda allá arriba cerca de los reflectores y la gente que está ahí se lee como textura y no como multitud.',
   'can.p2': 'El ruido llega desde arriba. Rebota en el hormigón y te cae encima, y no hay lugar acá afuera donde te puedas parar para salir de abajo.',
   'can.q': 'Nadie en este estadio está detrás tuyo. Están todos arriba.',
-  'can.cite': 'Capítulo 04 · 21:12',
-  'plate.5': 'Placa 04 · render en vivo',
-  'cap.5b': 'Placa 04', 'cap.5': 'Línea de cal · 50mm',
+  'can.cite': 'Capítulo 05 · 21:12',
+  'plate.5': 'Placa 05 · render en vivo',
+  'cap.5b': 'Placa 05', 'cap.5': 'Línea de cal · 50mm',
 
   'man.stencil': 'The<br>Heartbeat',
   'man.eyebrow': 'Manifiesto · colofón',
   'man.h': 'Construí el <span class="em">ruido</span>, no el logo',
   'man.1': 'Cada superficie de esta página se genera en tiempo real. No hay una sola fotografía, ni un archivo de textura, ni una imagen de relleno en el repositorio.',
-  'man.2': 'La cámara nunca corta. Seis capítulos, un solo recorrido, movido enteramente por cuánto scrolleaste.',
+  'man.2': 'La cámara nunca corta. Ocho capítulos, un solo recorrido, movido enteramente por cuánto scrolleaste.',
   'man.3': 'Sin framework, sin bundler, sin gestor de paquetes. Un archivo HTML, un renderer incluido y una tipografía.',
   'man.4': 'El modo de movimiento reducido no es una versión degradada. Es la misma historia, quieta.',
   'man.5': 'Un estadio es una máquina para amplificar gente. Una buena página también.',
@@ -2855,6 +2987,212 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   followCursor();
 }
 
+/* ═══ the terrace ══════════════════════════════════════════════════════
+   Every sound here is synthesized at runtime — noise beds shaped by
+   filters, a drum built from an oscillator and an envelope, and massed
+   wordless voices from detuned saws. There is no recording and no
+   sample in this project, for the same reason there is no photograph.
+
+   It follows the walk: distant outside, pressing through the concrete
+   of the tunnel, sealed off underground, then wide open the moment the
+   camera reaches the pitch.
+   ═══════════════════════════════════════════════════════════════════ */
+const MIX = [
+  { gain: 0.14, cutoff: 700, drums: 0.22 },    /* 00 blocks away        */
+  { gain: 0.30, cutoff: 1400, drums: 0.5 },    /* 01 barrio             */
+  { gain: 0.48, cutoff: 950, drums: 0.78 },    /* 02 at the wall        */
+  { gain: 0.56, cutoff: 480, drums: 0.92 },    /* 03 túnel — pressure   */
+  { gain: 0.08, cutoff: 220, drums: 0.1 },     /* 04 sealed underground */
+  { gain: 0.94, cutoff: 9000, drums: 1.0 },    /* 05 out on the pitch   */
+  { gain: 1.0, cutoff: 12000, drums: 1.0 },    /* 06 the tribuna        */
+  { gain: 0.42, cutoff: 3600, drums: 0.5 }     /* 07 pulling away       */
+];
+
+const audio = (() => {
+  let ctx = null, master = null, tone = null, bed = null, hiss = null, voices = null;
+  let drumBus = null, timer = null, nextBeat = 0, beat = 0;
+  let on = false;
+  const BEAT = 0.66;
+
+  function noiseBuffer(seconds) {
+    const len = Math.floor(ctx.sampleRate * seconds);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    return buf;
+  }
+
+  function loopNoise(filter) {
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuffer(3);
+    src.loop = true;
+    const g = ctx.createGain();
+    src.connect(filter).connect(g);
+    src.start();
+    return g;
+  }
+
+  /* the bombo: one oscillator, pitched down hard and cut short */
+  function bombo(at, level) {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(128, at);
+    osc.frequency.exponentialRampToValueAtTime(43, at + 0.11);
+    g.gain.setValueAtTime(0.0001, at);
+    g.gain.exponentialRampToValueAtTime(level, at + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, at + 0.38);
+    osc.connect(g).connect(drumBus);
+    osc.start(at);
+    osc.stop(at + 0.42);
+
+    /* the skin, not just the body */
+    const nz = ctx.createBufferSource();
+    nz.buffer = noiseBuffer(0.2);
+    const nf = ctx.createBiquadFilter();
+    nf.type = 'bandpass'; nf.frequency.value = 1900; nf.Q.value = 0.7;
+    const ng = ctx.createGain();
+    ng.gain.setValueAtTime(level * 0.22, at);
+    ng.gain.exponentialRampToValueAtTime(0.0001, at + 0.07);
+    nz.connect(nf).connect(ng).connect(drumBus);
+    nz.start(at);
+    nz.stop(at + 0.1);
+  }
+
+  /* many hands, never quite together */
+  function clap(at, level) {
+    for (let i = 0; i < 5; i++) {
+      const t = at + Math.random() * 0.045;
+      const nz = ctx.createBufferSource();
+      nz.buffer = noiseBuffer(0.15);
+      const f = ctx.createBiquadFilter();
+      f.type = 'highpass'; f.frequency.value = 1100;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(level * 0.16, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+      nz.connect(f).connect(g).connect(drumBus);
+      nz.start(t);
+      nz.stop(t + 0.16);
+    }
+  }
+
+  function schedule() {
+    while (nextBeat < ctx.currentTime + 0.2) {
+      const step = beat % 8;
+      if (step === 0) bombo(nextBeat, 0.9);
+      else if (step === 3) bombo(nextBeat, 0.55);
+      else if (step === 4) bombo(nextBeat, 0.75);
+      if (step === 2 || step === 6) clap(nextBeat, 0.9);
+      nextBeat += BEAT;
+      beat++;
+    }
+  }
+
+  function build() {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain();
+    master.gain.value = 0;
+
+    /* one filter stands for every wall between you and the noise */
+    tone = ctx.createBiquadFilter();
+    tone.type = 'lowpass';
+    tone.frequency.value = 700;
+    tone.Q.value = 0.6;
+    master.connect(tone).connect(ctx.destination);
+
+    const lowF = ctx.createBiquadFilter();
+    lowF.type = 'lowpass'; lowF.frequency.value = 380;
+    bed = loopNoise(lowF);
+    bed.gain.value = 0.5;
+    bed.connect(master);
+
+    const hissF = ctx.createBiquadFilter();
+    hissF.type = 'bandpass'; hissF.frequency.value = 1800; hissF.Q.value = 0.7;
+    hiss = loopNoise(hissF);
+    hiss.gain.value = 0.09;
+    hiss.connect(master);
+
+    /* massed voices: detuned saws through a vowel-ish band. No words,
+       no melody — just the shape a lot of people make at once. */
+    const vf = ctx.createBiquadFilter();
+    vf.type = 'bandpass'; vf.frequency.value = 520; vf.Q.value = 3.2;
+    voices = ctx.createGain();
+    voices.gain.value = 0.05;
+    vf.connect(voices).connect(master);
+    [96, 98.5, 110, 112.7, 146, 148.9, 164].forEach((f, i) => {
+      const o = ctx.createOscillator();
+      o.type = 'sawtooth';
+      o.frequency.value = f;
+      o.detune.value = (i - 3) * 7;
+      const g = ctx.createGain();
+      g.gain.value = 0.14;
+      o.connect(g).connect(vf);
+      o.start();
+    });
+    /* slow drift so it breathes instead of droning */
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = 0.07;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 130;
+    lfo.connect(lfoGain).connect(vf.frequency);
+    lfo.start();
+
+    drumBus = ctx.createGain();
+    drumBus.gain.value = 0.0;
+    drumBus.connect(master);
+
+    nextBeat = ctx.currentTime + 0.1;
+  }
+
+  return {
+    get enabled() { return on; },
+
+    toggle() {
+      if (!on) {
+        try {
+          if (!ctx) build();
+        } catch (err) {
+          console.warn('Web Audio unavailable — the page is unaffected.', err);
+          return false;
+        }
+        ctx.resume();
+        on = true;
+        timer = setInterval(schedule, 60);
+      } else {
+        on = false;
+        clearInterval(timer);
+        timer = null;
+        master.gain.setTargetAtTime(0, ctx.currentTime, 0.08);
+        ctx.suspend();
+      }
+      return on;
+    },
+
+    /* the mix follows the camera, not the scroll bar */
+    update(t) {
+      if (!on || !ctx) return;
+      const i = clamp(Math.floor(t), 0, MIX.length - 2);
+      const u = smoothstep(clamp(t - i, 0, 1));
+      const a = MIX[i], b = MIX[i + 1];
+      const now = ctx.currentTime;
+      master.gain.setTargetAtTime(lerp(a.gain, b.gain, u) * 0.55, now, 0.25);
+      tone.frequency.setTargetAtTime(lerp(a.cutoff, b.cutoff, u), now, 0.3);
+      drumBus.gain.setTargetAtTime(lerp(a.drums, b.drums, u) * 0.5, now, 0.25);
+    },
+
+    suspend() { if (on && ctx) ctx.suspend(); },
+    resume() { if (on && ctx) ctx.resume(); }
+  };
+})();
+
+{
+  const btn = document.getElementById('sound-toggle');
+  btn.addEventListener('click', () => {
+    const state = audio.toggle();
+    btn.setAttribute('aria-pressed', String(state));
+  });
+}
+
 /* ─── the loop ────────────────────────────────────────────────────────── */
 const camPos = new THREE.Vector3().fromArray(SHOTS[0].pos);
 const camLook = new THREE.Vector3().fromArray(SHOTS[0].look);
@@ -2901,6 +3239,7 @@ function frame(now) {
   }
 
   setChapter(clamp(Math.round(tCurrent), 0, chapterEls.length - 1));
+  audio.update(tCurrent);
 
   if (!webgl) return;
   if (still && !dirty) return;
@@ -2952,6 +3291,7 @@ if (webgl) {
 document.addEventListener('visibilitychange', () => {
   paused = document.hidden;
   last = performance.now();
+  if (document.hidden) audio.suspend(); else audio.resume();
 });
 window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener('resize', resize);
