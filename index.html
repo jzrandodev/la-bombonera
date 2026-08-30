@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>La Bombonera — A Matchday Walk</title>
-<meta name="description" content="A nine-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. An independent design study.">
+<meta name="description" content="A eight-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. An independent design study.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08090c">
 <meta property="og:title" content="La Bombonera — A Matchday Walk">
-<meta property="og:description" content="A nine-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL.">
+<meta property="og:description" content="A eight-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://la-bombonera-gules.vercel.app/">
 <meta property="og:image" content="https://la-bombonera-gules.vercel.app/assets/og-preview.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="La Bombonera — a nine-chapter matchday walk">
+<meta property="og:image:alt" content="La Bombonera — a eight-chapter matchday walk">
 <meta property="og:site_name" content="Juan Zamora">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="La Bombonera — A Matchday Walk">
-<meta name="twitter:description" content="A nine-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL.">
+<meta name="twitter:description" content="A eight-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL.">
 <meta name="twitter:image" content="https://la-bombonera-gules.vercel.app/assets/og-preview.jpg">
 <link rel="canonical" href="https://la-bombonera-gules.vercel.app/">
 <link rel="preload" href="./assets/vendor/fonts/arch-var-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -44,7 +44,7 @@
      Aires and carries a width axis; the wordmark runs it expanded so it sits
      still and takes up space, the way a building does, rather than leaning
      forward like a sports mark. Piazzolla is Huerta Tipografica, drawn for
-     long reading, which is what nine chapters of prose over a scene is. */
+     long reading, which is what eight chapters of prose over a scene is. */
   --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --font-stencil: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --font-body: 'Piazzolla', Georgia, 'Times New Roman', serif;
@@ -511,12 +511,6 @@ h1 .em, h2 .em { color: var(--gold); }
 /* ─── hero ────────────────────────────────────────────────────────────── */
 .hero { justify-content: flex-end; }
 .hero h1 { margin-top: clamp(1.2rem, 0.8rem + 1.4vw, 2.2rem); max-width: 13ch; }
-.hero .stencil {
-  position: absolute;
-  left: var(--gutter);
-  top: clamp(4.5rem, 3rem + 7vw, 9rem);
-  z-index: -1;
-}
 .hero-foot {
   display: flex;
   flex-wrap: wrap;
@@ -1017,43 +1011,42 @@ h1 .em, h2 .em { color: var(--gold); }
   <nav class="primary-nav" id="primary-nav" aria-label="Chapters">
     <button class="nav-close" type="button" data-i18n="nav.close">Close ✕</button>
     <ul class="nav-list">
-      <li><a href="#barrio"><span class="idx">01</span> Barrio</a></li>
-      <li><a href="#estadio"><span class="idx">02</span> Estadio</a></li>
-      <li><a href="#tunel"><span class="idx">03</span> Túnel</a></li>
-      <li><a href="#cancha"><span class="idx">04</span> Cancha</a></li>
-      <li><a href="#tribuna"><span class="idx">05</span> Tribuna</a></li>
-      <li><a href="#trofeos"><span class="idx">06</span> Trofeos</a></li>
-      <li><a href="#camisetas"><span class="idx">07</span> Camisetas</a></li>
-      <li><a href="#manifiesto"><span class="idx">08</span> Manifiesto</a></li>
+      <li><a href="#barrio"><span class="idx">00</span> Barrio</a></li>
+      <li><a href="#estadio"><span class="idx">01</span> Estadio</a></li>
+      <li><a href="#tunel"><span class="idx">02</span> Túnel</a></li>
+      <li><a href="#cancha"><span class="idx">03</span> Cancha</a></li>
+      <li><a href="#tribuna"><span class="idx">04</span> Tribuna</a></li>
+      <li><a href="#trofeos"><span class="idx">05</span> Trofeos</a></li>
+      <li><a href="#camisetas"><span class="idx">06</span> Camisetas</a></li>
+      <li><a href="#manifiesto"><span class="idx">07</span> Manifiesto</a></li>
     </ul>
   </nav>
 </header>
 
 <nav class="rail" aria-label="Chapter progress">
   <ul>
-    <li><a href="#hero"><span class="name" data-i18n="rail.0">Arrival</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch">Chapter</span> 00, </span>00</a></li>
-    <li><a href="#barrio"><span class="name">Barrio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch1">Chapter</span> 01, </span>01</a></li>
-    <li><a href="#estadio"><span class="name">Estadio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch2">Chapter</span> 02, </span>02</a></li>
-    <li><a href="#tunel"><span class="name">Túnel</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch3">Chapter</span> 03, </span>03</a></li>
-    <li><a href="#cancha"><span class="name">Cancha</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch4">Chapter</span> 04, </span>04</a></li>
-    <li><a href="#tribuna"><span class="name">Tribuna</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch5">Chapter</span> 05, </span>05</a></li>
-    <li><a href="#trofeos"><span class="name">Trofeos</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch6">Chapter</span> 06, </span>06</a></li>
-    <li><a href="#camisetas"><span class="name">Camisetas</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch7">Chapter</span> 07, </span>07</a></li>
-    <li><a href="#manifiesto"><span class="name">Manifiesto</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch8">Chapter</span> 08, </span>08</a></li>
+    <li><a href="#barrio"><span class="name">Barrio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch1">Chapter</span> 00, </span>00</a></li>
+    <li><a href="#estadio"><span class="name">Estadio</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch2">Chapter</span> 01, </span>01</a></li>
+    <li><a href="#tunel"><span class="name">Túnel</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch3">Chapter</span> 02, </span>02</a></li>
+    <li><a href="#cancha"><span class="name">Cancha</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch4">Chapter</span> 03, </span>03</a></li>
+    <li><a href="#tribuna"><span class="name">Tribuna</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch5">Chapter</span> 04, </span>04</a></li>
+    <li><a href="#trofeos"><span class="name">Trofeos</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch6">Chapter</span> 05, </span>05</a></li>
+    <li><a href="#camisetas"><span class="name">Camisetas</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch7">Chapter</span> 06, </span>06</a></li>
+    <li><a href="#manifiesto"><span class="name">Manifiesto</span><span class="tick" aria-hidden="true"></span><span class="visually-hidden"><span data-i18n="rail.ch8">Chapter</span> 07, </span>07</a></li>
   </ul>
 </nav>
 
 <main class="page" id="main">
 
   <!-- ── 00 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter hero" id="hero" data-chapter="0" aria-labelledby="hero-title">
+  <section class="chapter hero" id="barrio" data-chapter="0" aria-labelledby="hero-title">
     <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">00</span> <span data-i18n="hero.eyebrow">La Boca · Buenos Aires · 20:47</span></p>
     <h1 id="hero-title" data-reveal data-split data-i18n="hero.h">The street gets loud <span class="em">before</span> the stadium does</h1>
 
     <hr class="rule rule--gold" data-reveal>
 
     <div class="hero-foot">
-      <p class="lede" data-reveal data-i18n="hero.lede">Nine chapters, one continuous camera, every brick of it drawn at runtime. Scroll to walk from Caminito to the top of the away-side steps.</p>
+      <p class="lede" data-reveal data-i18n="hero.lede">Eight chapters, one continuous camera, every brick of it drawn at runtime. Scroll to walk from Caminito to the top of the away-side steps.</p>
       <p class="scroll-cue" data-reveal><span class="line" aria-hidden="true"></span> <span data-i18n="hero.scroll">Scroll</span></p>
     </div>
 
@@ -1065,12 +1058,10 @@ h1 .em, h2 .em { color: var(--gold); }
       <div><dt data-i18n="hero.m3t">Assets</dt><dd data-i18n="hero.m3d">Zero images</dd></div>
       <div><dt data-i18n="hero.m4t">Build step</dt><dd data-i18n="hero.m4d">None</dd></div>
     </dl>
-  </section>
 
-  <!-- ── 01 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter" id="barrio" data-chapter="1" aria-labelledby="barrio-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">01</span> <span data-i18n="bar.eyebrow">Caminito · corrugated iron</span></p>
-    <h2 id="barrio-title" data-reveal data-split data-i18n="bar.h">Painted in whatever the <span class="em">docks</span> had left over</h2>
+    <hr class="rule" data-reveal>
+
+    <h2 id="barrio-beat" data-reveal data-split data-i18n="bar.h">Painted in whatever the <span class="em">docks</span> had left over</h2>
     <hr class="rule" data-reveal>
 
     <div class="chapter-grid">
@@ -1099,8 +1090,8 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 02 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter chapter--reverse" id="estadio" data-chapter="2" aria-labelledby="estadio-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">02</span> <span data-i18n="est.eyebrow">The wall · arrival</span></p>
+  <section class="chapter chapter--reverse" id="estadio" data-chapter="1" aria-labelledby="estadio-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">01</span> <span data-i18n="est.eyebrow">The wall · arrival</span></p>
     <h2 id="estadio-title" data-reveal data-split data-i18n="est.h">Then the street <span class="em">ends</span>, and the wall starts</h2>
     <hr class="rule" data-reveal>
 
@@ -1130,8 +1121,8 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 03 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter" id="tunel" data-chapter="3" aria-labelledby="tunel-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">03</span> <span data-i18n="tun.eyebrow">The threshold · raw concrete</span></p>
+  <section class="chapter" id="tunel" data-chapter="2" aria-labelledby="tunel-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">02</span> <span data-i18n="tun.eyebrow">The threshold · raw concrete</span></p>
     <h2 id="tunel-title" data-reveal data-split data-i18n="tun.h">The last <span class="em">quiet</span> place in the building</h2>
     <hr class="rule" data-reveal>
 
@@ -1161,8 +1152,8 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 04 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter chapter--reverse" id="cancha" data-chapter="4" aria-labelledby="cancha-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> <span data-i18n="can.eyebrow">The pitch · eye level</span></p>
+  <section class="chapter chapter--reverse" id="cancha" data-chapter="3" aria-labelledby="cancha-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">03</span> <span data-i18n="can.eyebrow">The pitch · eye level</span></p>
     <h2 id="cancha-title" data-reveal data-split data-i18n="can.h">Down here the stands are a <span class="em">ceiling</span></h2>
     <hr class="rule" data-reveal>
 
@@ -1192,8 +1183,8 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 05 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter" id="tribuna" data-chapter="5" aria-labelledby="tribuna-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">05</span> <span data-i18n="tri.eyebrow">The stands · full throat</span></p>
+  <section class="chapter" id="tribuna" data-chapter="4" aria-labelledby="tribuna-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">04</span> <span data-i18n="tri.eyebrow">The stands · full throat</span></p>
     <h2 id="tribuna-title" data-reveal data-split data-i18n="tri.h">It doesn't tremble. It <span class="em">beats</span>.</h2>
     <hr class="rule rule--heavy" data-reveal>
 
@@ -1230,8 +1221,8 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 06 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter chapter--reverse" id="trofeos" data-chapter="6" aria-labelledby="trofeos-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">06</span> <span data-i18n="tro.eyebrow">Back under it · after the whistle</span></p>
+  <section class="chapter chapter--reverse" id="trofeos" data-chapter="5" aria-labelledby="trofeos-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">05</span> <span data-i18n="tro.eyebrow">Back under it · after the whistle</span></p>
     <h2 id="trofeos-title" data-reveal data-split data-i18n="tro.h">The half of the building that does not <span class="em">move</span></h2>
     <hr class="rule" data-reveal>
 
@@ -1264,8 +1255,8 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 07 ─────────────────────────────────────────────────────────── -->
-  <section class="chapter" id="camisetas" data-chapter="7" aria-labelledby="camisetas-title">
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">07</span> <span data-i18n="cam.eyebrow">The far end · cloth and light boxes</span></p>
+  <section class="chapter" id="camisetas" data-chapter="6" aria-labelledby="camisetas-title">
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">06</span> <span data-i18n="cam.eyebrow">The far end · cloth and light boxes</span></p>
     <h2 id="camisetas-title" data-reveal data-split data-i18n="cam.h">A colour, a band, and the same five <span class="em">shapes</span></h2>
     <hr class="rule" data-reveal>
 
@@ -1295,16 +1286,16 @@ h1 .em, h2 .em { color: var(--gold); }
   </section>
 
   <!-- ── 08 ─────────────────────────────────────────────────────────── -->
-  <section class="manifesto" id="manifiesto" data-chapter="8" aria-labelledby="manifiesto-title">
+  <section class="manifesto" id="manifiesto" data-chapter="7" aria-labelledby="manifiesto-title">
     <p class="stencil manifesto__stencil" aria-hidden="true" data-i18n="man.stencil">El<br>Latido</p>
 
-    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">08</span> <span data-i18n="man.eyebrow">Manifesto · colophon</span></p>
+    <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">07</span> <span data-i18n="man.eyebrow">Manifesto · colophon</span></p>
     <h2 id="manifiesto-title" data-reveal data-split data-i18n="man.h">Build the <span class="em">noise</span>, not the logo</h2>
     <hr class="rule rule--heavy" data-reveal>
 
     <ol>
       <li data-reveal data-i18n="man.1">Every surface in this page is generated at runtime. There is not one photograph, one texture file, or one placeholder image in the repository.</li>
-      <li data-reveal data-i18n="man.2">The camera never cuts. Nine chapters, one path, driven entirely by how far you have scrolled.</li>
+      <li data-reveal data-i18n="man.2">The camera never cuts. Eight chapters, one path, driven entirely by how far you have scrolled.</li>
       <li data-reveal data-i18n="man.3">No framework, no bundler, no package manager. One HTML file, a vendored renderer, and a font.</li>
       <li data-reveal data-i18n="man.4">Reduced motion is not a degraded version. It is the same story, held still.</li>
       <li data-reveal data-i18n="man.5">A stadium is a machine for amplifying people. So is a good page.</li>
@@ -1340,7 +1331,7 @@ h1 .em, h2 .em { color: var(--gold); }
 import * as THREE from './assets/vendor/three.module.min.js';
 
 /* ═══════════════════════════════════════════════════════════════════════
-   LA BOMBONERA — a nine-chapter matchday walk.
+   LA BOMBONERA — a eight-chapter matchday walk.
    Everything below is generated at runtime: no textures, no models,
    no images. One scene, one camera path, driven by scroll.
    ═══════════════════════════════════════════════════════════════════ */
@@ -2750,20 +2741,21 @@ function buildLights() {
    its exact framing no matter how tall the sections are.
    ═══════════════════════════════════════════════════════════════════ */
 const SHOTS = [
-  { pos: [2.6, 2.5, 46], look: [-1.2, 7.2, 4], fov: 60 },       /* 00 arrival   */
-  { pos: [1.2, 1.8, 34], look: [-1.4, 3.2, 8], fov: 62 },      /* 01 barrio    */
-  { pos: [-3, 1.7, 15], look: [7, 7, 3], fov: 64 },            /* 02 estadio   */
-  { pos: [0.1, 1.8, -30], look: [0.2, 2.2, -60], fov: 52 },    /* 03 túnel     */
-  { pos: [12, 1.7, -73], look: [6, 18, -56], fov: 62 },        /* 04 cancha    */
-  { pos: [-10, 6.5, -66], look: [8, 20, -100], fov: 58 },      /* 05 tribuna   */
-  { pos: [-4, -4.9, -22], look: [-14, -5.4, -32], fov: 62 },   /* 06 trofeos + leyendas */
-  { pos: [-3, -4.4, -36], look: [3, -4.6, -47], fov: 60 },     /* 07 camisetas + escudos */
-  { pos: [-58, 40, -26], look: [0, 6, -94], fov: 46 }          /* 08 manifiesto*/
+  /* 00 is the arrival and the barrio in one: the establishing street
+     view, pushed a little closer than the old hero so the tin reads. */
+  { pos: [2.0, 2.2, 41], look: [-1.3, 5.4, 5], fov: 61 },       /* 00 barrio    */
+  { pos: [-3, 1.7, 15], look: [7, 7, 3], fov: 64 },            /* 01 estadio   */
+  { pos: [0.1, 1.8, -30], look: [0.2, 2.2, -60], fov: 52 },    /* 02 túnel     */
+  { pos: [12, 1.7, -73], look: [6, 18, -56], fov: 62 },        /* 03 cancha    */
+  { pos: [-10, 6.5, -66], look: [8, 20, -100], fov: 58 },      /* 04 tribuna   */
+  { pos: [-4, -4.9, -22], look: [-14, -5.4, -32], fov: 62 },   /* 05 trofeos + leyendas */
+  { pos: [-3, -4.4, -36], look: [3, -4.6, -47], fov: 60 },     /* 06 camisetas + escudos */
+  { pos: [-58, 40, -26], look: [0, 6, -94], fov: 46 }          /* 07 manifiesto*/
 ];
 
 /* la tribuna is the only chapter allowed to shake, and it is the climax
    rather than the midpoint — the walk builds to it */
-const TREMOR_CHAPTER = 5;
+const TREMOR_CHAPTER = 4;
 
 /* plates are separate framings of the same world — the stills in the cards */
 const PLATES = [
@@ -2922,30 +2914,25 @@ const FG_PROPS = {
    lets eight props cover six chapters — the same chainlink appears three
    times at different scale and offset. */
 const FG_COMPOSITIONS = [
-  /* 00 hero */ [
+  /* 00 barrio (arrival) */ [
     { prop: 'tin-panel', x: -6, y: 0, scale: 34 },
     { prop: 'tin-panel', x: 72, y: 0, scale: 34, flip: true },
     { prop: 'laundry-line', x: 12, y: 46, scale: 78, opacity: 0.95 },
     { prop: 'streetlamp', x: 62, y: 18, scale: 17 }
   ],
-  /* 01 barrio */ [
-    { prop: 'tin-panel', x: -10, y: 0, scale: 44 },
-    { prop: 'laundry-line', x: 20, y: 40, scale: 74 },
-    { prop: 'streetlamp', x: 8, y: 22, scale: 19 }
-  ],
-  /* 02 estadio */ [
+  /* 01 estadio */ [
     { prop: 'smoke-bank', x: 4, y: -4, scale: 62, opacity: 0.7 }
   ],
-  /* 03 túnel */ [
+  /* 02 túnel */ [
     { prop: 'concrete-step', x: -4, y: 0, scale: 108 },
     { prop: 'chainlink', x: 0, y: 14, scale: 100, opacity: 0.55 }
   ],
-  /* 04 cancha */ [
+  /* 03 cancha */ [
     { prop: 'crowd-row', x: -2, y: 4, scale: 104, opacity: 0.9 },
     { prop: 'smoke-bank', x: 30, y: 10, scale: 64, opacity: 0.55 },
     { prop: 'chainlink', x: 0, y: 0, scale: 100, opacity: 0.65 }
   ],
-  /* 05 tribuna */ [
+  /* 04 tribuna */ [
     { prop: 'smoke-bank', x: -8, y: 12, scale: 70, opacity: 0.7 },
     { prop: 'smoke-bank', x: 48, y: 18, scale: 66, opacity: 0.5, flip: true },
     { prop: 'crowd-row', x: -4, y: 2, scale: 110 },
@@ -2954,7 +2941,7 @@ const FG_COMPOSITIONS = [
     { prop: 'concrete-step', x: -4, y: -6, scale: 108 },
     { prop: 'chainlink', x: 0, y: 0, scale: 100, opacity: 0.6 }
   ]
-  /* 06, 07, 08 stay generated — see ASSETS.md */
+  /* 05, 06, 07 stay generated — see ASSETS.md */
 ];
 
 /* Four of the eight editorial cards take a still; the rest keep their
@@ -2969,7 +2956,7 @@ const PLATE_ART = {
 function buildForegrounds() {
   const host = document.getElementById('foreground');
   const layers = [];
-  const painters = [];
+  let painters = [];
 
   /* 00 — street level: kerb, parked cars, a bollard or two */
   painters.push((ctx) => {
@@ -3349,6 +3336,14 @@ function buildForegrounds() {
   /* Each chapter takes real art when every prop in its composition has a
      path, and otherwise falls back to the generated painter above. That
      keeps delivery incremental: nothing 404s, nothing renders half-built. */
+  /* chapters 00 and 01 merged, so their two painters compose into one
+     layer: the street at the kerb plus the tin wall and laundry above it.
+     Neither was worth discarding. */
+  if (painters.length === 9) {
+    const [street, tin, ...rest] = painters;
+    painters = [(ctx) => { street(ctx); tin(ctx); }, ...rest];
+  }
+
   painters.forEach((paint, i) => {
     const comp = FG_COMPOSITIONS[i];
     const ready = comp && comp.length && comp.every((c) => FG_PROPS[c.prop]);
@@ -3678,7 +3673,7 @@ const ES = {
 
   'hero.eyebrow': 'La Boca · Buenos Aires · 20:47',
   'hero.h': 'La calle grita <span class="em">antes</span> que el estadio',
-  'hero.lede': 'Nueve capítulos, una sola cámara, cada ladrillo dibujado en tiempo real. Deslizá para caminar desde Caminito hasta lo más alto de los tablones.',
+  'hero.lede': 'Ocho capítulos, una sola cámara, cada ladrillo dibujado en tiempo real. Deslizá para caminar desde Caminito hasta lo más alto de los tablones.',
   'hero.scroll': 'Deslizá',
   'hero.m1t': 'Render',
   'hero.m2t': 'Geometría', 'hero.m2d': '100% procedural',
@@ -3767,7 +3762,7 @@ const ES = {
   'man.eyebrow': 'Manifiesto · colofón',
   'man.h': 'Construí el <span class="em">ruido</span>, no el logo',
   'man.1': 'Cada superficie de esta página se genera en tiempo real. No hay una sola fotografía, ni un archivo de textura, ni una imagen de relleno en el repositorio.',
-  'man.2': 'La cámara nunca corta. Nueve capítulos, un solo recorrido, movido enteramente por cuánto scrolleaste.',
+  'man.2': 'La cámara nunca corta. Ocho capítulos, un solo recorrido, movido enteramente por cuánto scrolleaste.',
   'man.3': 'Sin framework, sin bundler, sin gestor de paquetes. Un archivo HTML, un renderer incluido y una tipografía.',
   'man.4': 'El modo de movimiento reducido no es una versión degradada. Es la misma historia, quieta.',
   'man.5': 'Un estadio es una máquina para amplificar gente. Una buena página también.',
@@ -3903,15 +3898,14 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
    camera reaches the pitch.
    ═══════════════════════════════════════════════════════════════════ */
 const MIX = [
-  { gain: 0.14, cutoff: 700, drums: 0.22 },    /* 00 blocks away        */
-  { gain: 0.30, cutoff: 1400, drums: 0.5 },    /* 01 barrio             */
-  { gain: 0.48, cutoff: 950, drums: 0.78 },    /* 02 at the wall        */
-  { gain: 0.56, cutoff: 480, drums: 0.92 },    /* 03 túnel — pressure   */
-  { gain: 0.94, cutoff: 9000, drums: 1.0 },    /* 04 out on the pitch   */
-  { gain: 1.0, cutoff: 12000, drums: 1.0 },    /* 05 the tribuna        */
-  { gain: 0.17, cutoff: 300, drums: 0.15 },    /* 06 back under it      */
-  { gain: 0.12, cutoff: 250, drums: 0.10 },    /* 07 deeper, quieter    */
-  { gain: 0.42, cutoff: 3600, drums: 0.5 }     /* 08 pulling away       */
+  { gain: 0.22, cutoff: 1000, drums: 0.36 },   /* 00 barrio, blocks out */
+  { gain: 0.48, cutoff: 950, drums: 0.78 },    /* 01 at the wall        */
+  { gain: 0.56, cutoff: 480, drums: 0.92 },    /* 02 túnel, pressure    */
+  { gain: 0.94, cutoff: 9000, drums: 1.0 },    /* 03 out on the pitch   */
+  { gain: 1.0, cutoff: 12000, drums: 1.0 },    /* 04 the tribuna        */
+  { gain: 0.17, cutoff: 300, drums: 0.15 },    /* 05 back under it      */
+  { gain: 0.12, cutoff: 250, drums: 0.10 },    /* 06 deeper, quieter    */
+  { gain: 0.42, cutoff: 3600, drums: 0.5 }     /* 07 pulling away       */
 ];
 
 const audio = (() => {

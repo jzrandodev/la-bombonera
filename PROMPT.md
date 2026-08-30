@@ -22,7 +22,7 @@ Write the passes yourself rather than importing a stack: threshold the bright re
 
 ## Page
 
-Structure it as nine chapters — arrival, the streets, the wall of the ground itself, the threshold, the pitch, the stands, then two quiet rooms under the stand on the way out, and a closing manifesto. The walk should build to the loudest chapter and come down from it, not peak in the middle. Set oversized, left-aligned, condensed display headings against small technical labels in mono, thick rules, and a lot of empty space. A second, larger stencil word sits behind each chapter as texture.
+Structure it as eight chapters — arrival, the streets, the wall of the ground itself, the threshold, the pitch, the stands, then two quiet rooms under the stand on the way out, and a closing manifesto. The walk should build to the loudest chapter and come down from it, not peak in the middle. Set oversized, left-aligned, condensed display headings against small technical labels in mono, thick rules, and a lot of empty space. A second, larger stencil word sits behind each chapter as texture.
 
 Editorial cards carry stills of the same world, framed differently and rendered offscreen. Foreground elements — fencing, steps, flags, drums, smoke — sit at the bottom of the viewport with real alpha, arriving at full opacity, holding while their chapter is active, then blurring away at the handoff.
 
