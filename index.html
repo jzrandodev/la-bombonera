@@ -21,8 +21,8 @@
 <meta name="twitter:description" content="A nine-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL.">
 <meta name="twitter:image" content="https://la-bombonera-gules.vercel.app/assets/og-preview.jpg">
 <link rel="canonical" href="https://la-bombonera-gules.vercel.app/">
-<link rel="preload" href="./assets/vendor/fonts/bsd-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="./assets/vendor/fonts/bsstencil-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/vendor/fonts/arch-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/vendor/fonts/piaz-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./assets/vendor/fonts/fonts.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2308090c'/%3E%3Crect x='6' y='6' width='20' height='20' fill='%230d1b3e'/%3E%3Crect x='6' y='14' width='20' height='4' fill='%23f0b323'/%3E%3C/svg%3E">
 <style>
@@ -40,17 +40,24 @@
   --bone:       #e8e6e0;
   --bone-dim:   #9a988f;
 
-  --font-display: 'Big Shoulders', 'Arial Narrow', 'Helvetica Neue', sans-serif;
-  --font-stencil: 'Big Shoulders Stencil', 'Big Shoulders', 'Arial Narrow', sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  /* Argentine type for an Argentine story. Archivo is Omnibus-Type of Buenos
+     Aires and carries a width axis; the wordmark runs it expanded so it sits
+     still and takes up space, the way a building does, rather than leaning
+     forward like a sports mark. Piazzolla is Huerta Tipografica, drawn for
+     long reading, which is what nine chapters of prose over a scene is. */
+  --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-stencil: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Piazzolla', Georgia, 'Times New Roman', serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --step--1: clamp(0.68rem, 0.66rem + 0.1vw, 0.75rem);
-  --step-0:  clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
-  --step-1:  clamp(1.15rem, 1.05rem + 0.5vw, 1.45rem);
+  --step-0:  clamp(1.0rem, 0.94rem + 0.24vw, 1.12rem);
+  --step-1:  clamp(1.18rem, 1.08rem + 0.5vw, 1.5rem);
   --step-2:  clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem);
-  --step-h:  clamp(2.3rem, 1.1rem + 5.4vw, 6.2rem);
-  --step-st: clamp(4.2rem, 1rem + 16vw, 17rem);
+  /* Retuned for Archivo. The old values were set against a condensed
+     face and overflow badly at the same numbers. */
+  --step-h:  clamp(1.85rem, 0.95rem + 3.9vw, 4.5rem);
+  --step-st: clamp(2.2rem, 0.6rem + 7.2vw, 7rem);
 
   --gutter: clamp(1.15rem, 0.6rem + 2.6vw, 4.5rem);
   --rule: 2px;
@@ -142,16 +149,22 @@ body {
   display: flex;
   justify-content: center;
   pointer-events: none;
+  /* the wordmark is deliberately wider than the viewport; clip it so it
+     does not hand the document a horizontal scrollbar */
+  overflow: hidden;
   opacity: 0;
   transition: opacity 1000ms var(--ease);
 }
 #wordmark.is-active { opacity: 1; }
 #wordmark span {
   font-family: var(--font-stencil);
-  font-weight: 700;
-  font-size: clamp(4.4rem, 16.5vw, 22rem);
-  line-height: 0.76;
-  letter-spacing: -0.012em;
+  font-weight: 800;
+  /* expanded: mass rather than speed */
+  font-stretch: 125%;
+  font-variation-settings: 'wdth' 125;
+  font-size: clamp(2.6rem, 9.4vw, 12rem);
+  line-height: 0.82;
+  letter-spacing: -0.028em;
   text-transform: uppercase;
   white-space: nowrap;
   color: rgba(232, 230, 224, 0.17);
@@ -161,6 +174,9 @@ body {
   position: fixed;
   inset: 0;
   z-index: 1;
+  /* layers are deliberately wider than the viewport; clip them so they
+     do not give the document a horizontal scrollbar */
+  overflow: hidden;
   pointer-events: none;
   overflow: hidden;
 }
@@ -445,16 +461,24 @@ h1 .em, h2 .em { color: var(--gold); }
 
 .stencil {
   font-family: var(--font-stencil);
-  font-weight: 700;
+  font-weight: 800;
+  /* The inversion device survives the typeface change: an outline on
+     Archivo reads the same as a stencil cut, without the costume. */
+  font-stretch: 118%;
+  font-variation-settings: 'wdth' 118;
   font-size: var(--step-st);
-  line-height: 0.78;
-  letter-spacing: 0.01em;
+  line-height: 0.84;
+  letter-spacing: -0.022em;
   text-transform: uppercase;
   color: transparent;
   -webkit-text-stroke: 1px var(--concrete-d);
   opacity: 0.5;
   pointer-events: none;
   user-select: none;
+  /* decorative: it must never widen the column, in either language */
+  max-width: 100%;
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 .stencil--fill {
   color: rgba(240, 179, 35, 0.09);
@@ -1300,7 +1324,7 @@ h1 .em, h2 .em { color: var(--gold); }
       <div>
         <h3>Stack</h3>
         <p>Three.js r185 · MIT</p>
-        <p>Big Shoulders · OFL 1.1</p>
+        <p>Archivo · Piazzolla · OFL 1.1</p>
         <p data-i18n="col.static">Static · no build step</p>
       </div>
       <div>
