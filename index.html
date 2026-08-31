@@ -58,6 +58,9 @@
      face and overflow badly at the same numbers. */
   --step-h:  clamp(1.85rem, 0.95rem + 3.9vw, 4.5rem);
   --step-st: clamp(2.2rem, 0.6rem + 7.2vw, 7rem);
+  /* set from the pointer each frame; 0 until it moves */
+  --par-x: 0px;
+  --par-y: 0px;
 
   --gutter: clamp(1.15rem, 0.6rem + 2.6vw, 4.5rem);
   --rule: 2px;
@@ -156,6 +159,9 @@ body {
   transition: opacity 1000ms var(--ease);
 }
 #wordmark.is-active { opacity: 1; }
+#wordmark {
+  transform: translate3d(calc(var(--par-x) * 1.5), calc(var(--par-y) * 1.5), 0);
+}
 #wordmark span {
   font-family: var(--font-stencil);
   font-weight: 800;
@@ -185,7 +191,7 @@ body {
   left: 50%;
   bottom: 0;
   width: min(1900px, 148vw);
-  transform: translateX(-50%);
+  transform: translateX(-50%) translate3d(calc(var(--par-x) * -2.1), calc(var(--par-y) * -0.9), 0);
   opacity: 0;
   filter: blur(14px);
   transition: opacity 900ms var(--ease), filter 900ms var(--ease), transform 1400ms var(--ease);
@@ -509,8 +515,27 @@ h1 .em, h2 .em { color: var(--gold); }
 .meta dd { margin: 0.25rem 0 0; color: var(--bone); }
 
 /* ─── hero ────────────────────────────────────────────────────────────── */
-.hero { justify-content: flex-end; }
-.hero h1 { margin-top: clamp(1.2rem, 0.8rem + 1.4vw, 2.2rem); max-width: 13ch; }
+.hero {
+  justify-content: flex-end;
+  /* the opening runs a much larger headline than the chapters that
+     follow, so it takes less padding above it to keep the lede and
+     the meta strip inside the first viewport in both languages */
+  padding-top: clamp(4.5rem, 3rem + 5vw, 7.5rem);
+}
+.hero h1, .hero .hero-foot {
+  transform: translate3d(calc(var(--par-x) * 0.42), calc(var(--par-y) * 0.28), 0);
+}
+.hero h1 {
+  margin-top: clamp(1rem, 0.6rem + 1.2vw, 1.9rem);
+  /* the opening carries the five-second bar on its own, so it runs
+     considerably larger than the chapter headings that follow */
+  font-size: clamp(2.7rem, 1rem + 8.4vw, 8.4rem);
+  /* a wider measure buys the height back: the same size in three lines
+     rather than five, so the lede and the meta strip stay above the fold */
+  line-height: 0.86;
+  letter-spacing: -0.034em;
+  max-width: 15ch;
+}
 .hero-foot {
   display: flex;
   flex-wrap: wrap;
@@ -967,6 +992,10 @@ h1 .em, h2 .em { color: var(--gold); }
   }
   .js [data-reveal], .js .word { opacity: 1; transform: none; }
   .fg-layer { opacity: 1; filter: none; }
+  /* the pointer parallax is already gated in script; this makes the
+     no-motion state explicit rather than relying on the vars staying 0 */
+  #wordmark, .hero h1, .hero .hero-foot { transform: none; }
+  .fg-layer { transform: translateX(-50%); }
 }
 </style>
 <script>document.documentElement.className = 'js';</script>
@@ -1041,7 +1070,7 @@ h1 .em, h2 .em { color: var(--gold); }
   <!-- ── 00 ─────────────────────────────────────────────────────────── -->
   <section class="chapter hero" id="barrio" data-chapter="0" aria-labelledby="hero-title">
     <p class="eyebrow" data-reveal><span class="bar" aria-hidden="true"></span><span class="num">00</span> <span data-i18n="hero.eyebrow">La Boca · Buenos Aires · 20:47</span></p>
-    <h1 id="hero-title" data-reveal data-split data-i18n="hero.h">The street gets loud <span class="em">before</span> the stadium does</h1>
+    <h1 id="hero-title" data-reveal data-split data-i18n="hero.h">The street gets <span class="em">loud</span> first</h1>
 
     <hr class="rule rule--gold" data-reveal>
 
@@ -1341,6 +1370,23 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const isCoarse = window.matchMedia('(pointer: coarse)').matches;
 const isSmall = window.matchMedia('(max-width: 900px)').matches;
 const LOW = isCoarse || isSmall;
+
+/* Pointer parallax. A fine pointer only, and never when the visitor has
+   asked for reduced motion. Held as a target that the frame loop damps
+   toward, so the movement has weight rather than tracking the cursor
+   one-to-one. */
+const ptr = { tx: 0, ty: 0, x: 0, y: 0 };
+const lastPar = { x: 0, y: 0 };
+const pointerParallax = !isCoarse && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (pointerParallax) {
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+    ptr.tx = (e.clientX / window.innerWidth) * 2 - 1;
+    ptr.ty = (e.clientY / window.innerHeight) * 2 - 1;
+    dirty = true;
+  }, { passive: true });
+  window.addEventListener('pointerleave', () => { ptr.tx = 0; ptr.ty = 0; dirty = true; }, { passive: true });
+}
 
 /* ─── math ────────────────────────────────────────────────────────────── */
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
@@ -3672,7 +3718,7 @@ const ES = {
   'rail.ch3': 'Capítulo', 'rail.ch4': 'Capítulo', 'rail.ch5': 'Capítulo', 'rail.ch6': 'Capítulo', 'rail.ch7': 'Capítulo', 'rail.ch8': 'Capítulo',
 
   'hero.eyebrow': 'La Boca · Buenos Aires · 20:47',
-  'hero.h': 'La calle grita <span class="em">antes</span> que el estadio',
+  'hero.h': 'La calle <span class="em">grita</span> primero',
   'hero.lede': 'Ocho capítulos, una sola cámara, cada ladrillo dibujado en tiempo real. Deslizá para caminar desde Caminito hasta lo más alto de los tablones.',
   'hero.scroll': 'Deslizá',
   'hero.m1t': 'Render',
@@ -4156,6 +4202,31 @@ function frame(now) {
     tgtPos.x += Math.sin(t * 8.3) * amp * 0.4 + Math.sin(t * 3.1) * amp * 0.3;
     tgtPos.y += Math.abs(Math.sin(t * 4.15)) * amp;
     tgtLook.y += Math.sin(t * 4.15 + 0.6) * amp * 2.2;
+  }
+
+  /* Parallax rides on top of the scroll path and the tremor rather than
+     replacing either. Weighted to the opening chapter, where the visitor
+     lingers, and decaying to a third of that once the walk is moving, so
+     it never fights a composed shot. */
+  if (pointerParallax && !still) {
+    const k = 1 - Math.exp(-dt * 3.6);
+    ptr.x += (ptr.tx - ptr.x) * k;
+    ptr.y += (ptr.ty - ptr.y) * k;
+    const w = 0.34 + 0.66 * Math.exp(-(tCurrent * tCurrent) / 0.9);
+    tgtPos.x  += ptr.x * 1.15 * w;
+    tgtPos.y  += -ptr.y * 0.5 * w;
+    tgtLook.x += ptr.x * 1.9 * w;
+    tgtLook.y += -ptr.y * 1.15 * w;
+    /* the DOM layers lean the other way, which is what reads as depth.
+       Written only when they actually move: setting a custom property on
+       the root invalidates style for everything that reads it, and the
+       pointer is still most of the time. */
+    const px = -ptr.x * 14 * w, py = -ptr.y * 8 * w;
+    if (Math.abs(px - lastPar.x) > 0.08 || Math.abs(py - lastPar.y) > 0.08) {
+      lastPar.x = px; lastPar.y = py;
+      doc.style.setProperty('--par-x', px.toFixed(2) + 'px');
+      doc.style.setProperty('--par-y', py.toFixed(2) + 'px');
+    }
   }
 
   camPos.copy(tgtPos);
