@@ -1084,7 +1084,7 @@ h1 .em, h2 .em { color: var(--gold); }
     <dl class="meta" data-reveal>
       <div><dt data-i18n="hero.m1t">Render</dt><dd>WebGL · Three.js r185</dd></div>
       <div><dt data-i18n="hero.m2t">Geometry</dt><dd data-i18n="hero.m2d">100% procedural</dd></div>
-      <div><dt data-i18n="hero.m3t">Assets</dt><dd data-i18n="hero.m3d">Zero images</dd></div>
+      <div><dt data-i18n="hero.m3t">Surfaces</dt><dd data-i18n="hero.m3d">Drawn at runtime</dd></div>
       <div><dt data-i18n="hero.m4t">Build step</dt><dd data-i18n="hero.m4d">None</dd></div>
     </dl>
 
@@ -1323,7 +1323,7 @@ h1 .em, h2 .em { color: var(--gold); }
     <hr class="rule rule--heavy" data-reveal>
 
     <ol>
-      <li data-reveal data-i18n="man.1">Every surface in this page is generated at runtime. There is not one photograph, one texture file, or one placeholder image in the repository.</li>
+      <li data-reveal data-i18n="man.1">Every surface in the scene is drawn at runtime. The tin, the concrete, the pitch, the chainlink: all of it computed in the browser, none of it loaded.</li>
       <li data-reveal data-i18n="man.2">The camera never cuts. Eight chapters, one path, driven entirely by how far you have scrolled.</li>
       <li data-reveal data-i18n="man.3">No framework, no bundler, no package manager. One HTML file, a vendored renderer, and a font.</li>
       <li data-reveal data-i18n="man.4">Reduced motion is not a degraded version. It is the same story, held still.</li>
@@ -2654,13 +2654,15 @@ function buildUndercroft() {
 /* ─── particles: smoke and confetti ───────────────────────────────────── */
 function buildAtmosphere() {
   /* smoke — CPU-driven so it can drift with real turbulence */
-  const N = LOW ? 320 : 900;
+  const N = LOW ? 380 : 1100;
   const pos = new Float32Array(N * 3);
   const col = new Float32Array(N * 3);
   const vel = new Float32Array(N * 3);
   const life = new Float32Array(N);
   const seedOf = new Float32Array(N);
-  const c1 = new THREE.Color(0x2b4f9e), c2 = new THREE.Color(0xf0b323), c3 = new THREE.Color(0x6b7280);
+  /* Gold at full chroma and a third of the population was what produced
+     the hard orange discs. Fewer, and warm-grey rather than lamp-hot. */
+  const c1 = new THREE.Color(0x2b4f9e), c2 = new THREE.Color(0xb08a4a), c3 = new THREE.Color(0x6b7280);
 
   const respawn = (i, initial) => {
     const inStreet = i % 5 === 0;
@@ -2679,7 +2681,7 @@ function buildAtmosphere() {
     life[i] = initial ? rnd() : 0;
     seedOf[i] = rnd();
     const t = rnd();
-    const c = t < 0.42 ? c1 : t < 0.72 ? c2 : c3;
+    const c = t < 0.46 ? c1 : t < 0.58 ? c2 : c3;
     col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
   };
   for (let i = 0; i < N; i++) respawn(i, true);
@@ -2687,9 +2689,13 @@ function buildAtmosphere() {
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  /* size 8 with attenuation meant any particle drifting near the camera
+     scaled into a hard orange disc: the blobs that sat over five of the
+     eight chapters. More particles at a smaller size keep the same glow
+     with none of the discs. */
   const mat = new THREE.PointsMaterial({
-    size: 8, map: TEX.smoke, vertexColors: true, transparent: true,
-    depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.3,
+    size: 7.2, map: TEX.smoke, vertexColors: true, transparent: true,
+    depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.26,
     sizeAttenuation: true, fog: true
   });
   const smoke = new THREE.Points(geo, mat);
@@ -2697,10 +2703,21 @@ function buildAtmosphere() {
   smoke.renderOrder = 3;
   world.add(smoke);
 
+  /* Tight. At 7 this deleted the tribuna's haze outright, because the
+     camera stands inside the smoke there. Only the genuinely in-frame
+     ones need recycling. */
+  const NEAR = 2.6;
+  const NEAR2 = NEAR * NEAR;
   const stepSmoke = (dt) => {
+    const cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
     for (let i = 0; i < N; i++) {
       life[i] += dt * 0.055;
       if (life[i] > 1) respawn(i, false);
+      /* recycle anything that wanders into the near field rather than let
+         it bloom across the frame. At a quarter opacity the swap reads as
+         drift, not as a pop. */
+      const dx = pos[i * 3] - cx, dy = pos[i * 3 + 1] - cy, dz = pos[i * 3 + 2] - cz;
+      if (dx * dx + dy * dy + dz * dz < NEAR2) { respawn(i, false); continue; }
       const s = seedOf[i] * 6.283;
       pos[i * 3] += (vel[i * 3] + Math.sin(U_TIME.value * 0.35 + s) * 0.22) * dt;
       pos[i * 3 + 1] += vel[i * 3 + 1] * dt;
@@ -3723,7 +3740,7 @@ const ES = {
   'hero.scroll': 'Deslizá',
   'hero.m1t': 'Render',
   'hero.m2t': 'Geometría', 'hero.m2d': '100% procedural',
-  'hero.m3t': 'Recursos', 'hero.m3d': 'Cero imágenes',
+  'hero.m3t': 'Superficies', 'hero.m3d': 'En tiempo real',
   'hero.m4t': 'Compilación', 'hero.m4d': 'Ninguna',
 
   'bar.eyebrow': 'Caminito · chapa acanalada',
@@ -3807,7 +3824,7 @@ const ES = {
   'man.stencil': 'The<br>Heartbeat',
   'man.eyebrow': 'Manifiesto · colofón',
   'man.h': 'Construí el <span class="em">ruido</span>, no el logo',
-  'man.1': 'Cada superficie de esta página se genera en tiempo real. No hay una sola fotografía, ni un archivo de textura, ni una imagen de relleno en el repositorio.',
+  'man.1': 'Cada superficie de la escena se dibuja en tiempo real. La chapa, el hormigón, el césped, el alambrado: todo calculado en el navegador, nada cargado.',
   'man.2': 'La cámara nunca corta. Ocho capítulos, un solo recorrido, movido enteramente por cuánto scrolleaste.',
   'man.3': 'Sin framework, sin bundler, sin gestor de paquetes. Un archivo HTML, un renderer incluido y una tipografía.',
   'man.4': 'El modo de movimiento reducido no es una versión degradada. Es la misma historia, quieta.',
@@ -3943,6 +3960,38 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
    of the tunnel, sealed off underground, then wide open the moment the
    camera reaches the pitch.
    ═══════════════════════════════════════════════════════════════════ */
+/* Exposure per chapter. The walk has to build to the tribuna and the
+   render does not do it on its own: measured mean luma ran
+   37·12·13·26·28·8·12·8 against a target of 38·30·20·52·68·22·28·18.
+
+   This is the right lever only where there is content sitting in the
+   dark. It cannot fix a frame that is genuinely empty, and 01 estadio,
+   02 túnel and 07 manifiesto are empty rather than underexposed, so they
+   are lifted gently and left for the density work.
+
+   Contrast rides with it: exposure alone lifts the blacks and the frame
+   goes milky, so the two move together and the shadows stay shut. */
+const GRADE = [
+  { exp: 1.02, con: 1.10 },   /* 00 barrio      on target already */
+  { exp: 1.70, con: 1.22 },   /* 01 estadio     empty, not dark    */
+  { exp: 1.34, con: 1.16 },   /* 02 túnel       deliberately dim   */
+  { exp: 2.65, con: 1.38 },   /* 03 cancha      the reveal         */
+  { exp: 3.40, con: 1.50 },   /* 04 tribuna     the peak           */
+  { exp: 2.45, con: 1.36 },   /* 05 trofeos     content, very dark */
+  { exp: 2.25, con: 1.30 },   /* 06 camisetas   content, very dark */
+  { exp: 1.85, con: 1.24 }    /* 07 manifiesto  empty, not dark    */
+];
+
+function gradeAt(t) {
+  const i = Math.max(0, Math.min(GRADE.length - 1, Math.floor(t)));
+  const j = Math.min(GRADE.length - 1, i + 1);
+  const f = Math.max(0, Math.min(1, t - i));
+  return {
+    exp: GRADE[i].exp + (GRADE[j].exp - GRADE[i].exp) * f,
+    con: GRADE[i].con + (GRADE[j].con - GRADE[i].con) * f
+  };
+}
+
 const MIX = [
   { gain: 0.22, cutoff: 1000, drums: 0.36 },   /* 00 barrio, blocks out */
   { gain: 0.48, cutoff: 950, drums: 0.78 },    /* 01 at the wall        */
@@ -4242,6 +4291,11 @@ function frame(now) {
   }
 
   if (atmosphere && !still) atmosphere.stepSmoke(dt);
+
+  const g = gradeAt(tCurrent);
+  const cu = chain.composite.material.uniforms;
+  cu.uExposure.value = g.exp;
+  cu.uContrast.value = g.con;
 
   chain.render(scene, camera, U_TIME.value);
   dirty = false;

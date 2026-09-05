@@ -12,9 +12,9 @@ An eight-chapter cinematic walk from the streets of La Boca into the stands, ren
 - Layers editorial cards over the live scene whose images are **offscreen renders of the same world**, plus foreground cutouts painted to canvas with real alpha — chainlink, concrete steps, flags, drums, smoke.
 - Keeps working without any of it: reduced motion, no WebGL, or a lost GPU context all still leave the complete page readable.
 
-## Zero image assets
+## Every surface is drawn at runtime
 
-There is not one photograph, texture file, or placeholder image in this repository. Every surface is generated in the browser at load:
+No texture files, no photographic source material. Every surface in the scene is computed in the browser at load:
 
 | Surface | How |
 | --- | --- |
@@ -26,6 +26,8 @@ There is not one photograph, texture file, or placeholder image in this reposito
 | Foreground cutouts | Canvas2D silhouettes with real alpha, painted once at boot |
 
 The crowd bounce and the falling confetti run in the vertex stage — the beat is a uniform, not a CPU loop.
+
+The one image in the repository is `assets/og-preview.jpg`, the social card that link previews need. It is composited from the live scene, not sourced.
 
 ## How it is made
 
