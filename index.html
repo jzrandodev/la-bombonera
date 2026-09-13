@@ -2037,7 +2037,7 @@ function buildTunnel() {
 
   /* the facade the tunnel cuts through, so the street ends in a wall */
   const facadeMat = MAT.concrete.clone();
-  facadeMat.color.setHex(0x4a4c4e);
+  facadeMat.color.setHex(0x63666a);
   const slabs = [
     [-19, 9, 26, 18], [19, 9, 26, 18], [0, 14.5, 12, 7]
   ];
@@ -2061,10 +2061,21 @@ function buildTunnel() {
   }
   strips.instanceColor.needsUpdate = true;
 
-  for (let i = 0; i < 3; i++) {
-    const lamp = new THREE.PointLight(0x9fb4e0, 14, 26, 2);
-    lamp.position.set(0, H - 0.6, Z0 - 8 - i * 15);
+  /* Three lamps at intensity 14 over fifty-two metres left this a black
+     frame with a white rectangle at the end of it. The chapter is meant
+     to be the darkest in the walk, which is not the same as unreadable:
+     one lamp per strip, dim, so the pillars recede and the concrete
+     shows its texture. */
+  for (let i = 0; i < n; i += 2) {
+    const lamp = new THREE.PointLight(0x9fb4e0, 46, 15, 2);
+    lamp.position.set(0, H - 0.5, Z0 - 2 - i * 4);
     shell.add(lamp);
+  }
+  /* a cold wash so the walls are never pure black between the lamps */
+  for (let i = 0; i < 3; i++) {
+    const fill = new THREE.PointLight(0x6d82b4, 26, 30, 2);
+    fill.position.set(0, H * 0.55, Z0 - 9 - i * 16);
+    shell.add(fill);
   }
 
   /* the mouth: a flat white rectangle at the end of the dark. It caps the
@@ -2076,10 +2087,20 @@ function buildTunnel() {
   /* the key light travels +z and so only reaches the far side of the
      facade. These light the street side, which is the side anyone
      walking up to it actually sees. */
-  for (const fx of [-15, 0, 15]) {
-    const lamp = new THREE.PointLight(0xffb782, 430, 46, 2);
-    lamp.position.set(fx, 9, 9);
+  /* Three lamps at mid-height put almost nothing on a dark grey wall, so
+     the chapter the whole street is walking toward rendered as black.
+     Uplit from the apron instead, which is how a facade like this is
+     actually lit, and enough of them to carry its width. */
+  for (const fx of [-26, -17, -8, 8, 17, 26]) {
+    const lamp = new THREE.PointLight(0xf0c096, 580, 38, 2);
+    lamp.position.set(fx, 1.9, 9.5);
     shell.add(lamp);
+  }
+  /* a cooler wash high up so the top of the wall does not fall to black */
+  for (const fx of [-20, 0, 20]) {
+    const top = new THREE.PointLight(0x93a9d4, 380, 46, 2);
+    top.position.set(fx, 16, 13);
+    shell.add(top);
   }
 
   const spill = new THREE.PointLight(0xcfe0ff, 40, 34, 2);
@@ -2807,6 +2828,8 @@ const SHOTS = [
   /* 00 is the arrival and the barrio in one: the establishing street
      view, pushed a little closer than the old hero so the tin reads. */
   { pos: [2.0, 2.2, 41], look: [-1.3, 5.4, 5], fov: 61 },       /* 00 barrio    */
+  /* looks right, at the slab. Aiming nearer x 0 puts the tunnel mouth
+     in the middle of frame and the wall stops reading. */
   { pos: [-3, 1.7, 15], look: [7, 7, 3], fov: 64 },            /* 01 estadio   */
   { pos: [0.1, 1.8, -30], look: [0.2, 2.2, -60], fov: 52 },    /* 02 túnel     */
   { pos: [12, 1.7, -73], look: [6, 18, -56], fov: 62 },        /* 03 cancha    */
@@ -3974,7 +3997,7 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 const GRADE = [
   { exp: 1.02, con: 1.10 },   /* 00 barrio      on target already */
   { exp: 1.70, con: 1.22 },   /* 01 estadio     empty, not dark    */
-  { exp: 1.34, con: 1.16 },   /* 02 túnel       deliberately dim   */
+  { exp: 1.42, con: 1.18 },   /* 02 túnel       deliberately dim   */
   { exp: 2.65, con: 1.38 },   /* 03 cancha      the reveal         */
   { exp: 3.40, con: 1.50 },   /* 04 tribuna     the peak           */
   { exp: 2.45, con: 1.36 },   /* 05 trofeos     content, very dark */
