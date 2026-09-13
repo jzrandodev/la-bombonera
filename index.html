@@ -907,6 +907,9 @@ h1 .em, h2 .em { color: var(--gold); }
   transition-delay: var(--d, 0ms);
 }
 .js [data-reveal].is-in { opacity: 1; transform: none; }
+/* module never took over: show everything rather than nothing */
+.no-module [data-reveal],
+.no-module .word { opacity: 1 !important; transform: none !important; }
 .js .word {
   display: inline-block;
   opacity: 0;
@@ -998,7 +1001,18 @@ h1 .em, h2 .em { color: var(--gold); }
   .fg-layer { transform: translateX(-50%); }
 }
 </style>
-<script>document.documentElement.className = 'js';</script>
+<script>
+document.documentElement.className = 'js';
+/* The class above hides every [data-reveal] until the module's observer
+   reveals them, which is what stops the page flashing its content before
+   it animates. If the module never runs, though — a failed vendor fetch,
+   a parse error, an engine that skips type="module" — nothing ever
+   reveals anything and the whole page is blank prose at opacity zero.
+   This reveals it unconditionally if nothing has claimed the page. */
+window.__revealFailsafe = setTimeout(function () {
+  document.documentElement.classList.add('no-module');
+}, 3500);
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
@@ -1370,6 +1384,8 @@ import * as THREE from './assets/vendor/three.module.min.js';
    ═══════════════════════════════════════════════════════════════════ */
 
 const doc = document.documentElement;
+/* the module is alive, so the blank-page failsafe is not needed */
+clearTimeout(window.__revealFailsafe);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const isCoarse = window.matchMedia('(pointer: coarse)').matches;
 const isSmall = window.matchMedia('(max-width: 900px)').matches;
