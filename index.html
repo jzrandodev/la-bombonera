@@ -922,6 +922,29 @@ h1 .em, h2 .em { color: var(--gold); }
 /* ─── responsive ──────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .rail { display: none; }
+
+  /* At 375 the bar wanted 567px: a 186px wordmark plus 328px of controls
+     in a 375px viewport. Nothing scrolled, it just clipped, which put the
+     ES half of the language toggle 65px off-screen and made Spanish
+     unreachable on a phone. Everything below is about fitting the bar and
+     giving each control a 44px touch target. */
+  .masthead { gap: 0.35rem; padding-left: 0.75rem; padding-right: 0.75rem; }
+  .masthead .wordmark .sub { display: none; }
+  .masthead__tools { gap: 0.3rem; }
+
+  /* labels go, the affordances stay */
+  .sound-toggle > span:not(.sound-toggle__bars),
+  .nav-toggle > span:not(.bars) { display: none; }
+
+  .sound-toggle, .nav-toggle, .lang-toggle {
+    min-height: 44px;
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+  }
+  .lang-toggle__opt { padding: 0.3rem 0.34rem; gap: 0.3rem; }
+  .wordmark { min-height: 44px; align-items: center; }
+  .nav-close { min-height: 44px; padding: 0.6rem 0.9rem; }
+  .manifesto a, .colophon a { display: inline-block; padding: 0.35rem 0; }
   .chapter-grid,
   .chapter--reverse .chapter-grid { grid-template-columns: minmax(0, 1fr); }
   .chapter--reverse .card-col { order: 0; }
@@ -956,6 +979,11 @@ h1 .em, h2 .em { color: var(--gold); }
     visibility: visible;
     transition: transform 520ms var(--ease), visibility 0s;
   }
+  /* This has to sit after the .primary-nav block above, not before it:
+     same specificity, so the later rule wins and var(--gutter) was
+     putting the overlay's links past the right edge. */
+  .primary-nav { padding-left: 1rem; padding-right: 1rem; overflow-x: hidden; }
+  .nav-list a { max-width: 100%; }
   .nav-list {
     flex-direction: column;
     gap: 0;
