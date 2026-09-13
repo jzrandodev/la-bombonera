@@ -2673,6 +2673,50 @@ function buildUndercroft() {
 }
 
 /* ─── particles: smoke and confetti ───────────────────────────────────── */
+/* The glow a lit ground throws into the night air above it. It is what
+   makes a stadium visible from blocks away, and the barrio copy already
+   claims it: "somewhere behind the roofline a floodlight is already
+   burning". Until now nothing in the scene showed it.
+
+   A dome over the bowl, seen from inside, additive, brightest near the
+   rim and gone by the top. Serves the opening, where it sits beyond the
+   rooftops, and the closing, where it is most of what reads. */
+function buildSkyGlow() {
+  const R = 78;
+  const dome = new THREE.Mesh(
+    new THREE.SphereGeometry(R, 28, 16, 0, Math.PI * 2, 0, Math.PI * 0.5),
+    new THREE.ShaderMaterial({
+      /* DoubleSide deliberately: the walk is inside this dome for six
+         chapters and outside it for the closing pull-back, and the glow
+         has to read from both. */
+      transparent: true, depthWrite: false, side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending, fog: false,
+      uniforms: {
+        uWarm: { value: new THREE.Color(0xffd9a3) },
+        uCool: { value: new THREE.Color(0x8fa8dc) },
+        uStrength: { value: 0.30 }
+      },
+      vertexShader: `varying vec3 vP;
+        void main() { vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `precision highp float;
+        uniform vec3 uWarm, uCool; uniform float uStrength; varying vec3 vP;
+        void main() {
+          /* 0 at the rim, 1 at the top of the dome */
+          float h = clamp(vP.y / ${R.toFixed(1)}, 0.0, 1.0);
+          /* falls away fast, so it is a glow and not a coloured sky */
+          float a = pow(1.0 - h, 3.4);
+          /* warm low where the lamps are, cooler as it climbs */
+          vec3 c = mix(uWarm, uCool, smoothstep(0.0, 0.45, h));
+          gl_FragColor = vec4(c * a * uStrength, a * uStrength);
+        }`
+    })
+  );
+  dome.position.set(BOWL.cx, 0, BOWL.cz);
+  dome.renderOrder = -1;
+  dome.frustumCulled = false;
+  world.add(dome);
+}
+
 function buildAtmosphere() {
   /* smoke — CPU-driven so it can drift with real turbulence */
   const N = LOW ? 380 : 1100;
@@ -2836,6 +2880,11 @@ const SHOTS = [
   { pos: [-10, 6.5, -66], look: [8, 20, -100], fov: 58 },      /* 04 tribuna   */
   { pos: [-4, -4.9, -22], look: [-14, -5.4, -32], fov: 62 },   /* 05 trofeos + leyendas */
   { pos: [-3, -4.4, -36], look: [3, -4.6, -47], fov: 60 },     /* 06 camisetas + escudos */
+  /* Frames almost entirely below the horizon, so there is no sky for the
+     ground to silhouette against. Dropping the camera to y 16 and
+     looking up at the rim was tried and measured worse, 10.8 to 5.1:
+     the bowl exterior is unlit, so more of it in frame is more black.
+     This wants the floodlight-pylon art, not another camera move. */
   { pos: [-58, 40, -26], look: [0, 6, -94], fov: 46 }          /* 07 manifiesto*/
 ];
 
@@ -3504,6 +3553,7 @@ if (webgl) {
   buildBowl();
   buildUndercroft();
   buildLights();
+  buildSkyGlow();
   atmosphere = buildAtmosphere();
 
   chain = new PostChain(renderer, 1, 1, {
