@@ -967,9 +967,13 @@ h1 .em, h2 .em { color: var(--gold); }
     inset: 0;
     z-index: 50;
     display: grid;
-    align-content: center;
+    /* start, not centre: centring a list taller than the screen clips it
+       at both ends, and the Close button was sitting at y -26. */
+    align-content: start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: var(--gutter);
-    background: rgba(5, 7, 13, 0.97);
+    background: rgb(5, 7, 13);
     transform: translateY(-100%);
     visibility: hidden;
     transition: transform 520ms var(--ease), visibility 0s linear 520ms;
@@ -988,9 +992,12 @@ h1 .em, h2 .em { color: var(--gold); }
     flex-direction: column;
     gap: 0;
     font-family: var(--font-display);
-    font-size: clamp(2rem, 1rem + 9vw, 3.4rem);
+    /* sized for Archivo, which sets far wider than the condensed face
+       this scale was written for. At the old value the list ran taller
+       than the viewport and centring pushed Close off the top. */
+    font-size: clamp(1.5rem, 0.85rem + 5.4vw, 2.45rem);
     font-weight: 700;
-    letter-spacing: 0;
+    letter-spacing: -0.01em;
   }
   .nav-list a {
     align-items: baseline;
@@ -1002,7 +1009,7 @@ h1 .em, h2 .em { color: var(--gold); }
   .nav-list a::after { display: none; }
   .nav-close {
     justify-self: end;
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem;
     font-family: var(--font-mono);
     font-size: var(--step--1);
     letter-spacing: 0.16em;
