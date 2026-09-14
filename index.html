@@ -1056,6 +1056,34 @@ document.documentElement.className = 'js';
 window.__revealFailsafe = setTimeout(function () {
   document.documentElement.classList.add('no-module');
 }, 3500);
+
+/* Reveals run here rather than in the module, because the module cannot
+   execute until 733 KB of Three.js has been fetched and parsed, and that
+   is 84 percent of the payload. Wiring them there meant nothing readable
+   appeared until a 3D engine had downloaded, on a page whose whole job is
+   to land in the first few seconds. This needs no Three, so it does not
+   wait for it: the words animate in on scroll while the scene is still
+   arriving. */
+document.addEventListener('DOMContentLoaded', function () {
+  var els = [].slice.call(document.querySelectorAll('[data-reveal]'));
+  els.forEach(function (el) {
+    var sibs = [].slice.call(el.parentElement.children)
+      .filter(function (n) { return n.hasAttribute('data-reveal'); });
+    el.style.setProperty('--d', (sibs.indexOf(el) * 90) + 'ms');
+  });
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('is-in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-in');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
+  els.forEach(function (el) { io.observe(el); });
+});
 </script>
 </head>
 <body>
@@ -4024,20 +4052,7 @@ const browserLang = (navigator.language || 'en').toLowerCase().startsWith('es') 
 applyLanguage(storedLang === 'es' || storedLang === 'en' ? storedLang : browserLang);
 langToggle.addEventListener('click', () => applyLanguage(lang === 'es' ? 'en' : 'es'));
 
-const revealables = [...document.querySelectorAll('[data-reveal]')];
-revealables.forEach((el) => {
-  const siblings = [...el.parentElement.children].filter((n) => n.hasAttribute('data-reveal'));
-  el.style.setProperty('--d', `${siblings.indexOf(el) * 90}ms`);
-});
-
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (!entry.isIntersecting) return;
-    entry.target.classList.add('is-in');
-    revealObserver.unobserve(entry.target);
-  });
-}, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
-revealables.forEach((el) => revealObserver.observe(el));
+/* the reveals are wired in the head, off the Three.js critical path */
 
 const plateObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
