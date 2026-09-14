@@ -50,8 +50,11 @@
   --font-body: 'Piazzolla', Georgia, 'Times New Roman', serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --step--1: clamp(0.68rem, 0.66rem + 0.1vw, 0.75rem);
-  --step-0:  clamp(1.0rem, 0.94rem + 0.24vw, 1.12rem);
+  /* the floor is what a phone gets. Captions and eyebrows were landing
+     at 10.9px there, and they carry real content: chapter number,
+     location, timestamp, plate caption. */
+  --step--1: clamp(0.75rem, 0.66rem + 0.1vw, 0.75rem);
+  --step-0:  clamp(1.06rem, 0.94rem + 0.24vw, 1.12rem);
   --step-1:  clamp(1.18rem, 1.08rem + 0.5vw, 1.5rem);
   --step-2:  clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem);
   /* Retuned for Archivo. The old values were set against a condensed
