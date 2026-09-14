@@ -37,6 +37,10 @@
   --gold-dim:   #a97d1c;
   --concrete:   #8a8b88;
   --concrete-d: #4a4b48;
+  /* #4a4b48 is a good rule and border colour and a bad text colour:
+     2.27:1 on the ink ground, where AA wants 4.5. This is the same
+     hue lifted until it passes, for label text only. */
+  --label:      #7a7b78;
   --bone:       #e8e6e0;
   --bone-dim:   #9a988f;
 
@@ -274,7 +278,7 @@ body {
   text-decoration: none;
   transition: color 320ms var(--ease);
 }
-.nav-list a .idx { color: var(--concrete-d); transition: color 320ms var(--ease); }
+.nav-list a .idx { color: var(--label); transition: color 320ms var(--ease); }
 .nav-list a::after {
   content: "";
   position: absolute;
@@ -309,7 +313,7 @@ body {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   line-height: 1;
-  color: var(--concrete-d);
+  color: var(--label);
   transition: color 300ms var(--ease), border-color 300ms var(--ease);
 }
 .sound-toggle:hover { color: var(--bone); }
@@ -343,7 +347,7 @@ body {
   align-items: center;
   gap: 0.38rem;
   padding: 0.42rem 0.58rem;
-  color: var(--concrete-d);
+  color: var(--label);
   transition: color 300ms var(--ease), background 300ms var(--ease);
 }
 .lang-toggle__opt.is-on { background: var(--gold); color: var(--ink); }
@@ -382,7 +386,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  color: var(--concrete-d);
+  color: var(--label);
   text-decoration: none;
   transition: color 320ms var(--ease);
 }
@@ -512,9 +516,9 @@ h1 .em, h2 .em { color: var(--gold); }
   font-size: var(--step--1);
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--concrete-d);
+  color: var(--label);
 }
-.meta dt { color: var(--concrete-d); }
+.meta dt { color: var(--label); }
 .meta dd { margin: 0.25rem 0 0; color: var(--bone); }
 
 /* ─── hero ────────────────────────────────────────────────────────────── */
@@ -639,7 +643,7 @@ h1 .em, h2 .em { color: var(--gold); }
   font-size: var(--step--1);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--concrete-d);
+  color: var(--label);
   background:
     repeating-linear-gradient(135deg, rgba(138,139,136,0.06) 0 8px, rgba(138,139,136,0) 8px 16px),
     var(--navy-deep);
@@ -723,7 +727,7 @@ h1 .em, h2 .em { color: var(--gold); }
   font-size: 0.56rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--concrete-d);
+  color: var(--label);
 }
 .legend__no {
   position: absolute;
@@ -766,11 +770,13 @@ h1 .em, h2 .em { color: var(--gold); }
   padding-bottom: 0.28rem;
   border-bottom: 1px solid rgba(138, 139, 136, 0.24);
   font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.1em;
+  /* was 0.58rem, which renders at 9px: too small to read on a phone,
+     and it sat just under AA on the card's lighter ground. */
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
-.legend__row dt { color: var(--concrete-d); }
+.legend__row dt { color: #8a8b88; }
 .legend__row dd { margin: 0; color: var(--bone); }
 .legend__back-name {
   font-family: var(--font-display);
@@ -813,7 +819,7 @@ h1 .em, h2 .em { color: var(--gold); }
   font-size: var(--step--1);
   font-style: normal;
   letter-spacing: 0.14em;
-  color: var(--concrete-d);
+  color: var(--label);
 }
 
 /* ─── manifesto footer ────────────────────────────────────────────────── */
@@ -871,12 +877,12 @@ h1 .em, h2 .em { color: var(--gold); }
 }
 .colophon h3 {
   font: inherit;
-  color: var(--concrete-d);
+  color: var(--label);
   margin-bottom: 0.5rem;
 }
 .colophon a { color: var(--bone); text-decoration: none; border-bottom: 1px solid var(--gold-dim); }
 .colophon a:hover { color: var(--gold); border-color: var(--gold); }
-.colophon .disclaimer { text-transform: none; letter-spacing: 0.02em; color: var(--concrete-d); }
+.colophon .disclaimer { text-transform: none; letter-spacing: 0.02em; color: var(--label); }
 
 /* ─── custom cursor (fine pointers only) ──────────────────────────────── */
 #cursor { display: none; }
