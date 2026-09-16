@@ -1,10 +1,18 @@
 # Handshake · La Bombonera
 
-Status: draft, interview in progress
+Status: complete · 2026-09-15
 
 ## The idea in plain words
 
-TODO, written after a read-back passes.
+Juan is looking for a job. When he sends someone his portfolio, he wants one link that makes them stop.
+
+So this is a web page about walking to a football ground in La Boca. The page is one long walk. You scroll, and a camera moves down a street, up to the stadium wall, through a tunnel, out onto the grass, and up into the stands where it is loudest. Then it comes back down through two quiet rooms and ends. The camera never cuts. It is one path the whole way.
+
+The computer draws the world live while you scroll. Some real pictures will sit in front of it, because the drawn version alone did not look good enough.
+
+It works in English and Spanish, and both count the same. If someone turns off animations, they still get the whole story, just held still.
+
+He will know it worked when someone who is hiring sees it and wants to talk to him. Because the top of the page is what most people will ever see, that part matters more than the rest.
 
 ## Why this matters
 
@@ -71,7 +79,7 @@ This is the single most important finding in this document. Two consequences:
 
 ## Decisions still open
 
-TODO, each with a recommended default.
+Only one, and it is not blocking: **whether to keep leading with the technique at all.** The positioning moved to story-led, and the copy followed, but the meta strip in the opening still lists Render, Geometry, Surfaces and Build step. That is a deliberate residue rather than an oversight. Default: leave it. It reads as a colophon rather than a boast, and a technical reviewer looks for exactly that.
 
 ## Constraints and guardrails
 
@@ -87,12 +95,26 @@ Present in the code today, not marked binding by Juan, would need a deliberate d
 
 ## Out of scope
 
-TODO.
+- **A build step.** No bundler, no package manager, no framework. This is load-bearing: it is stated in the README, it is why the page is one file, and it is the reason the 733 KB of Three.js cannot be tree-shaken. Giving it up would be a real trade, not a cleanup.
+- **Club marks of any kind.** No crest, no badge, no sponsor, no kit design, no sampled chants. Naming the club and the players is as far as this goes.
+- **Player photographs.** Names and career figures are public record; the images are licensed.
+- **More chapters.** Eight was reached by merging down from nine, deliberately.
+- **Anything that fetches at runtime.** See the deferred fixtures API.
 
 ## Open questions for research
 
-TODO.
+1. **Does the reduced-motion media query actually fire on a real machine?** The rules it contains are verified; the trigger is not, because no harness here can set the OS preference. Matters because it is one of two binding constraints.
+2. **Do the twelve players' figures survive a second source?** They come from Wikipedia's scorers table on a stated basis, plus DataFactory for Riquelme, and they cross-check. But they are real people in a public repo, so a second opinion is cheap insurance.
+3. **Does the Spanish read as rioplatense to a native?** It uses voseo, *bombo*, *tablones*, *papel picado* throughout and is grammatically sound. Register is the part I cannot check.
 
 ## Handoff notes
 
-TODO.
+Everything is one file, `index.html`, about 190 KB, no build step. A local server on `:4173` is the whole toolchain.
+
+**Read `PRODUCT.md` first** for who this is for, then `ASSETS.md` for what artwork is still needed and at what dimensions.
+
+**The single check that matters** is the eight-value luma sweep across the chapters. It must peak at the tribuna, index 4. It has caught every visual regression on this project, including two of mine that shipped.
+
+**The loader is inert by design.** Asset paths are `null` and a `null` is never requested, so the site is always shippable regardless of how much artwork exists. Activating one is a one-line change.
+
+**Verify on mobile as well as desktop, and exercise controls rather than measuring them.** Both rules were written after real breaks: Spanish was unreachable on a phone for weeks, and a skip link that passed every size check did nothing at all.
