@@ -113,7 +113,9 @@ Everything is one file, `index.html`, about 190 KB, no build step. A local serve
 
 **Read `PRODUCT.md` first** for who this is for, then `ASSETS.md` for what artwork is still needed and at what dimensions.
 
-**The single check that matters** is the eight-value luma sweep across the chapters. It must peak at the tribuna, index 4. It has caught every visual regression on this project, including two of mine that shipped.
+**The single check that matters** is the eight-value luma sweep across the chapters — but run it the way `VERIFY.md` specifies: on the **composite**, at **both viewports**, and **settled** (120 stepped frames per chapter, averaged). Corrected 2026-09-16: the sweep had been sampling only the WebGL canvas, while the foreground art sits in separate canvases covering the bottom 47% of the frame, and it receives none of the per-chapter `GRADE`.
+
+Measured properly, **desktop is fine** — it still peaks at the tribuna (55.5), with the barrio a close second (52.2), so the build is shallow rather than broken. **Mobile is a different curve**: it peaks at the túnel (50.0) and the tribuna comes 4th of 8 (22.6), because `camera.fov` is vertical and held constant while only `aspect` changes, collapsing the horizontal fov to ~46% in portrait. Do not tune brightness against the old stage-only number, and do not read the sweep under-settled — a 14-frame read invents an inversion on desktop that does not exist.
 
 **The loader is inert by design.** Asset paths are `null` and a `null` is never requested, so the site is always shippable regardless of how much artwork exists. Activating one is a one-line change.
 

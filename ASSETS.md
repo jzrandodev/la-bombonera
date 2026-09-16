@@ -40,20 +40,36 @@ This is what makes twelve separately-generated images feel like one place.
 
 ## Which frames need these most
 
-Measured 2026-09-15, after the grading, lighting and smoke work. The render has moved since these briefs were written, so aim them at what is still missing rather than at the old diagnosis.
+**Corrected 2026-09-16. The table below replaces one that was wrong.** The old
+figures came from a sweep that sampled only the WebGL canvas, while the
+foreground art sits in separate canvases covering the bottom 47% of the frame.
+See `VERIFY.md`. Both columns are the composite the viewer actually sees.
 
-| Chapter | Luma | State |
-| --- | --- | --- |
-| 00 barrio | 40 | Reads as a street. Props would add material and depth, not rescue it. |
-| 01 estadio | 21 | The wall is lit and legible now. Was 11 and black. |
-| **02 túnel** | **13** | **Still a black frame with a white rectangle. The weakest in the piece.** Lighting and framing were both tried and both measured worse. Wants `concrete-step` and `chainlink`. |
-| 03 cancha | 38 | Crowd reads as mass. Wants `chainlink` and `crowd-row` in front of it. |
-| 04 tribuna | 51 | The climax, and it works. Props would sharpen rather than save it. |
-| 05 trofeos | 14 | Dark but legible: lit cases against near-black, as intended. |
-| 06 camisetas | 19 | The most legible frame in the piece. Leave alone. |
-| **07 manifiesto** | **11** | **Unlit exterior seen from 95 units out, framed below the horizon.** Dropping the camera to catch sky measured worse, 10.8 to 5.1. Wants a floodlight pylon, which is not in the eight. |
+| Chapter | Desktop | Mobile | State |
+| --- | --- | --- | --- |
+| 00 barrio | **51** | 27 | Best desktop frame after the tribuna. Reads as a street. |
+| 01 estadio | 22 | 31 | **Fixed 2026-09-16.** The facade used `MAT.concrete` with no repeat set, so a 256px tile stretched across a 26×18 m slab and the wall read as brown mottling. Now a 6 m facade texture — lift lines, panel joints, grime — repeated per slab. +1.9 desktop, +5.3 mobile. |
+| 02 túnel | 34 | 24 | **Fixed 2026-09-16.** The mouth was a flat white `MeshBasicMaterial` card capping the corridor — the brightest thing in the chapter and completely featureless. Now floodlit sky, far stand with crowd speckle, perimeter boards, pitch. +2.6 desktop, **+10.8 mobile**. |
+| 03 cancha | 40 | **13** | Strong on desktop; loses most of its width to the portrait crop. Weakest mobile frame after the manifiesto. |
+| 04 tribuna | **61** | 33 | The climax, and the best frame at both sizes. Props would sharpen rather than save it. |
+| 05 trofeos | 20 | 15 | Dark but legible: lit cases against near-black, as intended. |
+| 06 camisetas | 17 | 30 | Reads clearly. Low desktop coverage is a dark room, not a broken frame. |
+| **07 manifiesto** | **12** | **8** | **The weakest frame at both sizes.** Unlit exterior from 95 units out, framed below the horizon. Reads as atmospheric abstraction rather than a building. Wants a floodlight pylon, which is not among the eight. |
 
-**So `chainlink` first.** It is the only asset serving three chapters, and two of those three are the frames doing least.
+Figures are **midtone coverage** (share of pixels in luma 25…235), not mean
+luma — see `VERIFY.md` for why the mean is misleading here. Measured under a
+matched `__T` schedule with the corrected harness, so the deltas above are
+controlled: in both A/B runs every chapter other than 01 and 02 came back
+identical to the decimal.
+
+**Priorities that follow.** The two frames that were failing for *code* reasons
+are fixed, and both fixes were the same move: a flat placeholder replaced with a
+generated texture. What remains genuinely wants art. **07 manifiesto** is the
+weakest at both sizes and needs the floodlight pylon, which is not among the
+briefed eight. **03 cancha** collapses on mobile (40 → 13) from the portrait
+crop, which is a framing property and not something an asset will fix. Of the
+briefed assets, `chainlink` still serves three chapters — but its original
+justification, rescuing the túnel, no longer applies.
 
 ## The 8 props
 
