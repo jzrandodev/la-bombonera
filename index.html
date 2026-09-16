@@ -3944,6 +3944,10 @@ const ES = {
   'skip': 'Saltar al contenido',
   'est': 'Inaug. 1940',
   'sound': 'Sonido',
+  'a11y.sound': 'Sonido ambiente',
+  'a11y.chapters': 'Capítulos',
+  'a11y.nav': 'Capítulos',
+  'a11y.rail': 'Avance por capítulos',
   'nav.chapters': 'Capítulos',
   'nav.close': 'Cerrar ✕',
   'rail.0': 'Llegada',
@@ -4082,6 +4086,30 @@ function applyLanguage(next) {
     const revealed = h.classList.contains('is-in');
     splitWords(h);
     if (revealed) h.classList.add('is-in');
+  });
+
+  /* Attributes are not part of the i18n map, which only swaps innerHTML on
+     [data-i18n] nodes, so every aria-label here was English in both
+     languages. The first two are worse than that: hiding their text label
+     to fit the phone masthead took display:none to it, which removes it
+     from the accessibility tree, so both buttons had no accessible name at
+     all on mobile and announced as "button". */
+  const label = (sel, en, key) => {
+    const el = document.querySelector(sel);
+    if (el) el.setAttribute('aria-label', lang === 'es' ? ES[key] : en);
+  };
+  label('.sound-toggle', 'Ambient sound', 'a11y.sound');
+  label('.nav-toggle', 'Chapters', 'a11y.chapters');
+  label('.primary-nav', 'Chapters', 'a11y.nav');
+  label('.rail', 'Chapter progress', 'a11y.rail');
+
+  /* A plate's label is written once, when it renders, from a caption that
+     does translate. Render in English and switch, and the canvas keeps the
+     English label. Could not reproduce it in the harness because plates
+     render inside the rAF loop, but the code path is plain enough. */
+  document.querySelectorAll('[data-plate] .plate').forEach((el) => {
+    const cap = el.closest('[data-plate]').querySelector('.card__caption');
+    if (cap) el.setAttribute('aria-label', cap.textContent.replace(/\s+/g, ' ').trim());
   });
 
   /* the legend cards are built in script after the i18n map is captured,
