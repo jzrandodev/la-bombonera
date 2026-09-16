@@ -97,6 +97,8 @@ body {
 
 ::selection { background: var(--gold); color: var(--ink); }
 
+/* the skip target takes focus programmatically; it should not draw a ring */
+#main:focus { outline: none; }
 :focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 4px;
@@ -1155,7 +1157,11 @@ document.addEventListener('DOMContentLoaded', function () {
   </ul>
 </nav>
 
-<main class="page" id="main">
+<!-- tabindex -1 so the skip link can actually move focus here. Without it
+     the hash changes, focus stays on body, and the next Tab resumes from
+     the top of the page, which is the one thing a skip link exists to
+     prevent. -->
+<main class="page" id="main" tabindex="-1">
 
   <!-- ── 00 ─────────────────────────────────────────────────────────── -->
   <section class="chapter hero" id="barrio" data-chapter="0" aria-labelledby="hero-title">
