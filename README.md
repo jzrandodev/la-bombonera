@@ -7,7 +7,7 @@ An eight-chapter cinematic walk from the streets of La Boca into the stands, ren
 ## What it does
 
 - Moves a single WebGL camera along one continuous path as the page scrolls. Eight chapters, no cuts, no scene swaps — each chapter is a composed shot on the same path.
-- Builds the whole world procedurally: corrugated tin houses, laundry lines strung over the street, a concrete tunnel, a bowl with near-vertical tiers, a flat wall of lit boxes, and floodlight towers.
+- Builds the whole world procedurally: corrugated tin houses, laundry lines strung over the street, a concrete tunnel, a bowl with near-vertical tiers, a flat wall of lit boxes, floodlight towers, and the glow they throw into the night air above the ground.
 - Renders its own post-processing at runtime — bright-pass, separable bloom, a filmic tone curve, film grain, vignette and a touch of chromatic aberration, all hand-written as fullscreen passes.
 - Layers editorial cards over the live scene whose images are **offscreen renders of the same world**, plus foreground cutouts painted to canvas with real alpha — chainlink, concrete steps, flags, drums, smoke.
 - Keeps working without any of it: reduced motion, no WebGL, a lost GPU context, or the module failing to load at all still leave the complete page readable. The last of those is a real failure mode, not a hypothetical — the reveal animation hides every paragraph until script reveals it, so a failed vendor fetch would otherwise leave a blank scroll.
@@ -22,7 +22,7 @@ No texture files, no photographic source material. Every surface in the scene is
 | Concrete | Layered value noise with formwork joins and aggregate speckle |
 | Pitch | Mown stripes, wear noise, chalk lines drawn with Canvas2D |
 | Chainlink | One diamond lattice tile, reused by the 3D fence and the foreground layers |
-| Editorial plates | The live scene, re-rendered offscreen through the post chain at four authored framings |
+| Editorial plates | The live scene, re-rendered offscreen through the post chain at eight authored framings |
 | Foreground cutouts | Canvas2D silhouettes with real alpha, painted once at boot |
 
 The crowd bounce and the falling confetti run in the vertex stage — the beat is a uniform, not a CPU loop.
@@ -49,16 +49,21 @@ No environment variables, no analytics, no runtime network requests. Python only
 
 ```text
 la-bombonera/
-├── index.html
-├── PROMPT.md
+├── index.html          everything: markup, CSS, scene, choreography
+├── PRODUCT.md          who it is for and what it is
+├── ASSETS.md           artwork specs, for art that has not landed yet
+├── HANDSHAKE.md        the idea in plain words
+├── PROMPT.md           the brief it was built from
 ├── README.md
 ├── LICENSE
-├── vercel.json
-└── assets/vendor/
-    ├── three.module.min.js
-    ├── three.core.min.js
-    ├── THREE-LICENSE
-    └── fonts/
+├── vercel.json         clean URLs, and a year of immutable caching on vendor
+└── assets/
+    ├── og-preview.jpg  the social card, composited from the live scene
+    └── vendor/
+        ├── three.module.min.js
+        ├── three.core.min.js
+        ├── THREE-LICENSE
+        └── fonts/      Archivo and Piazzolla, variable Latin subsets
 ```
 
 ## Legend cards
@@ -87,7 +92,7 @@ An independent design study, inspired by the architecture and atmosphere of La B
 
 Not affiliated with, endorsed by, or licensed by any football club.
 
-Vendored Three.js r185 keeps its MIT notice. Big Shoulders and Big Shoulders Stencil are used under the SIL Open Font License 1.1, self-hosted with the license text included.
+Vendored Three.js r185 keeps its MIT notice. The type is Argentine: **Archivo** by Omnibus-Type of Buenos Aires and **Piazzolla** by Huerta Tipográfica, named for Ástor Piazzolla. Both are used under the SIL Open Font License 1.1, self-hosted as variable Latin subsets with the license text included.
 
 ## License
 
