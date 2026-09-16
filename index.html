@@ -4161,15 +4161,21 @@ document.querySelectorAll('[data-plate]').forEach((f) => plateObserver.observe(f
   const nav = document.getElementById('primary-nav');
   const toggle = document.querySelector('.nav-toggle');
   const close = document.querySelector('.nav-close');
-  const setOpen = (open) => {
+  /* moveFocus is false when a chapter link dismisses this: the visitor is
+     on their way somewhere and pulling focus back to the hamburger would
+     fight that. Everything else still needs the focus handled. */
+  const setOpen = (open, moveFocus = true) => {
     nav.dataset.open = String(open);
     toggle.setAttribute('aria-expanded', String(open));
+    if (!moveFocus) return;
     if (open) close.focus();
     else toggle.focus();
   };
   toggle.addEventListener('click', () => setOpen(nav.dataset.open !== 'true'));
   close.addEventListener('click', () => setOpen(false));
-  nav.addEventListener('click', (e) => { if (e.target.closest('a')) nav.dataset.open = 'false'; });
+  /* this used to set dataset.open directly and leave aria-expanded saying
+     true, so the most common way out of the menu left the state lying */
+  nav.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false, false); });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && nav.dataset.open === 'true') setOpen(false);
   });
