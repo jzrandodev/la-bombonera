@@ -10,7 +10,7 @@ An eight-chapter cinematic walk from the streets of La Boca into the stands, ren
 - Builds the whole world procedurally: corrugated tin houses, laundry lines strung over the street, a concrete tunnel, a bowl with near-vertical tiers, a flat wall of lit boxes, floodlight towers, and the glow they throw into the night air above the ground.
 - Renders its own post-processing at runtime — bright-pass, separable bloom, a filmic tone curve, film grain, vignette and a touch of chromatic aberration, all hand-written as fullscreen passes.
 - Layers editorial cards over the live scene whose images are **offscreen renders of the same world**, plus foreground cutouts painted to canvas with real alpha — chainlink, concrete steps, flags, drums, smoke.
-- Keeps working without any of it: reduced motion, no WebGL, a lost GPU context, or the module failing to load at all still leave the complete page readable. The last of those is a real failure mode, not a hypothetical — the reveal animation hides every paragraph until script reveals it, so a failed vendor fetch would otherwise leave a blank scroll.
+- Keeps working without any of it: reduced motion, no WebGL, a lost GPU context, or the module failing to load at all still leave the complete page readable. Two of those are tested rather than asserted. Killing the context with `WEBGL_lose_context` leaves the readable text byte-identical, the chapter menu and the language toggle both still working, and the scene comes back when the context is restored. A failed vendor fetch is the other, and it is a real failure mode rather than a hypothetical: the reveal animation hides every paragraph until script reveals it, so without a failsafe it would leave a blank scroll.
 
 ## Every surface is drawn at runtime
 
