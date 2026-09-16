@@ -937,6 +937,10 @@ h1 .em, h2 .em { color: var(--gold); }
      ES half of the language toggle 65px off-screen and made Spanish
      unreachable on a phone. Everything below is about fitting the bar and
      giving each control a 44px touch target. */
+  /* raising the type floor to 12px pushed the eyebrow onto two lines and
+     orphaned the timestamp. 0.2em of tracking is the part that does not
+     fit at this width, not the size. */
+  .eyebrow { letter-spacing: 0.11em; gap: 0.6rem; }
   .masthead { gap: 0.35rem; padding-left: 0.75rem; padding-right: 0.75rem; }
   .masthead .wordmark .sub { display: none; }
   .masthead__tools { gap: 0.3rem; }
@@ -1439,7 +1443,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
       <div>
         <h3 data-i18n="col.4">Note</h3>
-        <p class="disclaimer" data-i18n="col.disc">An independent design study inspired by the architecture and atmosphere of La Boca. Not affiliated with, endorsed by, or licensed by any football club.</p>
+        <p class="disclaimer" data-i18n="col.disc">An independent, unofficial tribute to Boca Juniors and the barrio of La Boca. Not affiliated with, endorsed by, or licensed by the club. No crest, badge, sponsor mark or kit design appears anywhere in it, and every emblem and shirt here was invented for this page. Player names and career figures are matters of public record.</p>
       </div>
     </div>
   </section>
@@ -3819,16 +3823,44 @@ function splitWords(el) {
      { no: '10', name: '...', art: './assets/legends/whoever.webp', ... }
    and it replaces the placeholder panel on the front of the card.
    ═══════════════════════════════════════════════════════════════════ */
-const LEGENDS = Array.from({ length: 12 }, (_, i) => ({
-  no: String(i + 1).padStart(2, '0'),
-  name: 'Player ' + String(i + 1).padStart(2, '0'),
-  position: '—',
-  years: '—',
-  apps: '—',
-  goals: '—',
-  note: '—',
-  art: null
-}));
+/* ── the twelve ───────────────────────────────────────────────────────
+   Real players, real figures. Nothing here is invented, and nothing here
+   should be trusted without checking it.
+
+   Source: the all-time scorers table on Wikipedia's "Boca Juniors top
+   scorers", which states its own basis plainly — "only goals in official
+   competitions are included" — so goals and appearances below are all
+   competitions, not league only. Mouzo's 426 comes from his own article,
+   which gives 426 across all competitions against 396 in the league.
+
+   VERIFY BEFORE SHIPPING. Two specific warnings:
+
+   1. Riquelme is the least safe row here. His Boca career runs over three
+      spells and the sources split them, with the first spell quoted as
+      league appearances and the later ones as totals. The figure below is
+      a sum across bases that may not match, which is exactly the mistake
+      the README warns about. Treat it as a placeholder with a real shape.
+
+   2. Positions for the pre-war players follow from their being forwards in
+      a scorers table, not from a source that states a position.
+
+   No portraits. Names and career figures are public facts; photographs of
+   these players are licensed images, so `art` stays null and the card
+   front is typographic. */
+const LEGENDS = [
+  { no: '01', name: 'Martín Palermo',          position: 'Delantero',        years: '1997–00, 2004–11',      apps: '404', goals: '236', note: 'Top scorer in the club\'s history.', art: null },
+  { no: '02', name: 'Roberto Cherro',          position: 'Delantero',        years: '1925–38',               apps: '305', goals: '223', note: 'Thirteen seasons, almost all of them scoring.', art: null },
+  { no: '03', name: 'Francisco Varallo',       position: 'Delantero',        years: '1931–39',               apps: '222', goals: '194', note: 'Nearly a goal every game he played.', art: null },
+  { no: '04', name: 'Domingo Tarasconi',       position: 'Delantero',        years: '1922–32',               apps: '236', goals: '192', note: 'The amateur era\'s great number nine.', art: null },
+  { no: '05', name: 'Roberto Mouzo',           position: 'Defensor',         years: '1971–84',               apps: '426', goals: '24',  note: 'More games than anyone, before or since.', art: null },
+  { no: '06', name: 'Juan Román Riquelme',     position: 'Enganche',         years: '1996–02, 2007–14',      apps: '—',   goals: '—',   note: 'Figures still to be verified.', art: null },
+  { no: '07', name: 'Jaime Sarlanga',          position: 'Delantero',        years: '1940–48',               apps: '220', goals: '129', note: 'Of the forties side.', art: null },
+  { no: '08', name: 'Mario Boyé',              position: 'Delantero',        years: '1941–49, 1955',         apps: '228', goals: '123', note: 'Left, came back, scored again.', art: null },
+  { no: '09', name: 'Delfín Benítez Cáceres',  position: 'Delantero',        years: '1932–38',               apps: '176', goals: '114', note: 'Paraguayan, and prolific.', art: null },
+  { no: '10', name: 'Pedro Calomino',          position: 'Delantero',        years: '1911–24',               apps: '226', goals: '99',  note: 'From the years before the ground existed.', art: null },
+  { no: '11', name: 'Pío Corcuera',            position: 'Delantero',        years: '1941–48',               apps: '187', goals: '97',  note: 'Of the same forties forward line.', art: null },
+  { no: '12', name: 'Carlos Tévez',            position: 'Delantero',        years: '2001–04, 2015–16, 2018–21', apps: '279', goals: '94', note: 'Three spells, two decades apart.', art: null }
+];
 
 {
   const grid = document.getElementById('legends-grid');
@@ -3999,7 +4031,7 @@ const ES = {
   'col.repo': 'Ver el repositorio',
   'col.mit': 'Licencia MIT',
   'col.static': 'Estático · sin compilación',
-  'col.disc': 'Un estudio de diseño independiente inspirado en la arquitectura y el clima de La Boca. Sin relación, aval ni licencia de ningún club de fútbol.'
+  'col.disc': 'Un homenaje independiente y no oficial a Boca Juniors y al barrio de La Boca. Sin relación, aval ni licencia del club. No aparece ningún escudo, insignia, marca de sponsor ni diseño de camiseta: todos los emblemas y las camisetas fueron inventados para esta página. Los nombres y las cifras de carrera son de dominio público.'
 };
 
 const langToggle = document.getElementById('lang-toggle');

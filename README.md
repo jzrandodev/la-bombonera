@@ -88,9 +88,9 @@ The same applies to the shirts: they carry a colour and a band and nothing else.
 
 ## Design and attribution
 
-An independent design study, inspired by the architecture and atmosphere of La Boca and by the format of MengTo's [Kage](https://github.com/MengTo/kage) — a five-chapter Three.js night walk. The code here is original and shares none of Kage's source.
+An independent, unofficial tribute to Boca Juniors and the barrio of La Boca, and to the format of MengTo's [Kage](https://github.com/MengTo/kage) — a five-chapter Three.js night walk. The code here is original and shares none of Kage's source.
 
-Not affiliated with, endorsed by, or licensed by any football club.
+Not affiliated with, endorsed by, or licensed by the club. No crest, badge, sponsor mark or kit design appears anywhere in the project; every emblem and shirt in it was invented for this page. The twelve players named in the legends chapter are real, and their career figures are matters of public record — see the source note above the `LEGENDS` array in `index.html`, and verify before relying on them.
 
 Vendored Three.js r185 keeps its MIT notice. The type is Argentine: **Archivo** by Omnibus-Type of Buenos Aires and **Piazzolla** by Huerta Tipográfica, named for Ástor Piazzolla. Both are used under the SIL Open Font License 1.1, self-hosted as variable Latin subsets with the license text included.
 
