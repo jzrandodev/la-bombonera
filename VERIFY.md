@@ -50,6 +50,45 @@ Mobile, 375×812, composite: `28.1 · 19.4 · **50.0** · 16.1 · 22.6 · 20.1 �
    corridor of the túnel fills the portrait frame with its lit exit.
    Survives settling; reproduced forward and reverse.
 
+### Tried and reverted twice: the smoke sprites (2026-09-16)
+
+The large soft blue discs over the cancha, the tribuna and the manifiesto are
+the most prominent "this is a WebGL demo" artifact left in the piece. **Two
+measured attempts to fix them both regressed and both were reverted.**
+
+The arithmetic first, because it explains the trap. With `sizeAttenuation`, a
+sprite's on-screen height is `size / (2 * d * tan(fov/2))`. At the shipped
+`size: 7.2` that is **half the frame height at 13 units** and still a fifth of
+it at 30. A particle that large cannot read as haze at any distance the camera
+actually occupies. The earlier 8 -> 7.2 change could never have fixed this: the
+size is off by a factor, not a fraction.
+
+**Attempt 1 — fade near particles instead of culling them.** The hard cull is
+stuck between two failures (cull at 7 deletes the tribuna's haze because the
+camera stands inside the smoke; cull at 2.6 leaves everything from 2.6 to ~8
+units rendering as a disc). Since the blending is additive, scaling a
+particle's colour scales its intensity, so near particles can dim to nothing
+instead of swelling. Implemented with a `colBase` array so the fade cannot
+compound. Result: coverage down everywhere — **estadio -6.6**, tribuna -1.7 —
+and visually no better. The blobs remained, because they are not primarily
+near-camera particles; they are *any* particles, at this size. A murky orange
+mass also became more visible once the blue was dimmed.
+
+**Attempt 2 — cut the size by a factor and raise the population.**
+`size: 2.0`, `N: 4600`, opacity 0.34. This does remove the discs, and frame
+cost was fine at 0.8 ms. But it overshoots into the opposite failure: the
+smoke reads as discrete blue dots, like snow, rather than atmosphere. And it
+cost the climax nearly a fifth of its coverage — **tribuna -9.7**, 61.2 to
+51.5. Reverted.
+
+**Conclusion: size tuning alone cannot fix this.** Too large reads as blobs,
+too small reads as dots, and the tribuna pays for both because the camera sits
+inside the volume there. A third size is not the answer. What is untried: a
+genuine depth-graded haze (a shader term, or a few large low-opacity gradient
+planes) carrying the atmosphere, with the point sprites reduced to a sparse
+accent or removed. **Do not attempt another size or cull constant.** Counting
+the earlier orange-disc pass, atmosphere tuning has now regressed three times.
+
 ### Tried and reverted: portrait fov compensation (2026-09-16)
 
 The obvious fix for finding 2 — widen the vertical fov as the frame narrows, so
