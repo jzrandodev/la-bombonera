@@ -3848,18 +3848,30 @@ function splitWords(el) {
    these players are licensed images, so `art` stays null and the card
    front is typographic. */
 const LEGENDS = [
-  { no: '01', name: 'Martín Palermo',          position: 'Delantero',        years: '1997–00, 2004–11',      apps: '404', goals: '236', note: 'Top scorer in the club\'s history.', art: null },
-  { no: '02', name: 'Roberto Cherro',          position: 'Delantero',        years: '1925–38',               apps: '305', goals: '223', note: 'Thirteen seasons, almost all of them scoring.', art: null },
-  { no: '03', name: 'Francisco Varallo',       position: 'Delantero',        years: '1931–39',               apps: '222', goals: '194', note: 'Nearly a goal every game he played.', art: null },
-  { no: '04', name: 'Domingo Tarasconi',       position: 'Delantero',        years: '1922–32',               apps: '236', goals: '192', note: 'The amateur era\'s great number nine.', art: null },
-  { no: '05', name: 'Roberto Mouzo',           position: 'Defensor',         years: '1971–84',               apps: '426', goals: '24',  note: 'More games than anyone, before or since.', art: null },
-  { no: '06', name: 'Juan Román Riquelme',     position: 'Enganche',         years: '1996–02, 2007–14',      apps: '—',   goals: '—',   note: 'Figures still to be verified.', art: null },
-  { no: '07', name: 'Jaime Sarlanga',          position: 'Delantero',        years: '1940–48',               apps: '220', goals: '129', note: 'Of the forties side.', art: null },
-  { no: '08', name: 'Mario Boyé',              position: 'Delantero',        years: '1941–49, 1955',         apps: '228', goals: '123', note: 'Left, came back, scored again.', art: null },
-  { no: '09', name: 'Delfín Benítez Cáceres',  position: 'Delantero',        years: '1932–38',               apps: '176', goals: '114', note: 'Paraguayan, and prolific.', art: null },
-  { no: '10', name: 'Pedro Calomino',          position: 'Delantero',        years: '1911–24',               apps: '226', goals: '99',  note: 'From the years before the ground existed.', art: null },
-  { no: '11', name: 'Pío Corcuera',            position: 'Delantero',        years: '1941–48',               apps: '187', goals: '97',  note: 'Of the same forties forward line.', art: null },
-  { no: '12', name: 'Carlos Tévez',            position: 'Delantero',        years: '2001–04, 2015–16, 2018–21', apps: '279', goals: '94', note: 'Three spells, two decades apart.', art: null }
+  { no: '01', name: 'Martín Palermo', position: { en: 'Forward', es: 'Delantero' }, years: '1997–00, 2004–11', apps: '404', goals: '236',
+    note: { en: 'Top scorer in the club\'s history.', es: 'El máximo goleador de la historia del club.' }, art: null },
+  { no: '02', name: 'Roberto Cherro', position: { en: 'Forward', es: 'Delantero' }, years: '1925–38', apps: '305', goals: '223',
+    note: { en: 'Thirteen seasons, almost all of them scoring.', es: 'Trece temporadas, casi todas haciendo goles.' }, art: null },
+  { no: '03', name: 'Francisco Varallo', position: { en: 'Forward', es: 'Delantero' }, years: '1931–39', apps: '222', goals: '194',
+    note: { en: 'Nearly a goal every game he played.', es: 'Casi un gol por partido jugado.' }, art: null },
+  { no: '04', name: 'Domingo Tarasconi', position: { en: 'Forward', es: 'Delantero' }, years: '1922–32', apps: '236', goals: '192',
+    note: { en: 'The amateur era\'s great number nine.', es: 'El gran nueve de la era amateur.' }, art: null },
+  { no: '05', name: 'Roberto Mouzo', position: { en: 'Defender', es: 'Defensor' }, years: '1971–84', apps: '426', goals: '24',
+    note: { en: 'More games than anyone, before or since.', es: 'Más partidos que nadie, antes o después.' }, art: null },
+  { no: '06', name: 'Juan Román Riquelme', position: { en: 'Enganche', es: 'Enganche' }, years: '1996–02, 2007–14', apps: '—', goals: '—',
+    note: { en: 'Figures still to be verified.', es: 'Cifras todavía por verificar.' }, art: null },
+  { no: '07', name: 'Jaime Sarlanga', position: { en: 'Forward', es: 'Delantero' }, years: '1940–48', apps: '220', goals: '129',
+    note: { en: 'Of the forties side.', es: 'Del equipo de los años cuarenta.' }, art: null },
+  { no: '08', name: 'Mario Boyé', position: { en: 'Forward', es: 'Delantero' }, years: '1941–49, 1955', apps: '228', goals: '123',
+    note: { en: 'Left, came back, scored again.', es: 'Se fue, volvió y siguió haciendo goles.' }, art: null },
+  { no: '09', name: 'Delfín Benítez Cáceres', position: { en: 'Forward', es: 'Delantero' }, years: '1932–38', apps: '176', goals: '114',
+    note: { en: 'Paraguayan, and prolific.', es: 'Paraguayo, y goleador.' }, art: null },
+  { no: '10', name: 'Pedro Calomino', position: { en: 'Forward', es: 'Delantero' }, years: '1911–24', apps: '226', goals: '99',
+    note: { en: 'From the years before the ground existed.', es: 'De los años anteriores a la cancha.' }, art: null },
+  { no: '11', name: 'Pío Corcuera', position: { en: 'Forward', es: 'Delantero' }, years: '1941–48', apps: '187', goals: '97',
+    note: { en: 'Of the same forties forward line.', es: 'De la misma delantera de los cuarenta.' }, art: null },
+  { no: '12', name: 'Carlos Tévez', position: { en: 'Forward', es: 'Delantero' }, years: '2001–04, 2015–16, 2018–21', apps: '279', goals: '94',
+    note: { en: 'Three spells, two decades apart.', es: 'Tres etapas, separadas por dos décadas.' }, art: null }
 ];
 
 {
@@ -3887,7 +3899,7 @@ const LEGENDS = [
           '<span class="legend__art">' + art + '<span class="legend__no">' + p.no + '</span></span>' +
           '<span class="legend__bar">' +
             '<span class="legend__name">' + p.name + '</span>' +
-            '<span class="legend__pos">' + p.position + '</span>' +
+            '<span class="legend__pos" data-leg-pos>' + p.position.en + '</span>' +
           '</span>' +
         '</span>' +
         '<span class="legend__face legend__face--back">' +
@@ -3895,7 +3907,7 @@ const LEGENDS = [
           '<dl class="legend__stats">' +
             rows.map((r) => '<div class="legend__row"><dt data-i18n="' + r[0] + '">' + r[1] + '</dt><dd>' + p[r[2]] + '</dd></div>').join('') +
           '</dl>' +
-          '<span class="legend__note">' + p.note + '</span>' +
+          '<span class="legend__note" data-leg-note>' + p.note.en + '</span>' +
         '</span>' +
       '</span>';
 
@@ -4062,6 +4074,19 @@ function applyLanguage(next) {
     const revealed = h.classList.contains('is-in');
     splitWords(h);
     if (revealed) h.classList.add('is-in');
+  });
+
+  /* the legend cards are built in script after the i18n map is captured,
+     so their values are not in it. They carry both languages and get
+     swapped here; without this the English view showed Spanish positions
+     and the Spanish view showed English notes. */
+  document.querySelectorAll('.legend').forEach((card, i) => {
+    const p = LEGENDS[i];
+    if (!p) return;
+    const pos = card.querySelector('[data-leg-pos]');
+    const note = card.querySelector('[data-leg-note]');
+    if (pos) pos.textContent = p.position[lang];
+    if (note) note.textContent = p.note[lang];
   });
 
   langToggle.querySelectorAll('.lang-toggle__opt').forEach((opt) => {
