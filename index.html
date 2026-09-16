@@ -3833,16 +3833,18 @@ function splitWords(el) {
    competitions, not league only. Mouzo's 426 comes from his own article,
    which gives 426 across all competitions against 396 in the league.
 
-   VERIFY BEFORE SHIPPING. Two specific warnings:
+   Riquelme is not in that table, because his 92 goals put him eleventh
+   and it lists ten. His row comes from DataFactory, an Argentine football
+   data company, which gives 388 official matches and 92 goals, and notes
+   the 206 appearances at La Bombonera itself. That basis matches: 92 goals
+   sits just under Tevez's 94, which is exactly why he is absent from a top
+   ten. Wikipedia's own article sums his three spells to 292 appearances,
+   but quotes the first spell as league games and the later ones as totals,
+   so that number adds across mismatched bases and is not used here.
 
-   1. Riquelme is the least safe row here. His Boca career runs over three
-      spells and the sources split them, with the first spell quoted as
-      league appearances and the later ones as totals. The figure below is
-      a sum across bases that may not match, which is exactly the mistake
-      the README warns about. Treat it as a placeholder with a real shape.
-
-   2. Positions for the pre-war players follow from their being forwards in
-      a scorers table, not from a source that states a position.
+   VERIFY BEFORE SHIPPING. Positions for the pre-war players follow from
+   their being forwards in a scorers table, not from a source that states a
+   position.
 
    No portraits. Names and career figures are public facts; photographs of
    these players are licensed images, so `art` stays null and the card
@@ -3858,8 +3860,8 @@ const LEGENDS = [
     note: { en: 'The amateur era\'s great number nine.', es: 'El gran nueve de la era amateur.' }, art: null },
   { no: '05', name: 'Roberto Mouzo', position: { en: 'Defender', es: 'Defensor' }, years: '1971–84', apps: '426', goals: '24',
     note: { en: 'More games than anyone, before or since.', es: 'Más partidos que nadie, antes o después.' }, art: null },
-  { no: '06', name: 'Juan Román Riquelme', position: { en: 'Enganche', es: 'Enganche' }, years: '1996–02, 2007–14', apps: '—', goals: '—',
-    note: { en: 'Figures still to be verified.', es: 'Cifras todavía por verificar.' }, art: null },
+  { no: '06', name: 'Juan Román Riquelme', position: { en: 'Enganche', es: 'Enganche' }, years: '1996–02, 2007–14', apps: '388', goals: '92',
+    note: { en: 'More games at La Bombonera than anyone: 206.', es: 'Más partidos en La Bombonera que nadie: 206.' }, art: null },
   { no: '07', name: 'Jaime Sarlanga', position: { en: 'Forward', es: 'Delantero' }, years: '1940–48', apps: '220', goals: '129',
     note: { en: 'Of the forties side.', es: 'Del equipo de los años cuarenta.' }, art: null },
   { no: '08', name: 'Mario Boyé', position: { en: 'Forward', es: 'Delantero' }, years: '1941–49, 1955', apps: '228', goals: '123',
@@ -3905,7 +3907,13 @@ const LEGENDS = [
         '<span class="legend__face legend__face--back">' +
           '<span class="legend__back-name">' + p.name + '</span>' +
           '<dl class="legend__stats">' +
-            rows.map((r) => '<div class="legend__row"><dt data-i18n="' + r[0] + '">' + r[1] + '</dt><dd>' + p[r[2]] + '</dd></div>').join('') +
+            rows.map((r) => {
+              /* position carries both languages; the rest are plain strings */
+              const v = p[r[2]];
+              const text = (v && typeof v === 'object') ? v.en : v;
+              const tag = r[2] === 'position' ? ' data-leg-pos' : '';
+              return '<div class="legend__row"><dt data-i18n="' + r[0] + '">' + r[1] + '</dt><dd' + tag + '>' + text + '</dd></div>';
+            }).join('') +
           '</dl>' +
           '<span class="legend__note" data-leg-note>' + p.note.en + '</span>' +
         '</span>' +
@@ -4083,9 +4091,10 @@ function applyLanguage(next) {
   document.querySelectorAll('.legend').forEach((card, i) => {
     const p = LEGENDS[i];
     if (!p) return;
-    const pos = card.querySelector('[data-leg-pos]');
+    /* the position appears twice, on the front face and in the stats table
+       on the back, so this has to be querySelectorAll */
+    card.querySelectorAll('[data-leg-pos]').forEach((el) => { el.textContent = p.position[lang]; });
     const note = card.querySelector('[data-leg-note]');
-    if (pos) pos.textContent = p.position[lang];
     if (note) note.textContent = p.note[lang];
   });
 
