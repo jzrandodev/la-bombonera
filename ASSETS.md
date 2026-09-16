@@ -38,6 +38,23 @@ This is what makes twelve separately-generated images feel like one place.
 
 ---
 
+## Which frames need these most
+
+Measured 2026-09-15, after the grading, lighting and smoke work. The render has moved since these briefs were written, so aim them at what is still missing rather than at the old diagnosis.
+
+| Chapter | Luma | State |
+| --- | --- | --- |
+| 00 barrio | 40 | Reads as a street. Props would add material and depth, not rescue it. |
+| 01 estadio | 21 | The wall is lit and legible now. Was 11 and black. |
+| **02 túnel** | **13** | **Still a black frame with a white rectangle. The weakest in the piece.** Lighting and framing were both tried and both measured worse. Wants `concrete-step` and `chainlink`. |
+| 03 cancha | 38 | Crowd reads as mass. Wants `chainlink` and `crowd-row` in front of it. |
+| 04 tribuna | 51 | The climax, and it works. Props would sharpen rather than save it. |
+| 05 trofeos | 14 | Dark but legible: lit cases against near-black, as intended. |
+| 06 camisetas | 19 | The most legible frame in the piece. Leave alone. |
+| **07 manifiesto** | **11** | **Unlit exterior seen from 95 units out, framed below the horizon.** Dropping the camera to catch sky measured worse, 10.8 to 5.1. Wants a floodlight pylon, which is not in the eight. |
+
+**So `chainlink` first.** It is the only asset serving three chapters, and two of those three are the frames doing least.
+
 ## The 8 props
 
 Bottom-anchored. On the page these sit pinned to the bottom of the viewport, so **the subject lives in the lower portion of the frame with transparency above it.**
@@ -49,7 +66,7 @@ Two size classes:
 
 Path: `assets/props/<name>.webp`
 
-### 01 · `tin-panel` — wide · hero, barrio
+### 01 · `tin-panel` — wide · barrio (00)
 A section of corrugated zinc wall filling one edge of frame, two or three mismatched paint colours meeting at a seam.
 
 - **Angle:** flat elevation, very slight perspective. Sits frame-left or frame-right as the thing you look *past*.
@@ -57,7 +74,7 @@ A section of corrugated zinc wall filling one edge of frame, two or three mismat
 - **Inspiration:** the conventillos of La Boca — corrugated sheet over timber, painted in leftover marine paint from the port, no two panels agreeing.
 - **Note:** needs one clean vertical edge so it can be flipped and reused on the opposite side.
 
-### 02 · `laundry-line` — wide · hero, barrio
+### 02 · `laundry-line` — wide · barrio (00)
 Washing strung on a line crossing the frame, seen from below.
 
 - **Angle:** shallow upward angle — the line sags across the top, garments hang down into frame.
@@ -65,7 +82,7 @@ Washing strung on a line crossing the frame, seen from below.
 - **Inspiration:** lines strung between balconies across a narrow street.
 - **Note:** the line reads as a thin dark curve. Keep garment spacing irregular.
 
-### 03 · `streetlamp` — tall · hero, barrio
+### 03 · `streetlamp` — tall · barrio (00)
 An old street lamp head on its bracket, with visible warm falloff.
 
 - **Angle:** from below. Lamp head upper third, post running down out of frame.
@@ -73,7 +90,7 @@ An old street lamp head on its bracket, with visible warm falloff.
 - **Inspiration:** sodium-vapour street lighting, warm and slightly sickly, pre-LED.
 - **Note:** the glow must be **in the alpha** — soft radial falloff fading to transparent, not a hard-edged cutout.
 
-### 04 · `concrete-step` — wide · túnel, tribuna
+### 04 · `concrete-step` — wide · túnel (02), tribuna (04)
 Raw poured concrete terracing — two or three steps, edges worn and chipped.
 
 - **Angle:** low and close, looking along the steps so they recede slightly to one side.
@@ -81,7 +98,7 @@ Raw poured concrete terracing — two or three steps, edges worn and chipped.
 - **Inspiration:** raw terracing in older grounds — poured, never finished, worn round at the edges by use.
 - **Note:** reads as the bottom edge of frame, so the top edge needs a clean silhouette against transparency.
 
-### 05 · `chainlink` — wide · túnel, cancha, tribuna
+### 05 · `chainlink` — wide · túnel (02), cancha (03), tribuna (04)
 A section of chainlink fence, close and slightly out of focus. The thing you look *through*.
 
 - **Angle:** dead-on, filling the frame.
@@ -89,7 +106,7 @@ A section of chainlink fence, close and slightly out of focus. The thing you loo
 - **Inspiration:** perimeter fencing between terrace and pitch.
 - **Note:** **the most important prop in the set.** It appears in three chapters and does most of the depth work — if only one prop is excellent, make it this one. Diamond apertures large enough to see through clearly. Keep it roughly tileable horizontally so it scales without an obvious seam.
 
-### 06 · `crowd-row` — wide · cancha, tribuna
+### 06 · `crowd-row` — wide · cancha (03), tribuna (04)
 A row of silhouetted spectators from behind — heads, shoulders, some arms raised.
 
 - **Angle:** from behind and slightly below, as if standing among them.
@@ -97,7 +114,7 @@ A row of silhouetted spectators from behind — heads, shoulders, some arms rais
 - **Inspiration:** a packed terrace backlit by floodlights — you read the shape of a crowd, never a face.
 - **Note:** **no identifiable faces.** Silhouette only. Hard requirement.
 
-### 07 · `flag` — tall · tribuna
+### 07 · `flag` — tall · tribuna (04)
 A large terrace flag on a pole, mid-wave.
 
 - **Angle:** from below. Pole enters bottom of frame, flag fills the upper portion.
@@ -105,7 +122,7 @@ A large terrace flag on a pole, mid-wave.
 - **Inspiration:** hand-painted terrace banners hoisted on long poles.
 - **Note:** **no crest, no lettering, no text.** Bands and colour only.
 
-### 08 · `smoke-bank` — wide · estadio, cancha, tribuna
+### 08 · `smoke-bank` — wide · estadio (01), cancha (03), tribuna (04)
 A drifting bank of smoke catching light from one side.
 
 - **Angle:** horizontal drift across the lower frame, thinning upward into transparency.
@@ -176,7 +193,7 @@ Page today: **~1 MB** — 856 KB vendored Three.js and fonts, 161 KB HTML.
 | Social preview | 1 | ~80 KB |
 | **New total** | | **~3.2 MB** |
 
-Kage ships 2.54 MB of imagery, so this lands in the same territory. Only acceptable with lazy-loading in place, so first paint still pulls only the hero's props.
+Kage ships 2.54 MB of imagery, so this lands in the same territory. Only acceptable with lazy-loading in place, so first paint still pulls only the opening chapter's props.
 
 ---
 
