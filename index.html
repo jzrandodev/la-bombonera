@@ -4164,9 +4164,30 @@ document.querySelectorAll('[data-plate]').forEach((f) => plateObserver.observe(f
   /* moveFocus is false when a chapter link dismisses this: the visitor is
      on their way somewhere and pulling focus back to the hamburger would
      fight that. Everything else still needs the focus handled. */
+  /* While the overlay covers the screen, everything behind it stays
+     tabbable: twenty controls, including the legend cards and the header's
+     own buttons, all invisible under an opaque panel. Tab past the last
+     chapter and focus disappears somewhere the visitor cannot see.
+
+     `inert` fixes focus and screen-reader exposure together. The nav lives
+     inside the masthead, so the masthead cannot be marked wholesale: its
+     other children are marked individually instead. */
+  const supportsInert = 'inert' in HTMLElement.prototype;
+  const setBehindInert = (on) => {
+    if (!supportsInert) return;
+    [...document.body.children].forEach((el) => {
+      if (el.contains(nav)) {
+        [...el.children].forEach((child) => { if (child !== nav) child.inert = on; });
+      } else {
+        el.inert = on;
+      }
+    });
+  };
+
   const setOpen = (open, moveFocus = true) => {
     nav.dataset.open = String(open);
     toggle.setAttribute('aria-expanded', String(open));
+    setBehindInert(open);
     if (!moveFocus) return;
     if (open) close.focus();
     else toggle.focus();
