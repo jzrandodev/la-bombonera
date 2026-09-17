@@ -205,6 +205,64 @@ Do not compare against numbers from an earlier session or an older harness. The
 pre-2026-09-16 figures were taken with the corrupted clock and are not a valid
 baseline for anything.
 
+## Performance, measured 2026-09-17
+
+Prompted by "takes too long to load and feels laggy". Two of the three parts
+are measurable here; one is not, and the docs previously carried a frame-cost
+number that was wrong.
+
+**Load is not the problem.** On the live deploy, behind Vercel's compression:
+
+| | transfer | decoded |
+|---|---|---|
+| index.html | 59 KB | 198 KB |
+| three.core.min.js | 102 KB | 376 KB |
+| three.module.min.js | 88 KB | 357 KB |
+| arch-var-latin.woff2 | 88 KB | — |
+| piaz-var-latin.woff2 | 50 KB | — |
+| **total** | **388 KB** | |
+
+TTFB 24 ms, domInteractive 446 ms, load 973 ms. Procedural texture generation
+— every noise field and canvas texture in the scene — is **16 ms**, and the
+whole module init finishes by ~199 ms locally. Nothing here is pathological.
+The 190 KB of compressed Three.js is the floor, and cutting it needs a build
+step, which is out of scope.
+
+**Frame cost cannot be measured in this harness, and the old number was
+wrong.** The plan claimed 1.15 ms/frame; that was JS-only timing, which
+returns before the GPU has done anything. Forcing a sync with a 1×1
+`gl.readPixels` after each frame gives 9–23 ms instead — trofeos 23.5,
+barrio 19.9, manifiesto 19.5, against a 16.7 ms budget for 60 fps. That
+matches the reported lag.
+
+But those figures are **not trustworthy either**: sweeping `setPixelRatio`
+produced lower resolutions measuring *slower* (1.0 → 30 ms vs 1.75 → 20 ms),
+which is impossible for fragment-bound work, and one chapter drifted
+20.8 → 39.1 → 36.7 → 32.9 within a single run. The Browser pane is hidden, so
+GPU work is descheduled unpredictably. **Do not tune frame cost against
+numbers taken here.** Judge it on a real machine, or instrument with
+`EXT_disjoint_timer_query`.
+
+### What was changed, and on what grounds
+
+Since frame time is unmeasurable here, these were justified by arithmetic and
+verified not to break the image, rather than by a timing delta:
+
+- **`setPixelRatio` 1.75 → 1.5.** 2520×1575 → 2160×1350, **26% fewer
+  fragments**, which the scene pays for twice: once for the bowl and its
+  twenty-odd point lights, again for the additive sprites over it. Reversible
+  by one number.
+- **Confetti 1500 → 620.** The busiest thing in the frame and 1500
+  double-sided planes with a custom vertex shader behind it.
+- **Smoke 1100 → 720**, size unchanged. Population is free to come down;
+  *size* is what gives these their character and changing it has regressed
+  twice (see above).
+
+Midtone coverage cost of all three together, desktop:
+`-1.1 · -1.5 · -0.1 · -4.0 · -2.2 · -0.2 · +0.2 · -1.3`. The worst is cancha,
+where the confetti was densest. That is an accepted trade: "too busy" was the
+brief, and coverage counts bright confetti pixels as content.
+
 ## Running the sweep
 
 Local server on `:4173`. Rebuild the temporary `verify.html` harness, which

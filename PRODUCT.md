@@ -15,7 +15,7 @@ Two audiences, both confirmed, in priority order:
 
 ## Product Purpose
 
-An eight-chapter cinematic walk from the streets of La Boca into the stands of a football ground, rendered live in WebGL and driven entirely by scroll position. Editorial typography over one continuous camera path — an art book that happens to be a real-time scene.
+A six-chapter cinematic walk from the streets of La Boca into the stands of a football ground, rendered live in WebGL and driven entirely by scroll position. The barrio and the túnel are still walked through, but they are scenery rather than chapters — the opening view and a silent pass under the stand, neither announced. Editorial typography over one continuous camera path — an art book that happens to be a real-time scene.
 
 The journey is the point: your neighbourhood, the building arriving, going in, out onto the grass, the stands, then the quiet rooms on the way out. It **builds to the tribuna** as its climax and comes down from it.
 
@@ -41,7 +41,7 @@ This replaced a positioning that led with a "zero image assets, everything gener
 
 ## Capabilities and Constraints
 
-- **Eight chapters, one continuous camera path**, no cuts or scene swaps. Scroll maps to a chapter-anchored `t` value, so each chapter lands on its exact framing regardless of section height.
+- **Six named chapters over eight camera anchors**, one continuous path, no cuts or scene swaps. Scroll maps to a chapter-anchored `t` value, so each anchor lands on its exact framing regardless of section height. Two anchors — 00 barrio and 02 túnel — carry no copy and appear in no nav: the walk passes through them. Reduced from eight named chapters on 2026-09-17 because the piece read as too busy.
 - **Bilingual EN/ES**, complete parity, including a stencil-inversion device where the English view shows Spanish words. Spanish is rioplatense throughout.
 - **Synthesized audio** — filtered noise beds, procedural drum, massed voices from detuned oscillators. No recordings.
 - **No build step.** One HTML file (~190 KB), a vendored Three.js r185 ESM build, and two fonts. No framework, bundler, or package manager. Deploys by copying files; currently on Vercel.

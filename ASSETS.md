@@ -47,20 +47,20 @@ See `VERIFY.md`. Both columns are the composite the viewer actually sees.
 
 | Chapter | Desktop | Mobile | State |
 | --- | --- | --- | --- |
-| 00 barrio | **51** | 27 | Best desktop frame after the tribuna. Reads as a street. |
-| 01 estadio | 22 | 31 | **Fixed 2026-09-16.** The facade used `MAT.concrete` with no repeat set, so a 256px tile stretched across a 26×18 m slab and the wall read as brown mottling. Now a 6 m facade texture — lift lines, panel joints, grime — repeated per slab. +1.9 desktop, +5.3 mobile. |
-| 02 túnel | 34 | 24 | **Fixed 2026-09-16.** The mouth was a flat white `MeshBasicMaterial` card capping the corridor — the brightest thing in the chapter and completely featureless. Now floodlit sky, far stand with crowd speckle, perimeter boards, pitch. +2.6 desktop, **+10.8 mobile**. |
-| 03 cancha | 40 | **13** | Strong on desktop; loses most of its width to the portrait crop. Weakest mobile frame after the manifiesto. |
-| 04 tribuna | **61** | 33 | The climax, and the best frame at both sizes. Props would sharpen rather than save it. |
-| 05 trofeos | 20 | 15 | Dark but legible: lit cases against near-black, as intended. |
+| 00 barrio *(scenery)* | 50 | 27 | No longer a chapter — the opening view, not announced. |
+| 01 estadio | 21 | 31 | Facade texture fixed 2026-09-16 (was brown mottling from an unset repeat). |
+| 02 túnel *(pass-through)* | 34 | 24 | No longer a chapter — a silent walk under the stand. Mouth texture fixed 2026-09-16 (was a flat white card). |
+| 03 cancha | 36 | 13 | **Weakest mobile frame after the manifiesto.** Loses most of its width to the portrait crop, which is framing, not art. |
+| 04 tribuna | **59** | 33 | The climax, and the best frame at both sizes. |
+| 05 trofeos | 19 | 15 | Dark but legible: lit cases against near-black, as intended. |
 | 06 camisetas | 17 | 30 | Reads clearly. Low desktop coverage is a dark room, not a broken frame. |
-| **07 manifiesto** | **12** | **8** | **The weakest frame at both sizes.** Unlit exterior from 95 units out, framed below the horizon. Reads as atmospheric abstraction rather than a building. Wants a floodlight pylon, which is not among the eight. |
+| **07 manifiesto** | **10** | **8** | **The weakest frame at both sizes.** Unlit exterior from 95 units out, framed below the horizon. Wants a floodlight pylon, which is not among the eight. |
 
 Figures are **midtone coverage** (share of pixels in luma 25…235), not mean
-luma — see `VERIFY.md` for why the mean is misleading here. Measured under a
-matched `__T` schedule with the corrected harness, so the deltas above are
-controlled: in both A/B runs every chapter other than 01 and 02 came back
-identical to the decimal.
+luma — see the sections above for why the mean misleads here. Measured after
+the 2026-09-17 busyness and pixel-ratio reductions, so they sit 1–4 points
+below the 2026-09-16 baseline; the chapter indices are camera anchors, of
+which there are still eight, while only six are named chapters.
 
 **Priorities that follow.** The two frames that were failing for *code* reasons
 are fixed, and both fixes were the same move: a flat placeholder replaced with a

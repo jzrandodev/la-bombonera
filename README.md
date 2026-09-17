@@ -1,12 +1,12 @@
 # La Bombonera
 
-An eight-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. Editorial typography over a continuous 3D camera path — an art book that happens to be a real-time scene.
+A six-chapter cinematic walk from the streets of La Boca into the stands, rendered live in WebGL. Editorial typography over a continuous 3D camera path — an art book that happens to be a real-time scene.
 
 **[View it live](https://la-bombonera-gules.vercel.app)** · [View the source](https://github.com/jzrandodev/la-bombonera) · Built by [Juan Zamora](https://www.jjzamora.com)
 
 ## What it does
 
-- Moves a single WebGL camera along one continuous path as the page scrolls. Eight chapters, no cuts, no scene swaps — each chapter is a composed shot on the same path.
+- Moves a single WebGL camera along one continuous path as the page scrolls. Six named chapters over eight camera anchors, no cuts, no scene swaps — each is a composed shot on the same path. The barrio and the túnel are anchors you pass through rather than chapters that announce themselves.
 - Builds the whole world procedurally: corrugated tin houses, laundry lines strung over the street, a concrete tunnel, a bowl with near-vertical tiers, a flat wall of lit boxes, floodlight towers, and the glow they throw into the night air above the ground.
 - Renders its own post-processing at runtime — bright-pass, separable bloom, a filmic tone curve, film grain, vignette and a touch of chromatic aberration, all hand-written as fullscreen passes.
 - Layers editorial cards over the live scene whose images are **offscreen renders of the same world**, plus foreground cutouts painted to canvas with real alpha — chainlink, concrete steps, flags, drums, smoke.
