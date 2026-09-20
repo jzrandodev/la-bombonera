@@ -118,6 +118,10 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   text-decoration: none;
+  /* measured 43px, one short of the floor every other control clears */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   transition: transform 0.2s var(--ease);
 }
 .skip-link:focus { transform: translateY(0); }
@@ -959,8 +963,12 @@ h1 .em, h2 .em { color: var(--gold); }
   .sound-toggle > span:not(.sound-toggle__bars),
   .nav-toggle > span:not(.bars) { display: none; }
 
+  /* min-height alone left these 32x44 and 42x44 once the labels were
+     hidden: a 44px floor on one axis is not a 44px target. */
   .sound-toggle, .nav-toggle, .lang-toggle {
     min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
     padding-left: 0.55rem;
     padding-right: 0.55rem;
   }
@@ -968,6 +976,15 @@ h1 .em, h2 .em { color: var(--gold); }
   .wordmark { min-height: 44px; align-items: center; }
   .nav-close { min-height: 44px; padding: 0.6rem 0.9rem; }
   .manifesto a, .colophon a { display: inline-block; padding: 0.35rem 0; }
+  /* a link alone in its own paragraph is a tap target in its own right, so
+     it gets the same floor. Links inside running prose keep the smaller
+     padding — 44px there would overlap the line above. */
+  .colophon p > a:only-child,
+  .manifesto p > a:only-child {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
   .chapter-grid,
   .chapter--reverse .chapter-grid { grid-template-columns: minmax(0, 1fr); }
   .chapter--reverse .card-col { order: 0; }

@@ -338,6 +338,12 @@ Each has cost a full cycle, some more than once. The first one cost one *today*.
 
 1. Both languages at both viewports.
 2. Contrast audit, tap targets, overflow, console, network.
+   **Tap targets are a mobile check, and measure both axes.** A `min-height`
+   floor with no `min-width` left the header controls at 32x44 and 42x44 once
+   their labels were hidden at 375 — they passed a height-only check for
+   months. Fixed 2026-09-20 along with the skip link (43px) and the
+   standalone colophon links (33px). Desktop is mouse-driven and is not held
+   to 44px.
 3. **Exercise controls, do not just measure them.** Every significant bug lately
    passed a size or screenshot check.
 4. `node --check` the extracted module — parse errors only, so read the console
