@@ -1731,7 +1731,17 @@ class PostChain {
     this.quality = opts.quality || 1;
     this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.scene = new THREE.Scene();
-    const rtOpts = { type: THREE.HalfFloatType, depthBuffer: true, stencilBuffer: false };
+    /* The renderer is built with antialias:true, and it has never done
+       anything. That flag only applies to the default framebuffer, and
+       every frame of this scene is rendered into sceneRT instead, then
+       composited as a fullscreen quad — so since the post chain went in,
+       every edge in the piece has been hard aliased. A scene made almost
+       entirely of boxes is the worst possible subject for that.
+       MSAA has to be asked for on the target itself. */
+    const rtOpts = {
+      type: THREE.HalfFloatType, depthBuffer: true, stencilBuffer: false,
+      samples: opts.samples ?? 0
+    };
     this.sceneRT = new THREE.WebGLRenderTarget(1, 1, rtOpts);
     this.rtA = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: false });
     this.rtB = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: false });
@@ -2361,8 +2371,42 @@ const crowdUniforms = { uTime: U_TIME, uBeat: { value: 0 } };
 
 /* Lambert, with the bounce folded into the vertex stage so the whole
    crowd moves on one beat without touching the CPU. */
+/* The crowd was 16,000 unit cubes. At pitch level — where the cancha shot
+   stands — a 38cm cube is big enough on screen to show its flat faces and
+   its hard edges, so the stands read as stacked blocks rather than people.
+   This is the single boxiest thing in the piece.
+
+   A head and shoulders on a plane costs less than a box (two triangles
+   against twelve), and alphaTest keeps it out of the transparency sort.
+   White on transparent, so the per-instance colour still tints it. */
+function crowdFigureTexture() {
+  const S = 64;
+  const [c, ctx] = canvas2d(S, S);
+  ctx.clearRect(0, 0, S, S);
+  ctx.fillStyle = '#ffffff';
+  /* shoulders: a rounded trapezoid filling the bottom two thirds */
+  ctx.beginPath();
+  ctx.moveTo(S * 0.04, S);
+  ctx.lineTo(S * 0.08, S * 0.52);
+  ctx.quadraticCurveTo(S * 0.5, S * 0.26, S * 0.92, S * 0.52);
+  ctx.lineTo(S * 0.96, S);
+  ctx.closePath();
+  ctx.fill();
+  /* head, overlapping the shoulders so there is no cut-out neck — at this
+     size a visible neck is what makes it read as an icon */
+  ctx.beginPath();
+  ctx.arc(S * 0.5, S * 0.24, S * 0.19, 0, Math.PI * 2);
+  ctx.fill();
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
 function crowdMaterial() {
-  const m = new THREE.MeshLambertMaterial({ color: 0xffffff });
+  const m = new THREE.MeshLambertMaterial({
+    color: 0xffffff, map: crowdFigureTexture(),
+    alphaTest: 0.45, side: THREE.DoubleSide
+  });
   m.onBeforeCompile = (shader) => {
     shader.uniforms.uTime = crowdUniforms.uTime;
     shader.uniforms.uBeat = crowdUniforms.uBeat;
@@ -2450,25 +2494,62 @@ function buildBowl() {
   setInstance(lip, 1, 0, topY + 2.4, BOWL.z1 + topOut + 1.5, 90, 0.8, 6);
   setInstance(lip, 2, BOWL.x0 - topOut - 1.5, topY + 2.4, BOWL.cz, 6, 0.8, 70);
 
-  /* the crowd — one instance per person, three sides plus the wall */
-  const CROWD = LOW ? 5200 : 16000;
+  /* The crowd, one instance per person on three sides.
+
+     Twice wrong before this. It was 16,000 unit cubes, and a 38cm cube at
+     pitch level is big enough on screen to show its flat faces — the
+     stands read as stacked blocks, which is the boxiness the whole scene
+     was being judged on. Replacing the cube with a head-and-shoulders
+     plane fixed that and introduced the opposite problem: positions were
+     drawn at random along each row, and random placement clumps and
+     leaves holes, so on a phone — where the portrait crop pulls the near
+     stand right up to the lens — it read as scattered avatars rather than
+     a packed terrace.
+
+     Real terracing is regular. So the positions are a grid now, one step
+     of SEAT along each row, jittered by less than half a step. Figures
+     are wider than the step, so they overlap and the stand fills in, the
+     way a full ground actually looks. The count falls out of the geometry
+     instead of being guessed at. */
+  /* a wider step on low-power devices: the count falls out of this, so
+     this is the one knob that sets how many instances the phone pays for */
+  const SEAT = LOW ? 0.62 : 0.42;
+  const placements = [];
+  for (const s of sides) {
+    const len = s.span[1] - s.span[0];
+    const n = Math.max(1, Math.floor(len / SEAT));
+    for (let r = 0; r < ROWS; r++) {
+      const out = 4 + r * RUN;
+      const y = 1.2 + r * RISE + 0.42;
+      /* every other row offset by half a seat, so the columns do not line
+         up into visible verticals */
+      const stagger = (r % 2) * SEAT * 0.5;
+      for (let c = 0; c < n; c++) {
+        const t = s.span[0] + stagger + (c + 0.5) * SEAT + range(-SEAT * 0.4, SEAT * 0.4);
+        if (t < s.span[0] || t > s.span[1]) continue;
+        placements.push([s, t, y, out]);
+      }
+    }
+  }
+
+  const CROWD = placements.length;
   const seeds = new Float32Array(CROWD);
-  const crowdGeo = BOX.clone();
+  const crowdGeo = PLANE.clone();
   crowdGeo.setAttribute('aSeed', new THREE.InstancedBufferAttribute(seeds, 1));
   const crowd = instanced(crowdGeo, crowdMaterial(), CROWD);
   bowl.add(crowd);
   const SKIN = [0x1b2f63, 0x24417f, 0xd8a52c, 0xe8e6e0, 0x101725, 0xf0b323, 0x2c3a56];
   for (let i = 0; i < CROWD; i++) {
-    const s = sides[(rnd() * sides.length) | 0];
-    const r = (rnd() * ROWS) | 0;
-    const out = 4 + r * RUN;
-    const y = 1.2 + r * RISE + 0.42;
-    const t = range(s.span[0] + 1, s.span[1] - 1);
-    const jitter = range(-0.22, 0.22);
+    const [s, t, y, out] = placements[i];
+    const jitter = range(-0.18, 0.18);
+    const h = range(0.74, 0.98);
+    /* mirror half of them; one silhouette repeated reads as wallpaper */
+    const w = range(0.50, 0.62) * (rnd() > 0.5 ? 1 : -1);
+    const yJit = y + range(-0.05, 0.09);
     if (s.axis === 'z') {
-      setInstance(crowd, i, t, y, s.edge - s.dir * (out + jitter), 0.38, 0.84, 0.34, 0, pick(SKIN));
+      setInstance(crowd, i, t, yJit, s.edge - s.dir * (out + jitter), w, h, 1, 0, pick(SKIN));
     } else {
-      setInstance(crowd, i, s.edge - s.dir * (out + jitter), y, t, 0.34, 0.84, 0.38, 0, pick(SKIN));
+      setInstance(crowd, i, s.edge - s.dir * (out + jitter), yJit, t, w, h, 1, Math.PI / 2, pick(SKIN));
     }
     seeds[i] = rnd();
   }
@@ -3826,9 +3907,14 @@ if (webgl) {
   atmosphere = buildAtmosphere();
 
   chain = new PostChain(renderer, 1, 1, {
-    bloom: LOW ? 0.22 : 0.26, grain: 0.05, vignette: 0.82, aberration: 0.02, exposure: 1.02,
+    bloom: LOW ? 0.22 : 0.26, grain: 0.035, vignette: 0.82, aberration: 0.008, exposure: 1.02,
     contrast: 1.10, saturation: 1.02, shadowMix: 0.55, shadowTint: 0x8ba4d6,
-    threshold: 0.88, knee: 0.18, quality: LOW ? 0.75 : 1
+    threshold: 0.88, knee: 0.18, quality: LOW ? 0.75 : 1,
+    /* 4x MSAA on the scene target. This is the antialiasing the renderer
+       flag promised and never delivered; it buys far more per millisecond
+       on a scene of hard box edges than pushing the pixel ratio back up
+       would. */
+    samples: LOW ? 0 : 4
   });
 }
 
