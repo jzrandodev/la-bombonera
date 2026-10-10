@@ -3,8 +3,7 @@
   "configurations": [
     {
       "name": "la-bombonera",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4173", "--bind", "127.0.0.1"],
+      "url": "http://localhost:4173",
       "port": 4173
     }
   ]
