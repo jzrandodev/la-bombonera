@@ -71,18 +71,85 @@ crop, which is a framing property and not something an asset will fix. Of the
 briefed assets, `chainlink` still serves three chapters — but its original
 justification, rescuing the túnel, no longer applies.
 
+## Sketching these in Figma first
+
+Working file: [foliojz, page `bombo`](https://www.figma.com/design/uCBRVwdspYcIy7rzyTLfJ4/foliojz?node-id=280-190).
+
+Two kinds of frame:
+
+1. **One composition frame per chapter, `1900 × 560`.** The important one — it
+   shows which props sit where, at what scale, overlapping how. Start from the
+   chapter's current `FG_COMPOSITIONS` entry, then move things until it looks
+   right; **the code should follow the sketch, not the other way round.** Those
+   numbers were a first guess. Put a guide at the bottom 47% — that is the band
+   these layers actually occupy on screen.
+2. **One frame per prop**, at the sizes below, on transparent ground.
+
+Read the briefs below before sketching rather than after: they are the written
+version of what these frames need to show, and the anti-brief is what makes an
+asset unusable.
+
+---
+
 ## The 9 props
 
 Bottom-anchored. On the page these sit pinned to the bottom of the viewport, so **the subject lives in the lower portion of the frame with transparency above it.**
 
-Two size classes:
-
-- **Wide** — `1800 × 700`, alpha WebP, 150–250 KB
-- **Tall** — `900 × 1200`, alpha WebP, 120–200 KB
-
 Path: `assets/props/<name>.webp`
 
-### 01 · `tin-panel` — wide · barrio (00)
+### Generate in this order — a chapter is all-or-nothing
+
+`buildForegrounds()` gates each chapter on **every** prop in its composition:
+
+```js
+const ready = comp && comp.length && comp.every((c) => FG_PROPS[c.prop]);
+```
+
+One missing file and the whole chapter stays on its generated Canvas2D layer,
+silently and looking fine. So finish a chapter before starting the next:
+
+| order | chapter | still needed | new files |
+| --- | --- | --- | --- |
+| 1 | **07 manifiesto** | `floodlight-pylon` | 1 |
+| 2 | **01 estadio** | `smoke-bank` | 1 |
+| 3 | **02 túnel** | `concrete-step`, `chainlink` | 2 |
+| 4 | **03 cancha** | `crowd-row` | 1 |
+| 5 | **00 barrio** | `tin-panel`, `laundry-line`, `streetlamp` | 3 |
+| 6 | **04 tribuna** | `flag` | 1 |
+
+**The first visible win costs one file**, on the weakest frame in the piece.
+Chapters 05 trofeos and 06 camisetas have empty compositions and stay generated.
+
+### Size, split by edge hardness
+
+The old blanket spec was one size for everything. It should not be: at
+`scale: 100%` a prop fills the full 1900px stage — 3800 device px on a retina
+screen — so a 1x source is soft. But 2x everywhere would roughly quadruple the
+budget. Kage runs about 1x (its full-width `tall-grass` is 1717px) and gets away
+with it because its art is atmospheric. Ours is only atmospheric in places.
+
+- **Soft props — `chainlink`, `smoke-bank`** — `1800 × 700`, alpha WebP,
+  150–250 KB. Both are deliberately out of focus; sharpening them would hurt.
+- **Hard-edged props — `concrete-step`, `tin-panel`, `crowd-row`,
+  `laundry-line`, `flag`, `streetlamp`, `floodlight-pylon`** — `2600 × 1000`
+  wide, `1300 × 1700` tall, alpha WebP, 250–400 KB. Crisper where the eye lands.
+
+### How a prop is placed, so the sketch can match the code
+
+The foreground is a **`1900 × 560` stage**, bottom-anchored and centred, drawn at
+`width: min(1900px, 148vw)`. Each prop is an `<img>` positioned as a percentage
+of that box:
+
+| field | meaning |
+| --- | --- |
+| `x` | `left`, % of stage width |
+| `y` | `bottom`, % of stage height — negative pushes it below the fold |
+| `scale` | `width`, % of stage width |
+| `opacity`, `flip` | optional; `flip` mirrors on X |
+
+Tall props are *meant* to overflow the top of the stage. Nothing clips them.
+
+### 01 · `tin-panel` — `2600 × 1000` · barrio (00)
 A section of corrugated zinc wall filling one edge of frame, two or three mismatched paint colours meeting at a seam.
 
 - **Angle:** flat elevation, very slight perspective. Sits frame-left or frame-right as the thing you look *past*.
@@ -90,7 +157,7 @@ A section of corrugated zinc wall filling one edge of frame, two or three mismat
 - **Inspiration:** the conventillos of La Boca — corrugated sheet over timber, painted in leftover marine paint from the port, no two panels agreeing.
 - **Note:** needs one clean vertical edge so it can be flipped and reused on the opposite side.
 
-### 02 · `laundry-line` — wide · barrio (00)
+### 02 · `laundry-line` — `2600 × 1000` · barrio (00)
 Washing strung on a line crossing the frame, seen from below.
 
 - **Angle:** shallow upward angle — the line sags across the top, garments hang down into frame.
@@ -98,7 +165,7 @@ Washing strung on a line crossing the frame, seen from below.
 - **Inspiration:** lines strung between balconies across a narrow street.
 - **Note:** the line reads as a thin dark curve. Keep garment spacing irregular.
 
-### 03 · `streetlamp` — tall · barrio (00)
+### 03 · `streetlamp` — `1300 × 1700` · barrio (00)
 An old street lamp head on its bracket, with visible warm falloff.
 
 - **Angle:** from below. Lamp head upper third, post running down out of frame.
@@ -106,7 +173,7 @@ An old street lamp head on its bracket, with visible warm falloff.
 - **Inspiration:** sodium-vapour street lighting, warm and slightly sickly, pre-LED.
 - **Note:** the glow must be **in the alpha** — soft radial falloff fading to transparent, not a hard-edged cutout.
 
-### 04 · `concrete-step` — wide · túnel (02), tribuna (04)
+### 04 · `concrete-step` — `2600 × 1000` · túnel (02), tribuna (04)
 Raw poured concrete terracing — two or three steps, edges worn and chipped.
 
 - **Angle:** low and close, looking along the steps so they recede slightly to one side.
@@ -114,7 +181,7 @@ Raw poured concrete terracing — two or three steps, edges worn and chipped.
 - **Inspiration:** raw terracing in older grounds — poured, never finished, worn round at the edges by use.
 - **Note:** reads as the bottom edge of frame, so the top edge needs a clean silhouette against transparency.
 
-### 05 · `chainlink` — wide · túnel (02), cancha (03), tribuna (04)
+### 05 · `chainlink` — `1800 × 700` (soft) · túnel (02), cancha (03), tribuna (04)
 A section of chainlink fence, close and slightly out of focus. The thing you look *through*.
 
 - **Angle:** dead-on, filling the frame.
@@ -122,7 +189,7 @@ A section of chainlink fence, close and slightly out of focus. The thing you loo
 - **Inspiration:** perimeter fencing between terrace and pitch.
 - **Note:** **the most important prop in the set.** It appears in three chapters and does most of the depth work — if only one prop is excellent, make it this one. Diamond apertures large enough to see through clearly. Keep it roughly tileable horizontally so it scales without an obvious seam.
 
-### 06 · `crowd-row` — wide · cancha (03), tribuna (04)
+### 06 · `crowd-row` — `2600 × 1000` · cancha (03), tribuna (04)
 A row of silhouetted spectators from behind — heads, shoulders, some arms raised.
 
 - **Angle:** from behind and slightly below, as if standing among them.
@@ -130,7 +197,7 @@ A row of silhouetted spectators from behind — heads, shoulders, some arms rais
 - **Inspiration:** a packed terrace backlit by floodlights — you read the shape of a crowd, never a face.
 - **Note:** **no identifiable faces.** Silhouette only. Hard requirement.
 
-### 07 · `flag` — tall · tribuna (04)
+### 07 · `flag` — `1300 × 1700` · tribuna (04)
 A large terrace flag on a pole, mid-wave.
 
 - **Angle:** from below. Pole enters bottom of frame, flag fills the upper portion.
@@ -138,7 +205,7 @@ A large terrace flag on a pole, mid-wave.
 - **Inspiration:** hand-painted terrace banners hoisted on long poles.
 - **Note:** **no crest, no lettering, no text.** Bands and colour only.
 
-### 08 · `smoke-bank` — wide · estadio (01), cancha (03), tribuna (04)
+### 08 · `smoke-bank` — `1800 × 700` (soft) · estadio (01), cancha (03), tribuna (04)
 A drifting bank of smoke catching light from one side.
 
 - **Angle:** horizontal drift across the lower frame, thinning upward into transparency.
@@ -146,7 +213,7 @@ A drifting bank of smoke catching light from one side.
 - **Inspiration:** flare haze drifting across floodlight beams.
 - **Note:** the most forgiving asset here. Soft alpha throughout, hard to get wrong, and it carries three chapters.
 
-### 09 · `floodlight-pylon` — tall · manifiesto (07)
+### 09 · `floodlight-pylon` — `1300 × 1700` · manifiesto (07)
 A floodlight pylon seen from close and below-ish, mostly in silhouette — lattice steelwork rising out of the bottom-left corner, the lamp array at the top just catching its own spill.
 
 - **Angle:** near the camera and off to one side, cropped by the frame edge. It is not the subject; it is the thing the stadium sits *behind*.
@@ -163,6 +230,19 @@ These replace the live offscreen render in three of the six editorial cards. The
 **`barrio.webp` was dropped 2026-09-17** along with the barrio chapter's card — the barrio is scenery now, not a chapter, and has no card to hang a still on. Its brief is kept below, struck through, in case the card ever returns.
 
 **Spec:** `1800 × 1350` (4:3), WebP, ~180 KB. Path: `assets/plates/<name>.webp`
+
+**Wiring trap — read before adding one.** `PLATE_ART` is keyed by **`PLATES`
+array index, not the number printed on the card.** They do not match, and the
+mapping was wrong in the repo until `9d5489d`:
+
+| file | card reads | `PLATE_ART` key |
+| --- | --- | --- |
+| `estadio.webp` | Plate 01 | **4** |
+| `tribuna.webp` | Plate 03 | **0** |
+| `trofeos.webp` | Plate 05 | **3** |
+
+Every value is `null`, so a wrong key does not error — the still just appears on
+the wrong card. If `PLATES` is ever reordered, re-key this with it.
 **Framing:** sits in a bordered card with a caption bar below and a centred play icon over the image. Keep the subject centred and clear of the bottom edge.
 
 ### ~~A · `barrio.webp`~~ — no longer has a card
@@ -214,12 +294,17 @@ Page today: **~388 KB transferred** on the live deploy (190 KB compressed Three.
 
 | | Count | Est. |
 | --- | --- | --- |
-| Props | 9 | ~1.6 MB |
+| Props | 9 | ~2.4 MB (raised: seven are now 2600px, not 1800) |
 | Hero stills | 3 | ~0.55 MB |
 | Social preview | 1 | ~80 KB |
-| **New total** | | **~3.2 MB** |
+| **New total** | | **~4.0 MB** |
 
-Kage ships 2.54 MB of imagery, so this lands in the same territory. Only acceptable with lazy-loading in place, so first paint still pulls only the opening chapter's props.
+Kage ships **1.27 MB** of WebP (measured from the live site, not estimated), so
+at ~4 MB we would be three times heavier. Two things make that survivable and
+both need checking as files land: `primeChapterArt()` only fetches chapters
+`i-1 … i+1`, so first paint pulls the opening chapter alone; and the 2600px tier
+is a choice, not a requirement — drop a prop back to 1800px if its edges turn out
+not to matter. **Keep a running total.**
 
 ---
 
