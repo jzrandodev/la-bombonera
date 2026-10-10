@@ -326,6 +326,54 @@ catches light at 95 units where bare concrete did not. **Painting a surface
 can substitute for lighting it**, and colour changes do not carry the
 regression history that moving lights and cameras do.
 
+## Contrast must be measured against the scene, not the stylesheet
+
+Added 2026-10-10. **This is the third time the same mistake has been found
+here, and it is worth naming as a pattern rather than a one-off.**
+
+This file claimed zero contrast failures for weeks. That audit compared each
+element's colour against its **CSS** background — a colour nothing is ever
+drawn in, because the real background is the live WebGL scene scrolling
+behind the type. Measured against what is actually composited there, a third
+to a half of the body copy in the brightest chapters was below AA:
+
+| | before the scrim | after |
+|---|---|---|
+| tribuna, "Smoke crosses the floodlights…" | **43%** of its area | 4.9% |
+| tribuna, "The stands here go up…" | 34.9% | 0.8% |
+| cancha pull quote | 25.4% (1.25:1 at worst) | 0.1% |
+| cancha, "The noise arrives downward…" | 15.5% | 2.4% |
+| trofeos, "Afterwards, on the way out…" | not measured before | **11%** |
+
+Mobile at 375×812 is cleaner than desktop — worst 2.5% — because the copy
+column is narrower and overlaps less of the bright scene.
+
+### The three of a kind
+
+Each was a number that was correct about the thing it measured, where the
+thing it measured was not the page:
+
+1. **Luma** sampled `#stage` only, excluding the foreground canvases that
+   cover the bottom 47% of the frame.
+2. **Frame cost** was JS-only timing that returns before the GPU starts, then
+   a `readPixels` sync that had lower resolutions measuring slower.
+3. **Contrast** compared text against a CSS background colour that is never
+   painted.
+
+**Before trusting any metric here, ask what it is sampling and whether that
+is what a visitor sees.** The cheap check is to run it on something that
+could not possibly have changed: if that moves too, the instrument is wrong.
+
+### How to measure it
+
+Use the stepping harness so the scene is deterministic, then for each text
+element sample the stage canvas and the active `.fg-layer` over its bounding
+rect, paint the element's own scrim on top the way CSS does — `ellipse`,
+`farthest-corner` — and compute the share of that area whose contrast against
+the text colour falls below 4.5 (or 3.0 for large text). Report the share of
+area failing, not the single worst pixel: one bright confetti fleck behind a
+glyph is not the same defect as half a paragraph sitting on a lit crowd.
+
 ## Running the sweep
 
 Local server on `:4173`. Rebuild the temporary `verify.html` harness, which
