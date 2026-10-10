@@ -47,14 +47,14 @@ See `VERIFY.md`. Both columns are the composite the viewer actually sees.
 
 | Chapter | Desktop | Mobile | State |
 | --- | --- | --- | --- |
-| 00 barrio *(scenery)* | 50 | 27 | No longer a chapter — the opening view, not announced. |
-| 01 estadio | 21 | 31 | Facade texture fixed 2026-09-16 (was brown mottling from an unset repeat). |
-| 02 túnel *(pass-through)* | 34 | 24 | No longer a chapter — a silent walk under the stand. Mouth texture fixed 2026-09-16 (was a flat white card). |
-| 03 cancha | 36 | 13 | **Weakest mobile frame after the manifiesto.** Loses most of its width to the portrait crop, which is framing, not art. |
-| 04 tribuna | **59** | 33 | The climax, and the best frame at both sizes. |
+| 00 barrio *(scenery)* | 51 | 23 | Not a chapter — the opening view, not announced. |
+| 01 estadio | 18 | 21 | Facade texture fixed 2026-09-16. |
+| 02 túnel *(pass-through)* | 34 | 24 | Not a chapter — a silent walk under the stand. Mouth texture fixed 2026-09-16. |
+| 03 cancha | 27 | 13 | Crowd rebuilt 2026-10-09 and now reads as a packed terrace. Still loses most of its width to the portrait crop. |
+| 04 tribuna | **57** | 25 | The climax, and the best frame at both sizes. |
 | 05 trofeos | 19 | 15 | Dark but legible: lit cases against near-black, as intended. |
 | 06 camisetas | 17 | 30 | Reads clearly. Low desktop coverage is a dark room, not a broken frame. |
-| **07 manifiesto** | **10** | **8** | **The weakest frame at both sizes.** Unlit exterior from 95 units out, framed below the horizon. Wants a floodlight pylon, which is not among the eight. |
+| **07 manifiesto** | **8** | **8** | **The weakest frame at both sizes.** Briefed as prop 09 `floodlight-pylon`; loader slot and composition already wired. |
 
 Figures are **midtone coverage** (share of pixels in luma 25…235), not mean
 luma — see the sections above for why the mean misleads here. Measured after

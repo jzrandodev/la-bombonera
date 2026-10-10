@@ -263,6 +263,33 @@ Midtone coverage cost of all three together, desktop:
 where the confetti was densest. That is an accepted trade: "too busy" was the
 brief, and coverage counts bright confetti pixels as content.
 
+## The metric counts noise as content
+
+Found 2026-10-09, while acting on "too pixelated/boxy".
+
+Midtone coverage rewards film grain and chromatic fringing. Both scatter
+mid-luma pixels over black, and the metric cannot tell them from real
+content. Measured in isolation on mobile, dropping grain 0.05 → 0.035 alone
+accounts for **+5.3 of the cancha's coverage and +3.9 of the tribuna's**, and
+the aberration cut 0.02 → 0.008 explains most of the estadio's fall — a
+chapter whose camera cannot see the bowl crowd at all.
+
+So a coverage drop that follows a *cleanup* is not necessarily lost content.
+Check whether a chapter that could not have been affected also moved; if it
+did, the change is in the post chain, not the scene.
+
+## Antialiasing was never on
+
+`WebGLRenderer({ antialias: true })` applies only to the default framebuffer.
+Every frame of this scene renders into `sceneRT` and is composited as a
+fullscreen quad, so from the moment the post chain was added **nothing in the
+scene was antialiased** — on a piece built almost entirely from boxes.
+
+MSAA must be requested on the render target: `samples: 4` in its options,
+WebGL2 only, and gated off on `LOW`. Verified live with
+`chain.sceneRT.samples`. If a future pass adds another render target the
+scene draws into, it needs the same.
+
 ## Running the sweep
 
 Local server on `:4173`. Rebuild the temporary `verify.html` harness, which
