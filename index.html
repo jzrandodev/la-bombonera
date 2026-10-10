@@ -3288,7 +3288,12 @@ const FG_PROPS = {
   'chainlink':     null,   /* './assets/props/chainlink.webp'     wide  */
   'crowd-row':     null,   /* './assets/props/crowd-row.webp'     wide  */
   'flag':          null,   /* './assets/props/flag.webp'          tall  */
-  'smoke-bank':    null    /* './assets/props/smoke-bank.webp'    wide  */
+  'smoke-bank':    null,   /* './assets/props/smoke-bank.webp'    wide  */
+  /* The manifiesto is the weakest frame at both sizes and the only one
+     whose problem is not fixable in code: it looks at an unlit exterior
+     from 95 units out, so there is nothing in the foreground at all.
+     This is the ninth prop, briefed in ASSETS.md after the other eight. */
+  'floodlight-pylon': null /* './assets/props/floodlight-pylon.webp' tall */
 };
 
 /* Per chapter, which props sit where. x/left and y/bottom are percentages
@@ -3322,17 +3327,30 @@ const FG_COMPOSITIONS = [
     { prop: 'flag', x: 76, y: 30, scale: 17, flip: true },
     { prop: 'concrete-step', x: -4, y: -6, scale: 108 },
     { prop: 'chainlink', x: 0, y: 0, scale: 100, opacity: 0.6 }
+  ],
+  /* 05 trofeos  */ [],
+  /* 06 camisetas */ [],
+  /* 07 manifiesto — one pylon, near and unlit, to give the bowl something
+     to be far away from. An empty array falls back to the generated
+     painter, so 05 and 06 are unchanged and this one stays generated too
+     until the file lands. */ [
+    { prop: 'floodlight-pylon', x: 2, y: 0, scale: 23 }
   ]
-  /* 05, 06, 07 stay generated — see ASSETS.md */
 ];
 
 /* Four of the eight editorial cards take a still; the rest keep their
    live offscreen render. Same rule: null is never requested. */
+/* Keyed by PLATES index, which is NOT the number printed on the card.
+   Re-keyed 2026-09-17 when the street and tunnel-mouth framings were
+   removed and the rest shifted down: estadio 6->4, tribuna 2->0,
+   trofeos 5->3. The barrio still had no card left to hang on, so it is
+   gone. Everything is null, so nothing was ever requested and nothing
+   broke — but the first dropped-in file would have landed on the wrong
+   card. If you reorder PLATES again, re-key this with it. */
 const PLATE_ART = {
-  0: null,   /* './assets/plates/barrio.webp'   */
-  6: null,   /* './assets/plates/estadio.webp'  */
-  2: null,   /* './assets/plates/tribuna.webp'  */
-  5: null    /* './assets/plates/trofeos.webp'  */
+  4: null,   /* './assets/plates/estadio.webp'  card "Plate 01" */
+  0: null,   /* './assets/plates/tribuna.webp'  card "Plate 03" */
+  3: null    /* './assets/plates/trofeos.webp'  card "Plate 05" */
 };
 
 function buildForegrounds() {

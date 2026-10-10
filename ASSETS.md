@@ -71,7 +71,7 @@ crop, which is a framing property and not something an asset will fix. Of the
 briefed assets, `chainlink` still serves three chapters — but its original
 justification, rescuing the túnel, no longer applies.
 
-## The 8 props
+## The 9 props
 
 Bottom-anchored. On the page these sit pinned to the bottom of the viewport, so **the subject lives in the lower portion of the frame with transparency above it.**
 
@@ -146,18 +146,28 @@ A drifting bank of smoke catching light from one side.
 - **Inspiration:** flare haze drifting across floodlight beams.
 - **Note:** the most forgiving asset here. Soft alpha throughout, hard to get wrong, and it carries three chapters.
 
+### 09 · `floodlight-pylon` — tall · manifiesto (07)
+A floodlight pylon seen from close and below-ish, mostly in silhouette — lattice steelwork rising out of the bottom-left corner, the lamp array at the top just catching its own spill.
+
+- **Angle:** near the camera and off to one side, cropped by the frame edge. It is not the subject; it is the thing the stadium sits *behind*.
+- **Vibe:** black steel lattice against a slightly-less-black sky. Almost no detail in the structure itself — read it as shape. The only brightness is a cold halo around the lamp heads, and it should be small.
+- **Inspiration:** the old four-pylon grounds, seen from a street or rooftop a block away at night.
+- **Note:** **added 2026-09-20, after the other eight.** The manifiesto measures 12 desktop / 8 mobile, the weakest frame at both sizes, and it is the only weak frame whose cause is not fixable in code — the camera looks at an unlit exterior from 95 units out, so the foreground is genuinely empty. Two earlier attempts to fix it by moving the camera and by relighting both measured worse. **Keep the top two thirds mostly transparent** — the bowl and the floodlight beams have to read through and past it.
+
 ---
 
-## The 4 hero stills
+## The 3 hero stills
 
-These replace the live offscreen render in four of the eight editorial cards. The other four keep their live renders.
+These replace the live offscreen render in three of the six editorial cards. The other three keep their live renders.
+
+**`barrio.webp` was dropped 2026-09-17** along with the barrio chapter's card — the barrio is scenery now, not a chapter, and has no card to hang a still on. Its brief is kept below, struck through, in case the card ever returns.
 
 **Spec:** `1800 × 1350` (4:3), WebP, ~180 KB. Path: `assets/plates/<name>.webp`
 **Framing:** sits in a bordered card with a caption bar below and a centred play icon over the image. Keep the subject centred and clear of the bottom edge.
 
-### A · `barrio.webp`
-Street-level down a narrow Caminito block. Tin housing close both sides, laundry crossing overhead, one warm lamp mid-frame, floodlight glow leaking over the rooftops far ahead.
-**Vibe:** intimate, cluttered, alive. The most human frame in the piece.
+### ~~A · `barrio.webp`~~ — no longer has a card
+~~Street-level down a narrow Caminito block. Tin housing close both sides, laundry crossing overhead, one warm lamp mid-frame, floodlight glow leaking over the rooftops far ahead.~~
+~~**Vibe:** intimate, cluttered, alive. The most human frame in the piece.~~
 
 ### B · `estadio.webp`
 The wall. A flat concrete face rising the full height of frame, four storeys, ghost-painted with decades of old announcements, a gated entrance at street level lit from below.
@@ -192,7 +202,7 @@ A dim underground room, cases and plinths lit by hard individual spots against n
 
 ## What stays generated
 
-Chapters **trofeos, camisetas, manifiesto** keep their Canvas2D foreground layers for now — they were rebuilt recently and hold up better than the ones being replaced. Expand the prop library later if they start to feel like the weak ones.
+Chapters **trofeos and camisetas** keep their Canvas2D foreground layers — they were rebuilt recently and hold up. **Manifiesto no longer does:** a composition is wired for it using `floodlight-pylon`, and it falls back to the generated painter until that one file lands.
 
 The 3D scene stays the backdrop throughout. Props and stills sit in front of and inside it; nothing here papers over it.
 
@@ -200,12 +210,12 @@ The 3D scene stays the backdrop throughout. Props and stills sit in front of and
 
 ## Weight
 
-Page today: **~1 MB** — 856 KB vendored Three.js and fonts, 161 KB HTML.
+Page today: **~388 KB transferred** on the live deploy (190 KB compressed Three.js, 138 KB fonts, 59 KB HTML). Decoded it is ~1 MB.
 
 | | Count | Est. |
 | --- | --- | --- |
-| Props | 8 | ~1.4 MB |
-| Hero stills | 4 | ~0.7 MB |
+| Props | 9 | ~1.6 MB |
+| Hero stills | 3 | ~0.55 MB |
 | Social preview | 1 | ~80 KB |
 | **New total** | | **~3.2 MB** |
 
