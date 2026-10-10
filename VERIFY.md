@@ -228,20 +228,38 @@ whole module init finishes by ~199 ms locally. Nothing here is pathological.
 The 190 KB of compressed Three.js is the floor, and cutting it needs a build
 step, which is out of scope.
 
-**Frame cost cannot be measured in this harness, and the old number was
-wrong.** The plan claimed 1.15 ms/frame; that was JS-only timing, which
-returns before the GPU has done anything. Forcing a sync with a 1×1
-`gl.readPixels` after each frame gives 9–23 ms instead — trofeos 23.5,
-barrio 19.9, manifiesto 19.5, against a 16.7 ms budget for 60 fps. That
-matches the reported lag.
+**Frame cost CAN be measured — but only with the pane displayed, and only
+if you leave the renderer alone.** Corrected 2026-10-10.
 
-But those figures are **not trustworthy either**: sweeping `setPixelRatio`
-produced lower resolutions measuring *slower* (1.0 → 30 ms vs 1.75 → 20 ms),
-which is impossible for fragment-bound work, and one chapter drifted
-20.8 → 39.1 → 36.7 → 32.9 within a single run. The Browser pane is hidden, so
-GPU work is descheduled unpredictably. **Do not tune frame cost against
-numbers taken here.** Judge it on a real machine, or instrument with
-`EXT_disjoint_timer_query`.
+Two earlier readings were wrong. The plan's `1.15 ms/frame` was JS-only
+timing, which returns before the GPU starts. The `9–23 ms` from a 1×1
+`gl.readPixels` sync was also junk — it had lower resolutions measuring
+slower, which is impossible.
+
+The method that works needs no instrumentation at all: load the page
+normally, scroll to a chapter, and sample `requestAnimationFrame`
+timestamps. The catch is that the Browser pane only composites when it is
+**displayed** — while hidden, `paused` is true from `document.hidden`, the
+loop returns early, and nothing can be measured.
+
+Measured that way at 1440×900, canvas 1440×900 (1.3 Mpx), 66 frames per
+chapter:
+
+| | 00 | 01 | 02 | 03 | 04 | 05 | 06 | 07 |
+|---|---|---|---|---|---|---|---|---|
+| median ms | 16.7 | 16.7 | 16.7 | 16.7 | 16.7 | 16.7 | 16.7 | 16.7 |
+| worst ms | 17.7 | 17.7 | 17.7 | 17.6 | 17.6 | 17.7 | 17.6 | 17.7 |
+
+**A locked 59.9 fps in all eight chapters, with no chapter below 50 and not
+one dropped frame.** The scene is not inherently slow.
+
+**What still cannot be measured here:** anything above the pane's own pixel
+ratio. Calling `renderer.setPixelRatio` at runtime reallocates the render
+targets and the pane stalls for seconds — sampling then captures one to
+three frames and reports nonsense like 0.5 fps at DPR 1, which the clean
+run disproves. So a retina display at 2160×1350 is still unverified from
+here. **Never change the pixel ratio and measure frames in the same
+session.**
 
 ### What was changed, and on what grounds
 
