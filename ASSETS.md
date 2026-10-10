@@ -47,19 +47,19 @@ See `VERIFY.md`. Both columns are the composite the viewer actually sees.
 
 | Chapter | Desktop | Mobile | State |
 | --- | --- | --- | --- |
-| 00 barrio *(scenery)* | 51 | 23 | Not a chapter — the opening view, not announced. |
+| 00 barrio *(scenery)* | 50 | 22 | Not a chapter — the opening view, not announced. |
 | 01 estadio | 18 | 21 | Facade texture fixed 2026-09-16. |
 | 02 túnel *(pass-through)* | 34 | 24 | Not a chapter — a silent walk under the stand. Mouth texture fixed 2026-09-16. |
-| 03 cancha | 27 | 13 | Crowd rebuilt 2026-10-09 and now reads as a packed terrace. Still loses most of its width to the portrait crop. |
-| 04 tribuna | **57** | 25 | The climax, and the best frame at both sizes. |
+| 03 cancha | 29 | 19 | Crowd rebuilt and bowl painted 2026-10-09; reads as a packed terrace now. Still loses width to the portrait crop. |
+| 04 tribuna | **58** | 29 | The climax, and the best frame at both sizes. |
 | 05 trofeos | 19 | 15 | Dark but legible: lit cases against near-black, as intended. |
-| 06 camisetas | 17 | 30 | Reads clearly. Low desktop coverage is a dark room, not a broken frame. |
-| **07 manifiesto** | **8** | **8** | **The weakest frame at both sizes.** Briefed as prop 09 `floodlight-pylon`; loader slot and composition already wired. |
+| 06 camisetas | 17 | 29 | Reads clearly. Low desktop coverage is a dark room, not a broken frame. |
+| **07 manifiesto** | **11** | **8** | Still the weakest, but the painted fascia recovered it from 8 to 11 on desktop. Prop 09 `floodlight-pylon` is briefed and wired. |
 
 Figures are **midtone coverage** (share of pixels in luma 25…235), not mean
-luma — see the sections above for why the mean misleads here. Measured after
-the 2026-09-17 busyness and pixel-ratio reductions, so they sit 1–4 points
-below the 2026-09-16 baseline; the chapter indices are camera anchors, of
+luma — see the sections above for why the mean misleads here. Re-measured
+2026-10-09 after the crowd rebuild and the blue-and-gold banding; the chapter
+indices are camera anchors, of
 which there are still eight, while only six are named chapters.
 
 **Priorities that follow.** The two frames that were failing for *code* reasons

@@ -290,6 +290,24 @@ WebGL2 only, and gated off on `LOW`. Verified live with
 `chain.sceneRT.samples`. If a future pass adds another render target the
 scene draws into, it needs the same.
 
+## The bowl is painted, 2026-10-09
+
+Everything in the ground was concrete grey until this date. The blue and gold
+banding — `palcoWallTexture` on the flat side, `fasciaTexture` on the cap of
+each stepped stand — is the single change that made it read as *this* ground
+rather than a generic one, and unlike most visual work here it moved the
+metric the right way too: desktop cancha +2.2, manifiesto +3.1, tribuna +0.7,
+nothing down more than 0.5; mobile cancha +5.8, tribuna +3.9.
+
+**Colour and geometry only.** No crest, no sponsor, no wordmark — see the IP
+boundaries in `PRODUCT.md`. The blues and golds are the crowd's own palette,
+so the bowl and the people in it stay one set of colours.
+
+Worth reusing: the manifiesto went 8 → 11 purely because a painted fascia
+catches light at 95 units where bare concrete did not. **Painting a surface
+can substitute for lighting it**, and colour changes do not carry the
+regression history that moving lights and cameras do.
+
 ## Running the sweep
 
 Local server on `:4173`. Rebuild the temporary `verify.html` harness, which
