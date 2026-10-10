@@ -519,7 +519,31 @@ h1 .em, h2 .em { color: var(--gold); }
   max-width: 34ch;
   color: var(--bone);
 }
-.body-copy { max-width: 46ch; color: var(--bone-dim); }
+/* The copy sits directly on the scene, and the scene got a lot brighter when
+   the crowd was rebuilt and the bowl painted. Measured against what is
+   actually behind it on the composite — not against the CSS background,
+   which is what the old audit compared with and why it reported no failures
+   — 35 to 43 percent of the tribuna's body copy was below AA, and 10 to 25
+   percent of the cancha's.
+
+   A pool of shade rather than a panel: the gradient is already transparent
+   well before the padding ends, so it reads as depth behind the column, not
+   as a box drawn around it. Padding carries the shade past the text and the
+   negative margin gives the space back, so nothing moves. */
+.body-copy, .quote {
+  /* the horizontal inset can never exceed the page gutter, or the copy
+     bleeds past it — at 375 the gutter is 1.15rem and a flat 2.4rem put
+     the text 19px off the left edge of the screen */
+  --scrim-x: min(2.4rem, var(--gutter));
+  padding: 1.5rem var(--scrim-x);
+  margin: -1.5rem calc(-1 * var(--scrim-x));
+  background: radial-gradient(ellipse at 45% 50%,
+    rgba(6, 8, 13, 0.92) 0%,
+    rgba(6, 8, 13, 0.86) 58%,
+    rgba(6, 8, 13, 0.62) 88%,
+    rgba(6, 8, 13, 0) 100%);
+}
+.body-copy { max-width: calc(46ch + 2 * var(--scrim-x)); color: var(--bone-dim); }
 .body-copy p + p { margin-top: 1.1em; }
 
 .meta {
@@ -823,7 +847,7 @@ h1 .em, h2 .em { color: var(--gold); }
   line-height: 1.02;
   text-transform: uppercase;
   letter-spacing: -0.005em;
-  max-width: 20ch;
+  max-width: calc(20ch + 2 * var(--scrim-x));
   color: var(--bone);
 }
 .quote cite {
